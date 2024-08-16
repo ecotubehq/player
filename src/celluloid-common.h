@@ -116,9 +116,6 @@ gchar *
 get_scripts_dir_path(void);
 
 gchar *
-get_script_opts_dir_path(void);
-
-gchar *
 get_watch_dir_path(void);
 
 gchar *
@@ -144,11 +141,6 @@ format_time(gint seconds, gboolean show_hour);
 
 void
 activate_action_string(GActionMap *map, const gchar *str);
-
-gboolean
-g_file_delete_recursive(	GFile *file,
-				GCancellable *cancellable,
-				GError **error);
 
 G_END_DECLS
 

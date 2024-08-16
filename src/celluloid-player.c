@@ -28,12 +28,14 @@
 #include "celluloid-metadata-cache.h"
 #include "celluloid-mpv.h"
 #include "celluloid-def.h"
+#include "celluloid-controller.h"
 
 #define get_private(player) \
 	((CelluloidPlayerPrivate *)celluloid_player_get_instance_private(CELLULOID_PLAYER(player)))
 
 typedef struct _CelluloidPlayerPrivate CelluloidPlayerPrivate;
 
+char prevSetting[256];
 enum
 {
 	PROP_0,
@@ -57,7 +59,6 @@ struct _CelluloidPlayerPrivate
 	GPtrArray *track_list;
 	GPtrArray *disc_list;
 	GHashTable *log_levels;
-	GHashTable *script_options;
 	gboolean loaded;
 	gboolean new_file;
 	gboolean init_vo_config;
@@ -104,11 +105,11 @@ mpv_property_changed(CelluloidMpv *mpv, const gchar *name, gpointer value);
 static void
 observe_properties(CelluloidMpv *mpv);
 
-static gchar *
-build_script_opts_string(CelluloidPlayer *player);
+static void
+apply_default_options(CelluloidMpv *mpv);
 
 static void
-apply_default_options(CelluloidPlayer *player);
+sa_updade_yt_file(char *data);
 
 static void
 initialize(CelluloidMpv *mpv);
@@ -133,14 +134,6 @@ load_config_file(CelluloidMpv *mpv);
 
 static void
 load_input_config_file(CelluloidPlayer *player);
-
-static void
-load_script_opts_from_file(	CelluloidPlayer *player,
-				const gchar *prefix,
-				const gchar *path );
-
-static void
-load_script_opts(CelluloidPlayer *player);
 
 static void
 load_scripts(CelluloidPlayer *player);
@@ -419,6 +412,7 @@ mpv_property_changed(CelluloidMpv *mpv, const gchar *name, gpointer value)
 	CelluloidPlayer *player = CELLULOID_PLAYER(mpv);
 	CelluloidPlayerPrivate *priv = get_private(mpv);
 
+	//printf("name #1: %s\n", name);
 	if(g_strcmp0(name, "pause") == 0)
 	{
 		gboolean idle_active = FALSE;
@@ -430,12 +424,22 @@ mpv_property_changed(CelluloidMpv *mpv, const gchar *name, gpointer value)
 		if(idle_active && !pause && !priv->init_vo_config)
 		{
 			load_from_playlist(player);
+			printf("Paused #1: %s-%b-%b\n", name, pause, priv->init_vo_config);
+			GSettings *settings =		g_settings_new(CONFIG_ROOT);
+			int video_resolution_index = g_settings_get_int(settings, "youtube-video-quality");
+			if(video_resolution_index > 3){
+				g_settings_set_int(settings, "youtube-video-quality", 3);
+			}
+		}else{
+			printf("Paused #2: %s-%b-%b\n", name, pause, priv->init_vo_config);
 		}
 	}
 	else if(g_strcmp0(name, "playlist") == 0)
 	{
 		gboolean idle_active = FALSE;
 		gboolean was_empty = FALSE;
+		
+		load_config_file(mpv);
 
 		celluloid_mpv_get_property
 			(mpv, "idle-active", MPV_FORMAT_FLAG, &idle_active);
@@ -509,42 +513,22 @@ observe_properties(CelluloidMpv *mpv)
 	celluloid_mpv_observe_property(mpv, 0, "volume-max", MPV_FORMAT_DOUBLE);
 	celluloid_mpv_observe_property(mpv, 0, "window-maximized", MPV_FORMAT_FLAG);
 	celluloid_mpv_observe_property(mpv, 0, "window-scale", MPV_FORMAT_DOUBLE);
-}
 
-static gchar *
-build_script_opts_string(CelluloidPlayer *player)
-{
-	CelluloidPlayerPrivate *priv = get_private(player);
-	GList *keys = g_hash_table_get_keys(priv->script_options);
-	GList *values = g_hash_table_get_values(priv->script_options);
-	GString *accum = g_string_new(NULL);
+	/* Added by Sako */
+	celluloid_mpv_observe_property(mpv, 0, "video-codec", MPV_FORMAT_STRING);
+	celluloid_mpv_observe_property(mpv, 0, "video-format", MPV_FORMAT_STRING);
+	celluloid_mpv_observe_property(mpv, 0, "audio-codec", MPV_FORMAT_STRING);
+	celluloid_mpv_observe_property(mpv, 0, "audio-codec-name", MPV_FORMAT_STRING);
+	celluloid_mpv_observe_property(mpv, 0, "audio-bitrate", MPV_FORMAT_STRING);
+	celluloid_mpv_observe_property(mpv, 0, "height", MPV_FORMAT_STRING);
 
-	while(keys && values)
-	{
-		const gchar *key = keys->data;
-		const gchar *value = values->data;
-		gchar *suboption = g_strdup_printf("%s=%s,", key, value);
-
-		g_string_append(accum, suboption);
-
-		keys = keys->next;
-		values = values->next;
-
-		g_free(suboption);
-	}
-
-	g_list_free(values);
-	g_list_free(keys);
-
-	return accum->str;
 }
 
 static void
-apply_default_options(CelluloidPlayer *player)
+apply_default_options(CelluloidMpv *mpv)
 {
 	gchar *config_dir = get_config_dir_path();
 	gchar *watch_dir = get_watch_dir_path();
-	gchar *script_opts_string = build_script_opts_string(player);
 	const gchar *screenshot_dir =	g_get_user_special_dir
 					(G_USER_DIRECTORY_PICTURES);
 
@@ -565,7 +549,6 @@ apply_default_options(CelluloidPlayer *player)
 			{"ytdl", "yes"},
 			{"ytdl-raw-options", "yes-playlist="},
 			{"load-scripts", "no"},
-			{"script-opts", script_opts_string},
 			{"osd-bar", "no"},
 			{"input-cursor", "no"},
 			{"cursor-autohide", "no"},
@@ -585,12 +568,9 @@ apply_default_options(CelluloidPlayer *player)
 				options[i].value );
 
 		celluloid_mpv_set_option_string
-			(	CELLULOID_MPV(player),
-				options[i].name,
-				options[i].value );
+			(mpv, options[i].name, options[i].value);
 	}
 
-	g_free(script_opts_string);
 	g_free(config_dir);
 	g_free(watch_dir);
 }
@@ -600,8 +580,7 @@ initialize(CelluloidMpv *mpv)
 {
 	CelluloidPlayer *player = CELLULOID_PLAYER(mpv);
 
-	load_script_opts(player);
-	apply_default_options(player);
+	apply_default_options(mpv);
 	load_config_file(mpv);
 	load_input_config_file(player);
 	apply_extra_options(player);
@@ -731,7 +710,6 @@ reset(CelluloidMpv *mpv)
 
 	CELLULOID_MPV_CLASS(celluloid_player_parent_class)->reset(mpv);
 
-	load_script_opts(CELLULOID_PLAYER(mpv));
 	load_scripts(CELLULOID_PLAYER(mpv));
 
 	if(!idle_active)
@@ -833,6 +811,86 @@ static void
 load_config_file(CelluloidMpv *mpv)
 {
 	GSettings *settings = g_settings_new(CONFIG_ROOT);
+	gchar *v_quality[] = {"144" ,"240", "360", "480", "720", "None"};
+	gchar *v_codec[] = {"av01", "vp09", "avc"};
+	gchar *v_output[] = {"ewa-lanczos", "bicubic_fast", "FSR"};//{"spline16", "ewa-lanczos", "ewa-hanning"};
+
+
+	int video_resolution_index = g_settings_get_int(settings, "youtube-video-quality");
+
+	gchar *selected_v_quality= v_quality[video_resolution_index]; //v_quality[g_settings_get_int(settings, "youtube-video-quality")];
+	gchar *selected_v_codec= v_codec[g_settings_get_int(settings, "youtube-video-codec")];
+	gchar *selected_v_output= v_output[g_settings_get_int(settings, "youtube-video-output")];
+
+	gchar *fsr;
+	if(g_settings_get_int(settings, "youtube-video-output") == 0){
+		//snprintf(fsr, sizeof(fsr), "profile=gpu-hq\nglsl-shader=\"/usr/local/share/sako/FSR.glsl\"\nprofile-cond=math.min(display_width / width, display_height / height) < 2.0");
+		fsr = "profile=gpu-hq\nglsl-shader=\"/usr/local/share/sako/FSR.glsl\"\nprofile-cond=math.min(display_width / width, display_height / height) < 2.0";
+	}else{
+		//snprintf(fsr, sizeof(fsr), "");
+		fsr = "";
+	}
+	char selectedOpions[2024];
+	if(strcmp("None",selected_v_quality) != 0){
+		if(strcmp("best",selected_v_codec) != 0){
+			if(g_settings_get_int(settings, "youtube-video-codec") != 2 && 
+				g_settings_get_int(settings, "youtube-video-quality") != 1){
+				snprintf(selectedOpions, sizeof(selectedOpions), "ytdl-format=bv*[height=%s][vcodec~='%s']+ba/bv*[height<=%s][vcodec~='vp']+ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b)\nscale=%s\ncache=%s\nstream-buffer-size=%s\n%s\nreset-on-next-file=all\nhwdec=no",
+				selected_v_quality, selected_v_codec, selected_v_quality, selected_v_quality, selected_v_output, "yes", "4MiB", fsr);
+				//printf("Loading video for No: %s\n", "h.24");
+			}else{
+				snprintf(selectedOpions, sizeof(selectedOpions), "ytdl-format=bv*[height=%s][vcodec~='%s']+ba/bv*[height>=%s][vcodec~='vp']+ba/(wv*+ba/b)[height>=%s]/(wv*+ba/b)\nscale=%s\ncache=%s\nstream-buffer-size=%s\n%s\nreset-on-next-file=all\nhwdec=no",
+				selected_v_quality, selected_v_codec, selected_v_quality, selected_v_quality, selected_v_output, "yes", "4MiB", fsr);
+				//printf("Loading video for: %s\n", "h.24");				
+			}
+			
+		}else{
+			if(g_settings_get_int(settings, "youtube-video-codec") != 2){
+				snprintf(selectedOpions, sizeof(selectedOpions), "ytdl-format=bv*[height<=%s]+ba/b[height<=%s] /(wv*+ba/b)[height<=%s]/(wv*+ba/b)/ wv*+ba/w\nscale=%s\ncache=%s\nstream-buffer-size=%s\nprofile=gpu-hq\nreset-on-next-file=all\nhwdec=no\n%s",
+				selected_v_quality, selected_v_quality, selected_v_quality, selected_v_output, "yes", "4MiB", fsr);
+				printf("Loading video for No: %s\n", "h.24");
+			}else{
+				printf("Loading video for: %s\n", "h.24");
+				snprintf(selectedOpions, sizeof(selectedOpions), "ytdl-format=bv*[height>=%s]+ba/b[height>=%s] /(wv*+ba/b)[height>=%s]/(wv*+ba/b)/ wv*+ba/w\nscale=%s\ncache=%s\nstream-buffer-size=%s\nprofile=gpu-hq\nreset-on-next-file=all\nhwdec=no\n%s",
+				selected_v_quality, selected_v_quality, selected_v_quality, selected_v_output, "yes", "4MiB", fsr);				
+			}
+		}
+	}else{
+			snprintf(selectedOpions, sizeof(selectedOpions), "ytdl-format=bestaudio\nscale=%s\nreset-on-next-file=all\nprofile=gpu-hq\nglsl-shader=\"/usr/local/share/sako/FSR.glsl\"\nprofile-cond=math.min(display_width / width, display_height / height) < 2.0",
+		 	selected_v_output);
+
+	}
+	if(strcmp(prevSetting, selectedOpions) == 0){
+		printf("No change was made: %s\n", prevSetting);
+		return ;
+	}
+
+	memcpy(prevSetting, selectedOpions, sizeof prevSetting); //prevSetting = selectedOpions;
+	sa_updade_yt_file(selectedOpions);
+	
+
+	gchar *mpv_conf = "file:///tmp/sa-yt.config";	
+		
+	GFile *file = g_file_new_for_uri(mpv_conf);
+	gchar *path = g_file_get_path(file);
+		
+	g_info("Loading config file: %s", path);
+	printf("Loading config file: %s\n", path);
+	celluloid_mpv_load_config_file(mpv, path);
+	g_free(path);
+	g_object_unref(file);
+	/*
+	if(video_resolution_index < 3){
+		g_settings_set_int(settings, "youtube-video-quality", 3);
+	}*/
+	
+	g_object_unref(settings);
+}
+
+static void
+load_config_file_old(CelluloidMpv *mpv)
+{
+	GSettings *settings = g_settings_new(CONFIG_ROOT);
 
 	if(g_settings_get_boolean(settings, "mpv-config-enable"))
 	{
@@ -884,121 +942,6 @@ load_input_config_file(CelluloidPlayer *player)
 }
 
 static void
-load_script_opts_from_file(	CelluloidPlayer *player,
-				const gchar *prefix,
-				const gchar *path )
-{
-	GError *error = NULL;
-	gsize contents_length = 0;
-	gchar *contents = NULL;
-
-	const gchar group_name[] = "main";
-	const gchar group_header[] = "[main]\n";
-	gchar *data = NULL;
-	gsize data_length = 0;
-
-	GKeyFile *key_file = NULL;
-
-	g_file_get_contents(path, &contents, &contents_length, &error);
-
-	if(!error)
-	{
-		// GKeyFile can't parse files without section headers, so we
-		// need to stick a header in to get it to parse.
-		data = g_strconcat(group_header, contents, NULL);
-		data_length = contents_length + sizeof(group_header);
-	}
-
-	if(!error)
-	{
-		key_file = g_key_file_new();
-
-		g_key_file_load_from_data
-			(key_file, data, data_length, G_KEY_FILE_NONE, &error);
-	}
-
-	if(!error)
-	{
-		gsize n_keys = 0;
-
-		gchar **keys =
-			g_key_file_get_keys
-			(key_file, group_name, &n_keys, NULL);
-		GHashTable *script_options =
-			get_private(player)->script_options;
-
-		for(gsize i = 0; i < n_keys; i++)
-		{
-			gchar *value =
-				g_key_file_get_string
-				(key_file, group_name, keys[i], NULL);
-			gchar *prefixed_key =
-				g_strdup_printf
-				("%s-%s", prefix, keys[i]);
-
-			g_hash_table_insert
-				(script_options, prefixed_key, value);
-		}
-
-		g_strfreev(keys);
-	}
-
-
-	if(error)
-	{
-		g_warning(	"Failed to load script options file %s: %s",
-				path,
-				error->message );
-
-		g_error_free(error);
-	}
-
-	g_key_file_free(key_file);
-	g_free(data);
-	g_free(contents);
-}
-
-static void
-load_script_opts(CelluloidPlayer *player)
-{
-	gchar *path = get_script_opts_dir_path();
-	GDir *dir = g_dir_open(path, 0, NULL);
-
-	if(dir)
-	{
-		const gchar *name = g_dir_read_name(dir);
-
-		while(name)
-		{
-			gchar *full_path = g_build_filename(path, name, NULL);
-			const gchar *suffix = g_utf8_strchr(name, -1, '.');
-			gchar *prefix = g_utf8_substring(name, 0, suffix - name);
-			if(g_file_test(full_path, G_FILE_TEST_IS_REGULAR))
-			{
-				g_info(	"Loading script options file: %s",
-					full_path );
-
-				load_script_opts_from_file
-					(player, prefix, full_path);
-			}
-
-			name = g_dir_read_name(dir);
-
-			g_free(prefix);
-			g_free(full_path);
-		}
-
-		g_dir_close(dir);
-	}
-	else
-	{
-		g_warning("Failed to open script options directory: %s", path);
-	}
-
-	g_free(path);
-}
-
-static void
 load_scripts(CelluloidPlayer *player)
 {
 	gchar *path = get_scripts_dir_path();
@@ -1006,20 +949,28 @@ load_scripts(CelluloidPlayer *player)
 
 	if(dir)
 	{
-		const gchar *name = g_dir_read_name(dir);
+		const gchar *name;
 
-		while(name)
+		do
 		{
-			gchar *full_path = g_build_filename(path, name, NULL);
-			const gchar *cmd[] = {"load-script", full_path, NULL};
-
-			g_info("Loading script: %s", full_path);
-			celluloid_mpv_command(CELLULOID_MPV(player), cmd);
+			gchar *full_path;
 
 			name = g_dir_read_name(dir);
+			full_path = g_build_filename(path, name, NULL);
+
+			if(g_file_test(full_path, G_FILE_TEST_IS_REGULAR))
+			{
+				const gchar *cmd[]
+					= {"load-script", full_path, NULL};
+
+				g_info("Loading script: %s", full_path);
+				celluloid_mpv_command
+					(CELLULOID_MPV(player), cmd);
+			}
 
 			g_free(full_path);
 		}
+		while(name);
 
 		g_dir_close(dir);
 	}
@@ -1522,8 +1473,6 @@ celluloid_player_init(CelluloidPlayer *player)
 				((GDestroyNotify)celluloid_disc_free);
 	priv->log_levels =	g_hash_table_new_full
 				(g_str_hash, g_str_equal, g_free, NULL);
-	priv->script_options =	g_hash_table_new_full
-				(g_str_hash, g_str_equal, g_free, NULL);
 
 	priv->loaded = FALSE;
 	priv->new_file = TRUE;
@@ -1709,4 +1658,13 @@ celluloid_player_set_log_level(	CelluloidPlayer *player,
 
 	celluloid_mpv_request_log_messages
 		(CELLULOID_MPV(player), level_map[i].name);
+}
+static void
+sa_updade_yt_file(char *data){
+   FILE * fp;
+
+   fp = fopen ("/tmp/sa-yt.config", "w+");
+  fprintf(fp, "%s", data);
+   
+   fclose(fp);
 }

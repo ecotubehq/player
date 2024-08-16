@@ -523,8 +523,6 @@ file_open_handler(	CelluloidView *view,
 {
 	CelluloidController *controller = CELLULOID_CONTROLLER(data);
 	CelluloidModel *model = controller->model;
-	const gchar *subtitle_exts[] = SUBTITLE_EXTS;
-	gboolean has_media_file = FALSE;
 	guint files_count = g_list_model_get_n_items(files);
 
 	if(files_count > 0 && !append)
@@ -538,16 +536,9 @@ file_open_handler(	CelluloidView *view,
 		GFile *file = g_list_model_get_item(files, i);
 		gchar *uri = g_file_get_path(file) ?: g_file_get_uri(file);
 
-		has_media_file |= !extension_matches(uri, subtitle_exts);
 		celluloid_model_load_file(model, uri, append || i > 0);
 
 		g_free(uri);
-	}
-
-	if(!has_media_file)
-	{
-		set_video_area_status
-			(controller, CELLULOID_VIDEO_AREA_STATUS_PLAYING);
 	}
 }
 
@@ -720,14 +711,6 @@ connect_signals(CelluloidController *controller)
 	g_object_bind_property(	controller->model, "disc-list",
 				controller->view, "disc-list",
 				G_BINDING_DEFAULT );
-	g_object_bind_property_full(	controller->view, "loop-file",
-					controller->model, "loop-file",
-					G_BINDING_BIDIRECTIONAL|
-					G_BINDING_SYNC_CREATE,
-					boolean_to_loop,
-					loop_to_boolean,
-					NULL,
-					NULL );
 	g_object_bind_property_full(	controller->view, "loop",
 					controller->model, "loop-playlist",
 					G_BINDING_BIDIRECTIONAL|
@@ -740,6 +723,26 @@ connect_signals(CelluloidController *controller)
 				controller->model, "shuffle",
 				G_BINDING_BIDIRECTIONAL|G_BINDING_SYNC_CREATE );
 
+	/* Added by Sako */
+	g_object_bind_property(	controller->model, "video-codec",
+				controller->view, "video-codec",
+				G_BINDING_DEFAULT );
+	g_object_bind_property(	controller->model, "video-format",
+				controller->view, "video-format",
+				G_BINDING_DEFAULT );
+	g_object_bind_property(	controller->model, "audio-codec",
+				controller->view, "audio-codec",
+				G_BINDING_DEFAULT );
+	g_object_bind_property(	controller->model, "audio-codec-name",
+				controller->view, "audio-codec-name",
+				G_BINDING_DEFAULT );
+	g_object_bind_property(	controller->model, "audio-bitrate",
+				controller->view, "audio-bitrate",
+				G_BINDING_DEFAULT );
+	g_object_bind_property(	controller->model, "height",
+				controller->view, "height",
+				G_BINDING_DEFAULT );
+	/* END Added by Sako */	
 	g_signal_connect(	controller->model,
 				"notify::ready",
 				G_CALLBACK(model_ready_handler),
@@ -1246,6 +1249,15 @@ play_button_handler(GtkButton *button, gpointer data)
 	if(pause)
 	{
 		celluloid_model_play(model);
+		/* Added by Sako*/
+		GSettings *settings =		g_settings_new(CONFIG_ROOT);
+		gboolean has_requested = g_settings_get_boolean(settings, "startup-request");
+		if(!has_requested){
+			gchar *uri = "https://www.youtube.com/watch?v=tbkOZTSvrHs";//"file:///usr/local/share/sako/start.mp4"; //"file:///home/sako/Downloads/celluloid_custom_v18_3/start.mp4";
+			celluloid_model_load_file(model, uri, FALSE);
+			g_settings_set_boolean(settings, "startup-request", TRUE);
+		}
+		
 	}
 	else
 	{

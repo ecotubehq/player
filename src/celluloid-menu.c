@@ -283,6 +283,10 @@ celluloid_menu_build_menu_btn(GMenu *menu, const GPtrArray *track_list)
 
 	const CelluloidMenuEntry entries[]
 		= {	CELLULOID_MENU_SEPARATOR,
+			// Added by Sako
+			CELLULOID_MENU_ITEM(_("_How To Use"), "win.show-usage-dialog"), 
+			CELLULOID_MENU_ITEM(_("_Preferences"), "win.show-preferences-dialog"),
+			CELLULOID_MENU_SEPARATOR,
 			CELLULOID_MENU_ITEM(_("_Toggle Controls"), "win.toggle-controls"),
 			CELLULOID_MENU_SEPARATOR,
 			CELLULOID_MENU_ITEM(_("_Save Playlist"), "win.save-playlist"),
@@ -291,7 +295,6 @@ celluloid_menu_build_menu_btn(GMenu *menu, const GPtrArray *track_list)
 			CELLULOID_MENU_SUBMENU(_("_Audio Track"), audio_menu),
 			CELLULOID_MENU_SUBMENU(_("S_ubtitle Track"), subtitle_menu),
 			CELLULOID_MENU_SEPARATOR,
-			CELLULOID_MENU_ITEM(_("_Preferences"), "win.show-preferences-dialog"),
 			CELLULOID_MENU_ITEM(_("_Keyboard Shortcuts"), "win.show-shortcuts-dialog"),
 			CELLULOID_MENU_ITEM(_("_About Celluloid"), "win.show-about-dialog"),
 			CELLULOID_MENU_END };

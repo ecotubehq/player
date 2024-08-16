@@ -49,7 +49,13 @@ enum
 	PROP_WINDOW_MAXIMIZED,
 	PROP_WINDOW_SCALE,
 	PROP_DISPLAY_FPS,
-	N_PROPERTIES
+	N_PROPERTIES,
+	PROP_MEDIA_CODEC,
+	PROP_MEDIA_FORMAT,
+	PROP_MEDIA_AUDIO_CODEC,
+	PROP_MEDIA_CODEC_NAME,
+	PROP_MEDIA_BITRATE,
+	PROP_MEDIA_HEIGHT
 };
 
 struct _CelluloidModel
@@ -81,6 +87,12 @@ struct _CelluloidModel
 	gboolean window_maximized;
 	gdouble window_scale;
 	gdouble display_fps;
+	gchar *media_codec;
+	gchar *media_format;
+	gchar *media_audio_codec;
+	gchar *media_codec_name;
+	gchar *media_bitrate;
+	gchar *media_height;
 };
 
 struct _CelluloidModelClass
@@ -308,6 +320,38 @@ set_property(	GObject *object,
 		case PROP_DISPLAY_FPS:
 		self->display_fps = g_value_get_double(value);
 		break;
+		
+		/* Added by Sako*/
+		case PROP_MEDIA_CODEC:
+		g_free(self->media_codec);
+		self->media_codec = g_value_dup_string(value);
+		break;
+
+		case PROP_MEDIA_FORMAT:
+		g_free(self->media_format);
+		self->media_format = g_value_dup_string(value);
+		break;
+
+		case PROP_MEDIA_AUDIO_CODEC:
+		g_free(self->media_audio_codec);
+		self->media_audio_codec = g_value_dup_string(value);
+		break;
+
+		case PROP_MEDIA_CODEC_NAME:
+		g_free(self->media_codec_name);
+		self->media_codec_name = g_value_dup_string(value);
+		break;
+
+		case PROP_MEDIA_BITRATE:
+		g_free(self->media_bitrate);
+		self->media_bitrate = g_value_dup_string(value);
+		break;
+
+		case PROP_MEDIA_HEIGHT:
+		g_free(self->media_height);
+		self->media_height = g_value_dup_string(value);
+		break;
+		/*End Added by sako */
 
 		default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
@@ -419,7 +463,31 @@ get_property(	GObject *object,
 		case PROP_DISPLAY_FPS:
 		g_value_set_double(value, self->display_fps);
 		break;
+		/* Added by Sako */
+		case PROP_MEDIA_CODEC:
+		g_value_set_string(value, self->media_codec);
+		break;
 
+		case PROP_MEDIA_FORMAT:
+		g_value_set_string(value, self->media_format);
+		break;
+
+		case PROP_MEDIA_AUDIO_CODEC:
+		g_value_set_string(value, self->media_audio_codec);
+		break;
+
+		case PROP_MEDIA_CODEC_NAME:
+		g_value_set_string(value, self->media_codec_name);
+		break;
+
+		case PROP_MEDIA_BITRATE:
+		g_value_set_string(value, self->media_bitrate);
+		break;
+
+		case PROP_MEDIA_HEIGHT:
+		g_value_set_string(value, self->media_height);
+		break;		
+		/* End added by Sako */
 		default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
 		break;
@@ -453,7 +521,15 @@ static void finalize(GObject *object)
 	g_free(model->loop_file);
 	g_free(model->loop_playlist);
 	g_free(model->media_title);
-
+	/* Added by Sako */
+	g_free(model->media_codec);
+	g_free(model->media_format);
+	g_free(model->media_audio_codec);
+	g_free(model->media_codec_name);
+	g_free(model->media_bitrate);
+	g_free(model->media_height);
+	/* End Added by Sako */
+	
 	G_OBJECT_CLASS(celluloid_model_parent_class)->finalize(object);
 }
 
@@ -739,6 +815,13 @@ celluloid_model_class_init(CelluloidModelClass *klass)
 			{"volume-max", PROP_VOLUME_MAX, G_TYPE_DOUBLE},
 			{"window-maximized", PROP_WINDOW_MAXIMIZED, G_TYPE_BOOLEAN},
 			{"window-scale", PROP_WINDOW_SCALE, G_TYPE_DOUBLE},
+			/* Added by Sako */
+			{"video-codec", PROP_MEDIA_CODEC, G_TYPE_STRING},
+			{"video-format", PROP_MEDIA_FORMAT, G_TYPE_STRING},
+			{"audio-codec", PROP_MEDIA_AUDIO_CODEC, G_TYPE_STRING},
+			{"audio-codec-name", PROP_MEDIA_CODEC_NAME, G_TYPE_STRING},
+			{"audio-bitrate", PROP_MEDIA_BITRATE, G_TYPE_STRING},
+			{"height", PROP_MEDIA_HEIGHT, G_TYPE_STRING},
 			{NULL, PROP_INVALID, 0} };
 
 	GObjectClass *obj_class = G_OBJECT_CLASS(klass);
@@ -826,6 +909,16 @@ celluloid_model_init(CelluloidModel *model)
 	model->window_maximized = FALSE;
 	model->window_scale = 1.0;
 	model->display_fps = 0.0;
+	/* Added by Sako */
+	model->media_codec = NULL;
+	model->media_format = NULL;
+	model->media_audio_codec = NULL;
+	model->media_codec_name = NULL;
+	model->media_bitrate = NULL;
+	model->media_height = NULL;
+	/* End Added by Sako */
+	
+	
 }
 
 CelluloidModel *

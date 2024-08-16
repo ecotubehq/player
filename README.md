@@ -1,155 +1,67 @@
-# Celluloid
+# Ecotube
 
-Celluloid (formerly GNOME MPV) is a simple GTK+ frontend for mpv. Celluloid
-interacts with mpv via the client API exported by libmpv, allowing access to
-mpv's powerful playback capabilities.
+EcoTubeHQ Video Player offers high quality video playback for many DRM-free streaming services at minimal bitrates. Hardware acceleration is utilised where possible during video playback to optimize quality and minimize CPU usage.
 
-![Screenshot](https://celluloid-player.github.io/images/screenshot-0.png)
+-------------------------------------------------
 
-Repository Mirror: https://codeberg.org/celluloid-player/celluloid
+How to use. 
 
-## Dependencies
+To play a video from an online streaming service simply copy the video URL from the browser, click '+' at the top left of the player and select 'Open Location'. The player automatically places the copied video location imto the 'Location' entry box - click the 'Open' button to initiate playback.
 
-- appstream-glib (build)
-- pkg-config (build)
-- gcc (build)
-- glib >= 2.66
-- gtk >= 4.10
-- libadwaita >= 1.4.0
-- mpv >= 0.32
-- epoxy
-- lua (optional)
-- youtube-dl (optional)
+Press the spacebar or right click the mouse on the player screen to pause / play video playback.
 
-## Installation
+-------------------------------------------------
 
-### Packages
+EcoTubeHQ Preferences.
 
-<a href="https://repology.org/project/celluloid/versions">
-    <img src="https://repology.org/badge/vertical-allrepos/celluloid.svg?columns=4" alt="Packaging status">
-</a>
+AV Options
 
-Ubuntu users can use
-[this PPA](https://launchpad.net/~xuzhen666/+archive/ubuntu/gnome-mpv) to get
-more up-to-date versions of Celluloid.
+Video Output
 
-### Flatpak
+BQ - Best Quality - AMD FSR Video Upscaling [Default]
+HQ - High Guality - Lanczos Video Upscaling
+LE - Low Energy - Bicubic Video Upscaling
 
-[Flatpak](https://flatpak.org) packages support multiple distributions and are sandboxed.
-Flatpak 0.9.5+ is recommended for best integration.
+YouTube Options
 
-Stable releases are hosted on [Flathub](https://flathub.org):
+Video Codec
 
-```sh
-flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-flatpak install flathub io.github.celluloid_player.Celluloid
-```
+av1 - Best quality video with lowest bitrate [Default]
+vp9 - Good quality video with low bitrate
+h.264 - Lowest quality video with the highest bitrate
 
-### Snap
+*Note: If the video codec is set to av1 but this codec isn't available then vp9 will be utilised, and if vp9 isn't available then h.264 will be used.
 
-Stable releases are hosted on [Snapcraft](https://snapcraft.io):
+Video Resolution
 
-```sh
-sudo snap install celluloid
-```
+720p
+480p [Default]
+360p
+240p
+144p
 
-### Source code
-Run the following command in the source code directory to build and install:
+*Note: To minimize video data usage 1080p and 60fps are not supported.
 
-```sh
-meson setup build && cd build && ninja && sudo ninja install
-```
+Audio Quality *av1 and vp9 only*
 
-## Usage
+Hi - 160Kbps
+Lo - 70Kbps [Default]
 
-### Opening files
+-------------------------------------------------
 
-There are 4 ways to open files in Celluloid.
+Playlists
 
-1. Passing files and/or URIs as command line arguments.
-2. Using the file chooser dialog box, accessible via the "Open" menu item.
-3. Typing URI into the "Open Location" dialog box, accessible via the
-   menu item with the same name.
-4. Dragging and dropping files or URIs onto Celluloid.
+To create a playlist click on the bottom right icon titled "Toggle Playlist". When this is done the playlist opens. 
 
-### Manipulating playlist
+To add a video from an external streaming service copy the browser URL for the video, then right-click on the playlist, select "Add Location", and click "Open". 
 
-The playlist is hidden by default. To show the playlist, click the "Playlist"
-menu item or press F9. Files can be added by dragging and dropping files or URIs
-onto the playlist. Dropping files or URIs onto the video area will replace the
-content of the playlist. Playlist files or online playlists (eg. YouTube's
-playlist) will be automatically expanded into individual items when loaded.
+Additional videos can be added prior to, and during playback. To start playback simply double-click on the required playlist video.
 
-Items in the playlist can be reordered via drag-and-drop. To remove items from
-the playlist, select the item by clicking on it then press the delete button on
-your keyboard.
+-------------------------------------------------
 
-### Configuration
+EcoTubeHQ Original Concept: Colin Bett
+Coding and additional ideas: Sako Adams
 
-Celluloid can be configured using the preferences dialog accessible through the
-`Preferences` menu item. A number of less common options are also available in
-the `dconf` database. You can configure these using a tool like
-[Dconf Editor](https://wiki.gnome.org/Apps/DconfEditor).
+Forked from the Celluloid Video Player
 
-mpv-specific options can be set by creating a configuration file using mpv's
-`mpv.conf` syntax. See [mpv's manual](https://mpv.io/manual/stable/) for the
-full list of options. The file must be specified and enabled in the preferences
-dialog under the "MPV Configuration" section for it to take effect.
-
-It is also possible to set mpv options by putting the options as you would pass
-to mpv on the command line in the `Extra MPV Options` text box in the
-preferences dialog. If you want to set these options on the command line, you
-can do so by adding `mpv-` prefix to the name of the option you want to set.
-For example, the option `--mpv-vf=flip` is equivalent to `--vf=flip` in mpv.
-
-### User Scripts
-
-Celluloid can use most mpv user scripts as-is. Some user scripts may define
-keybindings that conflict with Celluloid, in which case you'll need to resolve
-the conflict by explicitly defining new keybindings using `input.conf`. See
-[mpv's manual](https://mpv.io/manual/stable/#lua-scripting-[,flags]]%29) for
-more details.
-
-User scripts can be installed by switching to the "Plugins" tab in the
-preferences dialog and dropping the files there. A list of mpv user scripts can
-be found [here](https://github.com/mpv-player/mpv/wiki/User-Scripts).
-
-### Keybindings
-
-Celluloid defines a set of keybindings in the macro `DEFAULT_KEYBINDS`, which
-can be found in
-[src/celluloid-def.h](https://github.com/celluloid-player/celluloid/blob/master/src/celluloid-def.h).
-The syntax used is exactly the same as mpv's `input.conf`. These keybindings are
-applied on top of default keybindings provided by mpv.
-
-Additional keybindings can be defined in an external file using mpv's
-`input.conf` syntax. The file can be set in the preferences dialog under the
-"Keybindings" section.
-
-## Contributing Translations
-
-![Translation Status](https://hosted.weblate.org/widgets/celluloid/-/celluloid/horizontal-auto.svg)
-
-Celluloid uses [Weblate](https://weblate.org) to coordinate translations. You
-can find Celluloid's page [here](https://hosted.weblate.org/projects/celluloid).
-
-While translating, you will find the string `translator-credits`. You should not
-translate this string. Instead, you should put your name, and optionally your
-email address, in the following format: `FirstName LastName <Email Address>`.
-Your name will then appear in the About dialog when your translation is active.
-
-## License
-
-Celluloid is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-Celluloid is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with Celluloid.  If not, see <http://www.gnu.org/licenses/>.
-
+This application comes with absolutely no warranty. See the GNU General Public Licence, version 3 or later for details - https://www.gnu.org/licenses/gpl-3.0.html.

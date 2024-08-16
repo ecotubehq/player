@@ -287,7 +287,30 @@ autofit_handler(CelluloidMpv *mpv, gpointer data)
 		g_info(	"Resizing window to %"G_GINT64_FORMAT"x%"G_GINT64_FORMAT,
 			dim[0],
 			dim[1] );
-		g_signal_emit_by_name(mpv, "window-resize", dim[0], dim[1]);
+		/*Added by Sako*/
+		if(dim[0] <= 500){
+			printf("Cancel Autofit %ld\n", dim[0]);
+			if(g_settings_get_int(settings, "youtube-video-output") == 0){
+				dim[0] = dim[0] * 2; //854;
+				dim[1] = dim[1] * 2; //480;
+			}else{
+				dim[0] = dim[0] * 2; //854;
+				dim[1] = dim[1] * 2; //480;				
+			}
+		}else{
+			printf("Apply Autofit %ldx%ld\n", dim[0], dim[1]);
+		}
+		gboolean theater_mode = TRUE; //g_settings_get_boolean(settings, "youtube-theater-mode");
+		/*if(theater_mode){
+			g_settings_set_boolean(settings, "always-use-floating-header-bar", TRUE);
+			g_settings_set_boolean(settings, "always-use-floating-controls", TRUE);
+			
+		}*/
+		//printf("Current window size %d%d\n", monitor_geom.width, monitor_geom.height);
+		/*End Added by Sako*/
+		if(!theater_mode){
+			g_signal_emit_by_name(mpv, "window-resize", dim[0], dim[1]);
+		}
 	}
 
 	g_object_unref(settings);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-2024 gnome-mpv
+ * Copyright (c) 2017-2023 gnome-mpv
  *
  * This file is part of Celluloid.
  *
@@ -50,13 +50,18 @@ enum
 	PROP_TRACK_LIST,
 	PROP_DISC_LIST,
 	PROP_SKIP_ENABLED,
-	PROP_LOOP_FILE,
 	PROP_LOOP,
 	PROP_SHUFFLE,
 	PROP_MEDIA_TITLE,
 	PROP_DISPLAY_FPS,
 	PROP_SEARCHING,
-	N_PROPERTIES
+	N_PROPERTIES,
+	PROP_MEDIA_CODEC,
+	PROP_MEDIA_FORMAT,
+	PROP_MEDIA_AUDIO_CODEC,
+	PROP_MEDIA_CODEC_NAME,
+	PROP_MEDIA_BITRATE,
+	PROP_MEDIA_HEIGHT
 };
 
 struct _CelluloidView
@@ -78,12 +83,19 @@ struct _CelluloidView
 	GPtrArray *disc_list;
 	gboolean skip_enabled;
 	gboolean control_box_enabled;
-	gboolean loop_file;
 	gboolean loop;
 	gboolean shuffle;
 	gchar *media_title;
 	gdouble display_fps;
 	gboolean searching;
+	/*Added by Sako*/
+	gchar *media_codec;
+	gchar *media_format;
+	gchar *media_audio_codec;
+	gchar *media_codec_name;
+	gchar *media_bitrate;
+	gchar *media_height;
+
 };
 
 struct _CelluloidViewClass
@@ -124,12 +136,21 @@ static void
 update_title(CelluloidView *view);
 
 static void
-show_message_dialog(CelluloidView *view, const gchar *prefix, const gchar *msg);
+show_message_dialog(	CelluloidView *view,
+			GtkMessageType type,
+			const gchar *title,
+			const gchar *prefix,
+			const gchar *msg );
 
 static void
 show_open_track_dialog(CelluloidView  *view, TrackType type);
 
 /* Dialog responses */
+static void
+message_dialog_response_handler(	GtkDialog *dialog,
+					gint response_id,
+					gpointer data);
+
 static void
 open_dialog_response_handler(GtkDialog *dialog, gint response_id, gpointer data);
 
@@ -150,11 +171,6 @@ save_playlist_response_handler(	GtkDialog *dialog,
 
 static gboolean
 mpv_reset_request_handler(AdwPreferencesWindow *dialog, gpointer data);
-
-static void
-error_handler(	CelluloidPreferencesDialog *dialog,
-		const gchar *message,
-		gpointer data );
 
 static void
 realize_handler(GtkWidget *widget, gpointer data);
@@ -230,6 +246,12 @@ constructed(GObject *object)
 	g_object_bind_property(	view, "skip-enabled",
 				control_box, "skip-enabled",
 				G_BINDING_DEFAULT );
+	g_object_bind_property(	view, "loop",
+				control_box, "loop",
+				G_BINDING_BIDIRECTIONAL );
+	g_object_bind_property(	view, "shuffle",
+				control_box, "shuffle",
+				G_BINDING_BIDIRECTIONAL );
 	g_object_bind_property(	view, "volume",
 				control_box, "volume",
 				G_BINDING_BIDIRECTIONAL );
@@ -241,15 +263,6 @@ constructed(GObject *object)
 				G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE );
 	g_object_bind_property(	playlist, "searching",
 				view, "searching",
-				G_BINDING_BIDIRECTIONAL );
-	g_object_bind_property(	view, "loop-file",
-				playlist, "loop-file",
-				G_BINDING_BIDIRECTIONAL );
-	g_object_bind_property(	view, "loop",
-				playlist, "loop-playlist",
-				G_BINDING_BIDIRECTIONAL );
-	g_object_bind_property(	view, "shuffle",
-				playlist, "shuffle",
 				G_BINDING_BIDIRECTIONAL );
 
 	celluloid_main_window_load_state(wnd);
@@ -326,7 +339,7 @@ dispose(GObject *object)
 
 	G_OBJECT_CLASS(celluloid_view_parent_class)->dispose(object);
 }
-
+gboolean has_bitrate = FALSE;
 static void
 set_property(	GObject *object,
 		guint property_id,
@@ -408,10 +421,6 @@ set_property(	GObject *object,
 		self->skip_enabled = g_value_get_boolean(value);
 		break;
 
-		case PROP_LOOP_FILE:
-		self->loop_file = g_value_get_boolean(value);
-		break;
-
 		case PROP_LOOP:
 		self->loop = g_value_get_boolean(value);
 		break;
@@ -424,6 +433,9 @@ set_property(	GObject *object,
 		g_free(self->media_title);
 		self->media_title = g_value_dup_string(value);
 		update_title(self);
+		if(has_bitrate){
+			has_bitrate = FALSE;
+		}
 		break;
 
 		case PROP_DISPLAY_FPS:
@@ -444,6 +456,49 @@ set_property(	GObject *object,
 			celluloid_view_set_playlist_visible(self, TRUE);
 		}
 		break;
+		
+		/* Added by Sako */
+		case PROP_MEDIA_CODEC:
+		g_free(self->media_codec);
+		self->media_codec = g_value_dup_string(value);
+		update_title(self);
+		break;
+
+		case PROP_MEDIA_FORMAT:
+		g_free(self->media_format);
+		self->media_format = g_value_dup_string(value);
+		update_title(self);
+		break;
+
+		case PROP_MEDIA_AUDIO_CODEC:
+		g_free(self->media_audio_codec);
+		self->media_audio_codec = g_value_dup_string(value);
+		update_title(self);
+		break;
+
+		case PROP_MEDIA_CODEC_NAME:
+		g_free(self->media_codec_name);
+		self->media_codec_name = g_value_dup_string(value);
+		update_title(self);
+		break;
+
+		case PROP_MEDIA_BITRATE:
+		if(!has_bitrate){
+			g_free(self->media_bitrate);
+			self->media_bitrate = g_value_dup_string(value);
+			//update_title(self);
+			//printf("bitrate updated:%s\n", self->media_bitrate);
+		}else{
+			//printf("bitrate already updated:%s\n", self->media_bitrate);
+		}
+		break;
+
+		case PROP_MEDIA_HEIGHT:
+		g_free(self->media_height);
+		self->media_height = g_value_dup_string(value);
+		update_title(self);
+		break;		
+		/* End Added by Sako */
 
 		default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
@@ -505,10 +560,6 @@ get_property(	GObject *object,
 		g_value_set_boolean(value, self->skip_enabled);
 		break;
 
-		case PROP_LOOP_FILE:
-		g_value_set_boolean(value, self->loop_file);
-		break;
-
 		case PROP_LOOP:
 		g_value_set_boolean(value, self->loop);
 		break;
@@ -529,6 +580,32 @@ get_property(	GObject *object,
 		g_value_set_boolean(value, self->searching);
 		break;
 
+		/* Added by Sako */
+		/* Updated by Sako */
+		case PROP_MEDIA_CODEC:
+		g_value_set_static_string(value, self->media_codec);
+		break;
+
+		case PROP_MEDIA_FORMAT:
+		g_value_set_static_string(value, self->media_format);
+		break;
+
+		case PROP_MEDIA_AUDIO_CODEC:
+		g_value_set_static_string(value, self->media_audio_codec);
+		break;
+
+		case PROP_MEDIA_CODEC_NAME:
+		g_value_set_static_string(value, self->media_codec_name);
+		break;
+
+		case PROP_MEDIA_BITRATE:
+		g_value_set_static_string(value, self->media_bitrate);
+		break;
+
+		case PROP_MEDIA_HEIGHT:
+		g_value_set_static_string(value, self->media_height);
+		break;
+		/*End Added by Sako*/
 		default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
 		break;
@@ -539,36 +616,12 @@ static void
 load_css(CelluloidView *view)
 {
 	const gchar *style =
-		"celluloid-video-area"
-		"{"
-		"	background-color: @view_bg_color;"
-		"}"
-		"celluloid-seek-bar slider"
-		"{"
-		"	border-radius: 100%;"
-		"}"
-		".dialog-action-area"
-		"{"
-		"	margin: -12px 12px 12px 0px;"
-		"}"
-		".dialog-action-area > button"
-		"{"
-		"	margin-left: 12px;"
-		"}"
-		".osd.docked"
-		"{"
-		"	border-radius: 0px;"
-		"}"
-		".control-box.osd.undocked"
-		"{"
-		"	margin: 12px 12px 12px 12px;"
-		"}"
-		".control-box.osd.docked"
-		"{"
-		"	margin: 0px 0px 0px 0px;"
-		"}";
-
-	GtkCssProvider *style_provider = gtk_css_provider_new();
+		"celluloid-seek-bar slider { border-radius: 100%; }"
+		"celluloid-video-area { background-color: black; }"
+		".dialog-action-area { margin: -12px 12px 12px 0px; }"
+		".dialog-action-area > button { margin-left: 12px; }";
+	GtkCssProvider *style_provider =
+		gtk_css_provider_new();
 
 	gtk_css_provider_load_from_data(style_provider, style, -1);
 
@@ -601,7 +654,12 @@ load_settings(CelluloidView *view)
 	CelluloidControlBox *control_box =
 		celluloid_main_window_get_control_box(wnd);
 
+	gboolean csd_enable;
+
+	csd_enable =	g_settings_get_boolean (settings, "csd-enable");
+
 	g_object_set(	control_box,
+			"show-fullscreen-button", !csd_enable,
 			"skip-enabled", FALSE,
 			NULL );
 
@@ -656,6 +714,91 @@ save_playlist(CelluloidView *view, GFile *file, GError **error)
 static void
 update_title(CelluloidView *view)
 {
+        char title_buff[256];
+        char *eptr;
+        double bitrate_double;
+	const gboolean use_media_title =
+		view->media_title &&
+		!view->idle_active &&
+		view->playlist_count > 0;
+	const gchar *title_source =
+		use_media_title ?
+		view->media_title :
+		g_get_application_name();
+	gchar *title =
+		sanitize_utf8(title_source, TRUE);
+	gchar *codec = use_media_title ? view->media_codec:"...";
+	gchar *media_format = use_media_title ? view->media_format:"..."; //use_media_title ? view->media_format:"";
+	gchar *media_audio_codec = use_media_title ? view->media_audio_codec:"...";
+	gchar *media_codec_name = use_media_title ? view->media_codec_name:"...";
+	gchar *media_bitrate = view->media_bitrate; //use_media_title ? view->media_bitrate:"...";
+	gchar *media_height = use_media_title ? view->media_height:"...";
+	GSettings *settings = g_settings_new(CONFIG_ROOT);
+	gchar *v_quality[] = {"144" ,"240", "360", "480", "720", "None"};
+	int video_resolution_index = g_settings_get_int(settings, "youtube-video-quality");
+	int audio_quality_index = g_settings_get_int(settings, "youtube-audio-quality");
+	gchar *selected_v_quality= v_quality[video_resolution_index];
+	if(use_media_title){
+		//printf("Use media title: %s \n", "Yes"); 
+	}else{
+		//printf("Use media title: %s \n", "No");
+	}
+		if(audio_quality_index == 0){
+			media_bitrate = "70kbps";
+		}else if(media_format && strcmp("h.264", media_format) == 0 ||
+				 media_format && strcmp("h264", media_format) == 0){
+			media_bitrate = "";
+		}else{
+			media_bitrate = "160kbps";
+		}
+		/*if(media_bitrate){
+			if (strstr(media_bitrate, "kbps") != NULL) {
+				//sprintf(media_bitrate, "%s", media_bitrate);
+			}else{
+				bitrate_double = strtod(media_bitrate, &eptr);
+				if(!has_bitrate && bitrate_double > 0){
+					printf("set has_bitrate to true because has_bitrate=%f\n", bitrate_double);
+					has_bitrate = TRUE;
+				}
+				sprintf(media_bitrate, "%.2fkbps", bitrate_double/1000);
+			}
+		}else{
+			media_bitrate = "N/A";//"128kps";
+		}*/
+		/*if(media_codec_name && media_height){
+			if(strcmp("aac", media_codec_name) != 0){
+				media_bitrate = "128kps";
+			}
+			else if(strcmp("opus",media_codec_name) != 0){
+				media_bitrate = "160kps";
+			}
+			else if(strcmp("opus",media_codec_name) != 0 && strcmp("360", media_height) !=0){
+				media_bitrate = "138kps";
+			}
+			else if(strcmp("aac",media_codec_name) != 0 && strcmp("360", media_height) !=0){
+				media_bitrate = "160kps";
+			}
+			else if(strcmp("opus",media_codec_name) != 0 && strcmp("720", media_height) !=0){
+				media_bitrate = "160kps";
+			}
+		}*/
+
+        //printf("update tile: %s and codec: %s and media_format: %s \n", title, codec, media_format); 
+        if(strcmp("None",selected_v_quality) == 0 || !use_media_title || !view->media_title || view->media_title == NULL){     
+        	snprintf(title_buff, sizeof(title_buff), "%s", title);
+        }else{
+        	snprintf(title_buff, sizeof(title_buff), "%s - %sp - %s - %s -%s", media_format, media_height, media_codec_name, media_bitrate, title);
+        	//printf("title_buff: %s\n", title_buff);
+        }
+
+	gtk_window_set_title(GTK_WINDOW(view), title_buff);//title);
+	g_free(title);
+
+}
+
+static void
+update_title_old(CelluloidView *view)
+{
 	const gboolean use_media_title =
 		view->media_title &&
 		!view->idle_active &&
@@ -667,23 +810,18 @@ update_title(CelluloidView *view)
 	gchar *title =
 		sanitize_utf8(title_source, TRUE);
 
-	CelluloidMainWindow *wnd =
-		CELLULOID_MAIN_WINDOW(view);
-	CelluloidVideoArea *video_area =
-		celluloid_main_window_get_video_area(wnd);
-	CelluloidControlBox *control_box =
-		celluloid_video_area_get_control_box
-		(CELLULOID_VIDEO_AREA(video_area));
-
-	celluloid_control_box_set_title(control_box, title);
 	gtk_window_set_title(GTK_WINDOW(view), title);
 	g_free(title);
 }
 
 void
-show_message_dialog(CelluloidView *view, const gchar *prefix, const gchar *msg)
+show_message_dialog(	CelluloidView *view,
+			GtkMessageType type,
+			const gchar *title,
+			const gchar *prefix,
+			const gchar *msg )
 {
-	GtkAlertDialog *dialog = NULL;
+	GtkWidget *dialog = NULL;
 
 	if(view->has_dialog)
 	{
@@ -691,11 +829,11 @@ show_message_dialog(CelluloidView *view, const gchar *prefix, const gchar *msg)
 
 		if(prefix)
 		{
-			g_info("Content: [%s] %s", prefix, msg);
+			g_info("Content: *%s* [%s] %s", title, prefix, msg);
 		}
 		else
 		{
-			g_info("Content: %s", msg);
+			g_info("Content: *%s* %s", title, msg);
 		}
 	}
 	else if(prefix)
@@ -703,22 +841,61 @@ show_message_dialog(CelluloidView *view, const gchar *prefix, const gchar *msg)
 		gchar *prefix_escaped = g_markup_printf_escaped("%s", prefix);
 		gchar *msg_escaped = g_markup_printf_escaped("%s", msg);
 
-		dialog =	gtk_alert_dialog_new
-				("[%s] %s", prefix_escaped, msg_escaped);
+		dialog =	gtk_message_dialog_new_with_markup
+				(	GTK_WINDOW(view),
+					GTK_DIALOG_DESTROY_WITH_PARENT,
+					type,
+					GTK_BUTTONS_OK,
+					"<b>[%s]</b> %s",
+					prefix_escaped,
+					msg_escaped );
 
 		g_free(prefix_escaped);
 		g_free(msg_escaped);
 	}
 	else
 	{
-		dialog = gtk_alert_dialog_new("%s", msg);
+		dialog =	gtk_message_dialog_new
+				(	GTK_WINDOW(view),
+					GTK_DIALOG_DESTROY_WITH_PARENT,
+					type,
+					GTK_BUTTONS_OK,
+					"%s",
+					msg );
 	}
 
 	if(dialog)
 	{
+		GtkMessageDialog *message_dialog =
+			GTK_MESSAGE_DIALOG(dialog);
+		GtkWidget *message_area =
+			gtk_message_dialog_get_message_area(message_dialog);
+		GtkWidget *first_child =
+			gtk_widget_get_first_child(message_area);
+
 		view->has_dialog = TRUE;
 
-		gtk_alert_dialog_show(dialog, GTK_WINDOW(view));
+		for(	GtkWidget *child = first_child;
+			child;
+			child = gtk_widget_get_next_sibling(child) )
+		{
+			if(GTK_IS_LABEL(child))
+			{
+				gtk_label_set_wrap_mode
+					(	GTK_LABEL(child),
+						PANGO_WRAP_WORD_CHAR );
+			}
+		}
+
+		g_signal_connect
+			(	dialog,
+				"response",
+				G_CALLBACK(message_dialog_response_handler),
+				view );
+
+		gtk_window_set_title(GTK_WINDOW(dialog), title);
+		gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
+		gtk_widget_set_visible(dialog, TRUE);
 	}
 }
 
@@ -772,6 +949,16 @@ show_open_track_dialog(CelluloidView  *view, TrackType type)
 }
 
 static void
+message_dialog_response_handler(	GtkDialog *dialog,
+					gint response_id,
+					gpointer data)
+{
+	CELLULOID_VIEW(data)->has_dialog = FALSE;
+
+	gtk_window_destroy(GTK_WINDOW(dialog));
+}
+
+static void
 open_dialog_response_handler(GtkDialog *dialog, gint response_id, gpointer data)
 {
 	GPtrArray *args = data;
@@ -780,8 +967,8 @@ open_dialog_response_handler(GtkDialog *dialog, gint response_id, gpointer data)
 
 	if(response_id == GTK_RESPONSE_ACCEPT)
 	{
-		CelluloidFileChooser *chooser = CELLULOID_FILE_CHOOSER(dialog);
-		GListModel *files = celluloid_file_chooser_get_files(chooser);
+		GtkFileChooser *chooser = GTK_FILE_CHOOSER(dialog);
+		GListModel *files = gtk_file_chooser_get_files(chooser);
 
 		if(files)
 		{
@@ -835,8 +1022,8 @@ open_track_dialog_response_handler(	GtkDialog *dialog,
 {
 	if(response_id == GTK_RESPONSE_ACCEPT)
 	{
-		CelluloidFileChooser *chooser = CELLULOID_FILE_CHOOSER(dialog);
-		GListModel *files = celluloid_file_chooser_get_files(chooser);
+		GtkFileChooser *chooser = GTK_FILE_CHOOSER(dialog);
+		GListModel *files = gtk_file_chooser_get_files(chooser);
 		const gchar *name = NULL;
 
 		TrackType type =
@@ -892,8 +1079,7 @@ save_playlist_response_handler(	GtkDialog *dialog,
 	if(response_id == GTK_RESPONSE_ACCEPT)
 	{
 		/* There should be only one file selected. */
-		dest_file =	celluloid_file_chooser_get_file
-				(CELLULOID_FILE_CHOOSER(dialog));
+		dest_file = gtk_file_chooser_get_file(GTK_FILE_CHOOSER(dialog));
 	}
 
 	celluloid_file_chooser_destroy(CELLULOID_FILE_CHOOSER(dialog));
@@ -906,7 +1092,11 @@ save_playlist_response_handler(	GtkDialog *dialog,
 
 	if(error)
 	{
-		show_message_dialog(view, NULL, error->message);
+		show_message_dialog(	view,
+					GTK_MESSAGE_ERROR,
+					_("Error"),
+					NULL,
+					error->message );
 
 		g_error_free(error);
 	}
@@ -926,6 +1116,8 @@ mpv_reset_request_handler(AdwPreferencesWindow *dialog, gpointer data)
 	if(celluloid_main_window_get_csd_enabled(wnd) != csd_enable)
 	{
 		show_message_dialog(	CELLULOID_VIEW(data),
+					GTK_MESSAGE_INFO,
+					g_get_application_name(),
 					NULL,
 					_("Enabling or disabling "
 					"client-side decorations "
@@ -936,19 +1128,45 @@ mpv_reset_request_handler(AdwPreferencesWindow *dialog, gpointer data)
 	gtk_widget_queue_draw(GTK_WIDGET(wnd));
 	g_signal_emit_by_name(data, "mpv-reset-request");
 
+	/* Updated by Sako
+	 *  Resize window when user changes the config
+	 * */
+	printf("reset window: %s\n", "view");
+	//gint64 selected_min_size = g_settings_get_int(settings, "youtube-player-size");
+	/*
+	int min_h = 360;//selected_min_size == 0 ? 360 : 480;
+	int min_w = min_h == 360? 640 : 850;
+	celluloid_main_window_resize_video_area
+		(wnd, min_w, min_h);
+	*/
+	gboolean theater_mode = FALSE;//g_settings_get_boolean(settings, "youtube-theater-mode");
+	if(theater_mode){
+		g_settings_set_boolean(settings, "always-use-floating-header-bar", TRUE);
+		g_settings_set_boolean(settings, "always-use-floating-controls", TRUE);
+		int video_resolution_index = g_settings_get_int(settings, "youtube-video-quality");
+		//gtk_window_set_resizable(wnd, FALSE);
+		if(video_resolution_index == 0){
+			int width = 734;
+			int height = 432;
+			//celluloid_view_resize_video_area(CELLULOID_CONTROLLER(data)->view, width, height);
+			celluloid_main_window_resize_video_area(wnd, width, height);
+		}
+		/*else if(video_resolution_index == 1){
+			int width = 1278;
+			int height = 720;
+			//celluloid_view_resize_video_area(CELLULOID_CONTROLLER(data)->view, width, height);
+			celluloid_main_window_resize_video_area(wnd, width, height);
+		}*/else{
+			int width = 432;
+			int height = 768;
+			//celluloid_view_resize_video_area(CELLULOID_CONTROLLER(data)->view, width, height);
+			celluloid_main_window_resize_video_area(wnd, width, height);			
+		}
+
+	}
 	g_object_unref(settings);
 
 	return FALSE;
-}
-
-static void
-error_handler(	CelluloidPreferencesDialog *dialog,
-		const gchar *message,
-		gpointer data )
-{
-	CelluloidView *view = CELLULOID_VIEW(data);
-
-	show_message_dialog(view, NULL, message);
 }
 
 static void
@@ -1215,14 +1433,6 @@ celluloid_view_class_init(CelluloidViewClass *klass)
 	g_object_class_install_property(object_class, PROP_SKIP_ENABLED, pspec);
 
 	pspec = g_param_spec_boolean
-		(	"loop-file",
-			"Loop file",
-			"Whether or not the the loop file button is active",
-			FALSE,
-			G_PARAM_READWRITE );
-	g_object_class_install_property(object_class, PROP_LOOP_FILE, pspec);
-
-	pspec = g_param_spec_boolean
 		(	"loop",
 			"Loop",
 			"Whether or not the the loop button is active",
@@ -1254,6 +1464,56 @@ celluloid_view_class_init(CelluloidViewClass *klass)
 			G_PARAM_READWRITE );
 	g_object_class_install_property(object_class, PROP_SEARCHING, pspec);
 
+	/* Added by Sako */
+	pspec = g_param_spec_string
+		(	"video-codec",
+			"Media codec",
+			"The codec of the media being played",
+			NULL,
+			G_PARAM_READWRITE );
+	g_object_class_install_property(object_class, PROP_MEDIA_CODEC, pspec);
+
+	pspec = g_param_spec_string
+		(	"video-format",
+			"Media forma",
+			"The forma of the media being played",
+			NULL,
+			G_PARAM_READWRITE );
+	g_object_class_install_property(object_class, PROP_MEDIA_FORMAT, pspec);
+
+	pspec = g_param_spec_string
+		(	"audio-codec",
+			"Media Audio codec",
+			"The Audio codec of the media being played",
+			NULL,
+			G_PARAM_READWRITE );
+	g_object_class_install_property(object_class, PROP_MEDIA_AUDIO_CODEC, pspec);
+
+	pspec = g_param_spec_string
+		(	"audio-codec-name",
+			"Media Audio codec name",
+			"The name of audio codec of the media being played",
+			NULL,
+			G_PARAM_READWRITE );
+	g_object_class_install_property(object_class, PROP_MEDIA_CODEC_NAME, pspec);
+
+	pspec = g_param_spec_string
+		(	"audio-bitrate",
+			"Media bitratecodec",
+			"The bitrate of the media being played",
+			NULL,
+			G_PARAM_READWRITE );
+	g_object_class_install_property(object_class, PROP_MEDIA_BITRATE, pspec);
+
+	pspec = g_param_spec_string
+		(	"height",
+			"Media height",
+			"The height of the media being played",
+			NULL,
+			G_PARAM_READWRITE );
+	g_object_class_install_property(object_class, PROP_MEDIA_HEIGHT, pspec);
+	/* End Added by Sako */
+	
 	g_signal_new(	"video-area-resize",
 			G_TYPE_FROM_CLASS(klass),
 			G_SIGNAL_RUN_FIRST|G_SIGNAL_DETAILED,
@@ -1404,12 +1664,18 @@ celluloid_view_init(CelluloidView *view)
 	view->track_list = NULL;
 	view->disc_list = NULL;
 	view->skip_enabled = FALSE;
-	view->loop_file = FALSE;
 	view->loop = FALSE;
 	view->shuffle = FALSE;
 	view->media_title = NULL;
 	view->display_fps = 0;
 	view->searching = FALSE;
+	
+	view->media_height = NULL;
+	view->media_codec = NULL;
+	view->media_format = NULL;
+	view->media_audio_codec = NULL;
+	view->media_codec_name = NULL;
+	view->media_bitrate = NULL;
 
 	g_signal_connect(view, "realize", G_CALLBACK(realize_handler), NULL);
 }
@@ -1521,7 +1787,7 @@ celluloid_view_show_open_location_dialog(CelluloidView *view, gboolean append)
 			"response",
 			G_CALLBACK(open_location_dialog_response_handler),
 			args );
-
+	//gtk_window_set_transient_for(dlg, GTK_WINDOW(view)); Added by Sako
 	gtk_widget_set_visible(dlg, TRUE);
 }
 
@@ -1547,14 +1813,16 @@ void
 celluloid_view_show_save_playlist_dialog(CelluloidView *view)
 {
 	CelluloidFileChooser *file_chooser;
+	GtkFileChooser *gtk_chooser;
 
 	file_chooser =	celluloid_file_chooser_new
 			(	_("Save Playlist"),
 				GTK_WINDOW(view),
 				GTK_FILE_CHOOSER_ACTION_SAVE,
 				TRUE );
+	gtk_chooser = GTK_FILE_CHOOSER(file_chooser);
 
-	celluloid_file_chooser_set_current_name(file_chooser, "playlist.m3u");
+	gtk_file_chooser_set_current_name(gtk_chooser, "playlist.m3u");
 
 	g_signal_connect(	file_chooser,
 				"response",
@@ -1572,10 +1840,6 @@ celluloid_view_show_preferences_dialog(CelluloidView *view)
 	g_signal_connect_after(	dialog,
 				"mpv-reset-request",
 				G_CALLBACK(mpv_reset_request_handler),
-				view );
-	g_signal_connect(	dialog,
-				"error-raised",
-				G_CALLBACK(error_handler),
 				view );
 
 	gtk_widget_set_visible(dialog, TRUE);
@@ -1616,6 +1880,172 @@ celluloid_view_show_about_window (CelluloidView *view)
 				"translator-credits",
 				_("translator-credits"),
 				NULL );
+				
+}
+
+void
+celluloid_view_show_usage_window (CelluloidView *view)
+{
+        /*adw_show_about_window(GTK_WINDOW(view), 
+                              "application-name", "EcoTube+ Video Player.\n\nEcoTube+ plays videos from many streaming services and offers high quality video at minimal bitrates.\n\n-------------------------------------------------\n\nHow to use.\n\nTo play a video simply copy the video URL from the browser, click \"+\" at the top left of the player, select Open Location [the aforementioned browser URL is automatically entered]. Playback will initiate when the Open button is clicked.\n\nDouble click the mouse on the player screen to play video full-screen.\n\nPress the spacebar or the right mouse key to pause / start video playback.\n\n-------------------------------------------------\n\nEcoTube+ Preferences.\n\nAV Options\n\nVideo Output\n\nBQ - Best Quality - AMD FSR Video Upscaling [Default]\nHQ - High Guality - Lanczos Video Upscaling\nLE - Low Energy - Bicubic Video Upscaling\n\nYouTube Options\n\nVideo Codec\n\nav1 - Best quality video with lowest bitrate [Default]\nvp9 - Good quality video with low bitrate\nh.264 - Lowest quality video with the highest bitrate\n\n*Note: If the video codec for output is set to av1 but this codec isn't available then vp9 will be utilised, and if vp9 isn't available then h.264 will be used. Similarly, if vp9 is selected but isn't available then h.264 will be output. \n\nAvailable video resolutions for av1 & vp9 [to minimize the video bitrate 1080p and 60fps are not supported]:\n\n720p\n480p [Default]\n360p\n240p\n144p\n\n*Note: YouTube's h.264 output only supports 144p, 360p and 720p for the majority of videos. If av1 or vp9 is selected at 240p or 480p on one of these videos then h.264 is output at the next available resolution, i.e. 240p is output at 360p & 480p is output at 720p.\n\nAudio Quality *av1 and vp9 only*\n\nHi - 160Kbps\nLo - 70Kbps [Default]\n\nTheater Mode *This mode is used by 144p and 240p only*\n\nIf Theater Mode is turned off and the video resolution is 144p or 240p then a double-click on the player screen removes the window decoration. If the window is moved to a desired location and \"Always on top\" is turned on prior to the double-click then the window will always be visible in the position of your choice during video output. A second double-click on the player screen will restore the window decorations.\n\nWhen Theater Mode is turned on then a double-click on the player screen will play 144p and 240p videos in the center of a black screen at 3x resultion:\n144p video resolution = 432 x 768\n240p video resolution = 720 x 1278\nPressing Esc or double clicking the playback area will return the player to normal playback.\n\n-------------------------------------------------\n\nEcoTube+ Concept: Colin Bett\nCoding: Sako Adams\n\nForked from the Celluloid Video Player\n\nThis application comes with absolutely no warranty. See the GNU General Public Licence, version 3 or later for details - https://www.gnu.org/licenses/gpl-3.0.html.\n",
+                              "comment", "How to use it!",
+                              NULL);
+       */
+       		/*show_message_dialog(	view,
+					GTK_MESSAGE_ERROR,
+					_("Error"),
+					"br",
+					"Hello <b>Sako</b>" );*/
+	    GtkWidget* hello_markup = gtk_message_dialog_new_with_markup(
+        GTK_WINDOW(view), GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK,
+        "<b>EcoTubeHQ Video Player offers high quality video playback for many DRM-free streaming services at minimal bitrates. Hardware acceleration is utilised where possible during video playback to optimize quality and minimize CPU usage.</b>!\n"\
+        "---------------------------------------------------------------------------------------------------------------------------------------------------\n\n"\
+        "<b><i>How to use.</i></b>\n\n"\
+        "To play a video from an online streaming service simply copy the video URL from the browser, click '+' at the top left of the player and select 'Open Location'. The player automatically places the copied video location imto the 'Location' entry box - click the 'Open' button to initiate playback."\
+        "\nPress the spacebar or right click the mouse on the player screen to pause / play video playback.\n\n---------------------------------------------------------------------------------------------------------------------------------------------------\n\n"\
+        "<b><i>EcoTubeHQ Preferences.</i></b>\n\n"\
+        "<b>AV Options</b>\n\n"\
+        "<i>Video Output</i>\n"\
+        "<b>BQ - Best Quality -</b> AMD FSR Video Upscaling [Default\n"\
+        "<b>HQ - High Guality -</b> Lanczos Video Upscaling\n"\
+        "<b>LE - Low Energy -</b> Bicubic Video Upscaling"
+        "<b>YouTube Options</b>\n\n"\
+        "<i>Video Codec</i>\n\n"\
+        "<b>av1 -</b> Best quality video with lowest bitrate [Default]\n"\
+        "<b>vp9 -</b> Good quality video with low bitrate\n"\
+        "<b>h.264 -</b> Lowest quality video with the highest bitrate\n\n"\
+        "*Note: If the video codec is set to av1 but this codec isn't available then vp9 will be utilised, and if vp9 isn't available then h.264 will be used.\n"\
+		"\n<b><i>Video Resolution</i></b>\n\n"\
+		"<b>720p</b>\n"\
+		"<b>480p [Default]</b>\n"\
+		"<b>360p</b>\n"\
+		"<b>240p</b>\n"\
+		"<b>144p</b>\n\n"\
+		"<b>*</b>Note: To minimize video data usage 1080p and 60fps are not supported.\n\n"\
+"<i>Audio Quality *av1 and vp9 only*</i>\n"\
+
+"<b>Hi -</b> 160Kbps\n"\
+"<b>Lo -</b> 70Kbps [Default]\n\n"\
+
+"-------------------------------------------------\n\n"\
+
+"EcoTubeHQ <b>Original Concept: Colin Bett</b>\n"\
+"Coding and additional ideas: <b>Sako Adams</b>\n"\
+
+"Forked from the Celluloid Video Player\n"\
+
+"This application comes with absolutely no warranty. See the GNU General Public Licence, version 3 or later for details - https://www.gnu.org/licenses/gpl-3.0.html.\n\n");
+
+    // We *could* add secondary text, either plain text or with
+    // markup, but we haven't done it here, just to show what the end
+    // result looks like. Either way, printf-style formatting is
+    // available.
+
+    // gtk_message_dialog_format_secondary_markup(
+    //     GTK_MESSAGE_DIALOG(hello_markup),
+    //     "This is <i>secondary</i> markup.");
+
+    // Again, this displays the second dialog as a modal dialog.
+    //gtk_dialog_run(GTK_DIALOG(hello_markup));
+
+    //gtk_widget_destroy(hello_markup);
+		gtk_window_set_title(GTK_WINDOW(hello_markup), "EcoTubeHQ Video Player.");
+		gtk_window_set_modal(GTK_WINDOW(hello_markup), FALSE);
+		//gtk_widget_set_size_request(GTK_WINDOW(hello_markup), 730, 1150);
+		gtk_widget_set_visible(hello_markup, TRUE);
+		
+/*		
+    GtkWidget *window, *vbox, *scrolled_window, *label;
+
+    window = GTK_WINDOW(view);//gtk_application_window_new( app );
+
+    //gtk_window_set_default_size (GTK_WINDOW (window), 100, 50);
+
+    vbox = gtk_box_new( GTK_ORIENTATION_VERTICAL, 10 );
+
+    scrolled_window = gtk_scrolled_window_new();
+
+    label = gtk_label_new("<0.o>");
+    gtk_label_set_markup(GTK_LABEL(label), "<b>EcoTube+ plays videos from many streaming services and offers high quality video at minimal bitrates.</b>"\
+        "<span>---------------------------------------------------------------------------------------------------------------------------------------------------\n\n"\
+        "<b><i>How to use.</i></b>\n\n"\
+        "To play a video simply copy the video URL from the browser, click \"+\" at the top left of the player, select Open Location [the aforementioned browser URL is automatically entered]. Playback will initiate when the Open button is clicked.\n\nDouble click the mouse on the player screen to play video full-screen.\n\nPress the spacebar or the right mouse key to pause / start video playback."\
+        "\n\n---------------------------------------------------------------------------------------------------------------------------------------------------<span>\n\n"\
+        "<b><i>EcoTube+ Preferences.</i></b>\n\n"\
+        "<b>AV Options</b>\n\n"\
+        "<i>Video Output</i>\n"\
+        "<b>BQ - Best Quality -</b> AMD FSR Video Upscaling [Default\n"\
+        "<b>HQ - High Guality -</b> Lanczos Video Upscaling\n"\
+        "<b>LE - Low Energy -</b> Bicubic Video Upscaling"
+        "<b>YouTube Options</b>\n\n"\
+        "<i>Video Codec</i>\n\n"\
+        "<b>av1 -</b> Best quality video with lowest bitrate [Default]\n"\
+        "<b>vp9 -</b> Good quality video with low bitrate\n"\
+        "<b>h.264 -</b> Lowest quality video with the highest bitrate\n\n"\
+        "Available video resolutions for av1 and vp9 [to minimize the video bitrate 1080p and 60fps are not supported]:\n"\
+		"<b>720p</b>\n"\
+		"<b>480p [Default]</b>\n"\
+		"<b>360p</b>\n"\
+		"<b>240p</b>\n"\
+		"<b>144p</b>\n\n"\
+		"<b>*</b>Note: YouTube's h.264 output only supports 144p, 360p and 720p for the majority of videos. If av1 or vp9 is selected at 240p or 480p on one of these videos then h.264 is output at the next available resolution, i.e. 240p is output at 360p and 480p is output at 720p.\n\n"\
+"<i>Audio Quality *av1 and vp9 only*</i>\n"\
+
+"<b>Hi -</b> 160Kbps\n"\
+"<b>Lo -</b> 70Kbps [Default]\n\n"\
+
+"Theater Mode *This mode is used by 144p and 240p only*\n\n"\
+
+"If Theater Mode is turned off and the video resolution is 144p or 240p then a double-click on the player screen removes the window decoration. If the window is moved to a desired location and \"Always on top\" is turned on prior to the double-click then the window will always be visible in the position of your choice during video output. A second double-click on the player screen will restore the window decorations.\n"\
+
+"When Theater Mode is turned on then a double-click on the player screen will play 144p and 240p videos in the center of a black screen at 3x resultion:\n"\
+"144p video resolution = 432 x 768\n"\
+"240p video resolution = 720 x 1278\n"\
+"Pressing Esc or double clicking the playback area will return the player to normal playback.\n"\
+
+"-------------------------------------------------\n\n"\
+
+"EcoTube+ <b>Concept: Colin Bett</b>\n"\
+"Coding: <b>Sako Adams</b>\n"\
+
+"Forked from the Celluloid Video Player\n"\
+
+"This application comes with absolutely no warranty. See the GNU General Public Licence, version 3 or later for details - https://www.gnu.org/licenses/gpl-3.0.html.\n\n");
+
+    gtk_scrolled_window_set_child( GTK_SCROLLED_WINDOW( scrolled_window ),
+        label );
+
+    gtk_box_append( GTK_BOX( vbox ), scrolled_window );
+
+    gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( scrolled_window ),
+        GTK_POLICY_ALWAYS,
+        GTK_POLICY_ALWAYS );
+
+    gtk_window_set_child( GTK_WINDOW( window ), vbox );
+
+    gtk_widget_show( window );
+    */
+	  /*GtkWidget *dialog = gtk_about_dialog_new();
+	  //gtk_about_dialog_set_name(GTK_ABOUT_DIALOG(dialog), "Battery");
+	  gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(dialog), "0.9"); 
+	  gtk_about_dialog_set_copyright(GTK_ABOUT_DIALOG(dialog), "(c) Jan Bodnar");
+	  gtk_about_dialog_set_comments(GTK_ABOUT_DIALOG(dialog), "Battery is a simple tool for battery checking.");
+	  gtk_about_dialog_set_website(GTK_ABOUT_DIALOG(dialog), "http://www.batteryhq.net");
+	  //gtk_about_dialog_set_logo(GTK_ABOUT_DIALOG(dialog), pixbuf);
+	  //gtk_dialog_run(GTK_DIALOG (dialog));
+	  */
+/*const gchar *const authors[] = AUTHORS;
+		adw_show_about_window(GTK_WINDOW(view), 
+"name", "GNOME Test Program", 
+                                 "version", VERSION,
+			             "copyright", "(C) 1998-2001 The Free Software Foundation",
+				     "comments", "Program to display GNOME functions.",
+			             "authors", authors,
+			             "documenters", NULL,
+			             "translator-credits", _("translator-credits"),
+				     "logo", ICON_NAME,
+                              NULL);
+                              */
 }
 
 void
@@ -1685,9 +2115,12 @@ celluloid_view_get_video_area_geometry(	CelluloidView *view,
 {
 	CelluloidMainWindow *wnd = CELLULOID_MAIN_WINDOW(view);
 	CelluloidVideoArea *area = celluloid_main_window_get_video_area(wnd);
-	GtkGLArea *gl_area = celluloid_video_area_get_gl_area(area);
-	*width = gtk_widget_get_width(GTK_WIDGET(gl_area));
-	*height = gtk_widget_get_height(GTK_WIDGET(gl_area));
+	GtkAllocation allocation;
+
+	gtk_widget_get_allocation(GTK_WIDGET(area), &allocation);
+
+	*width = allocation.width;
+	*height = allocation.height;
 }
 
 void
@@ -1758,7 +2191,7 @@ celluloid_view_set_playlist_visible(CelluloidView *view, gboolean visible)
 gboolean
 celluloid_view_get_playlist_visible(CelluloidView *view)
 {
-	return	celluloid_main_window_get_playlist_visible
+	return 	celluloid_main_window_get_playlist_visible
 		(CELLULOID_MAIN_WINDOW(view));
 }
 

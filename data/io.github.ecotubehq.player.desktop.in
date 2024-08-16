@@ -1,15 +1,15 @@
 [Desktop Entry]
 Version=1.0
-Name=Celluloid
+Name=ecotube
 GenericName=Multimedia Player
 Comment=Play movies and videos
-Exec=celluloid %U
+Exec=ecotube %U
 # Translators: This is an icon name, don't translate!
-Icon=io.github.celluloid_player.Celluloid
+Icon=io.github.ecotubehq.player
 Terminal=false
 Type=Application
 StartupNotify=true
-StartupWMClass=io.github.celluloid_player.Celluloid
+StartupWMClass=io.github.ecotubehq.player
 DBusActivatable=true
 Categories=GTK;GNOME;AudioVideo;Player;Audio;Video;TV;
 # Translators: Search terms to find this application. Don't translate the semicolons! The list MUST also end with a semicolon!
@@ -20,8 +20,8 @@ Actions=new-window;enqueue;
 
 [Desktop Action new-window]
 Name=New Window
-Exec=celluloid --new-window
+Exec=ecotube --new-window
 
 [Desktop Action enqueue]
 Name=Add to Playlist
-Exec=celluloid --enqueue %U
+Exec=ecotube --enqueue %U

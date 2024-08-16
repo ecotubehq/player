@@ -1,6 +1,6 @@
-data/io.github.celluloid_player.Celluloid.gschema.xml
-data/io.github.celluloid_player.Celluloid.appdata.xml.in
-data/io.github.celluloid_player.Celluloid.desktop.in
+data/io.github.ecotubehq.player.gschema.xml
+data/io.github.ecotubehq.player.appdata.xml.in
+data/io.github.ecotubehq.player.desktop.in
 src/celluloid-application.c
 src/celluloid-common.c
 src/celluloid-control-box.c

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2022, 2024 gnome-mpv
+ * Copyright (c) 2014-2022 gnome-mpv
  *
  * This file is part of Celluloid.
  *
@@ -20,18 +20,18 @@
 #ifndef DEF_H
 #define DEF_H
 
-#define APP_ID "io.github.celluloid_player.Celluloid"
+#define APP_ID "io.github.ecotubehq.player"
 #define ICON_NAME APP_ID
-#define BIN_NAME "celluloid"
+#define BIN_NAME "ecotube"
 #define CONFIG_DIR BIN_NAME
-#define CONFIG_ROOT "io.github.celluloid-player.Celluloid"
+#define CONFIG_ROOT "io.github.ecotubehq.player"
 #define CONFIG_WIN_STATE CONFIG_ROOT".window-state"
-#define ACTION_PREFIX "celluloid-action"
+#define ACTION_PREFIX "ecotube-action"
 #define DEFAULT_LOG_LEVEL MPV_LOG_LEVEL_ERROR
 #define MPRIS_TRACK_LIST_BEFORE 10
 #define MPRIS_TRACK_LIST_AFTER 10
 #define MPRIS_TRACK_ID_NO_TRACK "/org/mpris/MediaPlayer2/TrackList/NoTrack"
-#define MPRIS_TRACK_ID_PREFIX "/io/github/CelluloidPlayer/Celluloid/Track/"
+#define MPRIS_TRACK_ID_PREFIX "/io/github/ecotubehq/player/Track/"
 #define MPRIS_BUS_NAME "org.mpris.MediaPlayer2."APP_ID
 #define MPRIS_OBJ_ROOT_PATH "/org/mpris/MediaPlayer2"
 #define MPV_OPTION_PREFIX "--mpv-"
@@ -94,7 +94,6 @@
 		"Alt+2 set window-scale 2.0",\
 		"Ctrl+o script-message celluloid-action win.show-open-dialog((false, false))",\
 		"Ctrl+l script-message celluloid-action win.show-open-location-dialog(false)",\
-		"Ctrl+n script-message celluloid-action app.new-window",\
 		"Ctrl+Shift+o script-message celluloid-action win.show-open-dialog((false, true))",\
 		"Ctrl+Shift+l script-message celluloid-action win.show-open-location-dialog(true)",\
 		"Ctrl+Shift+s script-message celluloid-action win.save-playlist",\
@@ -106,7 +105,6 @@
 		"DEL script-message celluloid-action win.remove-selected-playlist-item",\
 		"U stop",\
 		"STOP stop",\
-		"F10 script-message celluloid-action win.toggle-main-menu",\
 		"F11 cycle fullscreen",\
 		"WHEEL_UP add volume 2",\
 		"WHEEL_DOWN add volume -2",\

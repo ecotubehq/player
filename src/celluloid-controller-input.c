@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2024 gnome-mpv
+ * Copyright (c) 2016-2023 gnome-mpv
  *
  * This file is part of Celluloid.
  *
@@ -182,8 +182,44 @@ key_pressed_handler(	GtkEventControllerKey *key_controller,
 		celluloid_model_key_down(controller->model, keystr);
 		g_free(keystr);
 	}
-
-	return keystr && !searching;
+	gchar *ckeystr = keyval_to_keystr(keyval);
+	//Added  by Sako
+	GSettings *settings =		g_settings_new(CONFIG_ROOT);
+	gboolean theater_mode = FALSE; //g_settings_get_boolean(settings, "youtube-theater-mode");
+	if((state & GDK_CONTROL_MASK) && g_strcmp0(ckeystr, "t")==0){
+		//printf("key pressed Ctrl: %d->%s\n", keyval, keyval_to_keystr(keyval));
+		GSettings *settings = g_settings_new(CONFIG_ROOT);
+		gboolean is_floating = FALSE;//g_settings_get_boolean(settings, "always-use-floating-header-bar");
+		g_settings_set_boolean(settings, "always-use-floating-header-bar", !is_floating);
+		g_settings_set_boolean(settings, "always-use-floating-controls", !is_floating);
+		//g_settings_set_boolean(settings, "youtube-theater-mode", !is_floating);
+		int video_resolution_index = g_settings_get_int(settings, "youtube-video-quality");
+		if(video_resolution_index < 3){
+			int width = 768;
+			int height = 432;
+			if(video_resolution_index == 1){
+				width = 1278;
+				height = 720;
+			}
+			celluloid_view_resize_video_area(controller->view, width, height);
+			//g_signal_emit_by_name(data, "resize", 120, 60);
+		}else if(is_floating && video_resolution_index==0){
+			int width = 854;
+			int height = 480;
+			celluloid_view_resize_video_area(controller->view, width, height);			
+		}
+		g_object_unref(settings);
+	}
+	if(theater_mode && g_strcmp0(ckeystr, "ESC")==0){
+		printf("DIsable - key pressed Ctrl: %d->%s\n", keyval, keyval_to_keystr(keyval));
+		//g_settings_set_boolean(settings, "always-use-floating-header-bar", FALSE);
+		//g_settings_set_boolean(settings, "always-use-floating-controls", FALSE);
+		//gtk_window_set_resizable(controller->view, TRUE);		
+		int width = 854;
+		int height = 480;
+		celluloid_view_resize_video_area(controller->view, width, height);	
+	}
+	return FALSE;
 }
 
 static void

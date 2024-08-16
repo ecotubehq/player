@@ -556,6 +556,12 @@ show_about_dialog_handler(GSimpleAction *action, GVariant *param, gpointer data)
 	celluloid_view_show_about_window(celluloid_controller_get_view(data));
 }
 
+static void
+show_usage_dialog_handler(GSimpleAction *action, GVariant *param, gpointer data)
+{
+	celluloid_view_show_usage_window(celluloid_controller_get_view(data));
+}
+
 void
 celluloid_controller_action_register_actions(CelluloidController *controller)
 {
@@ -625,7 +631,9 @@ celluloid_controller_action_register_actions(CelluloidController *controller)
 			.activate = leave_fullscreen_handler},
 			{.name = "set-video-size",
 			.activate = set_video_size_handler,
-			.parameter_type = "d"} };
+			.parameter_type = "d"},
+			{.name = "show-usage-dialog",
+			.activate = show_usage_dialog_handler} };
 
 	CelluloidMainWindow *window =	celluloid_view_get_main_window
 					(controller->view);

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<schemalist gettext-domain="celluloid">
-	<schema	path="/io/github/celluloid-player/celluloid/"
-		id="io.github.celluloid-player.Celluloid">
-		<child	schema="io.github.celluloid-player.Celluloid.window-state"
+<schemalist gettext-domain="ecotube">
+	<schema	path="/io/github/ecotubehq/player/"
+		id="io.github.ecotubehq.player">
+		<child	schema="io.github.ecotubehq.player.window-state"
 			name="window-state" />
 
 		<key name="settings-migrated" type="b">
@@ -31,10 +31,15 @@
 			</description>
 		</key>
 		<key name="always-use-floating-controls" type="b">
-			<default>false</default>
+			<default>true</default>
 			<summary>Use floating controls in windowed mode</summary>
 			<description>
 			</description>
+		</key>
+		<key name="always-use-floating-header-bar" type="b">
+			<default>true</default>
+			<summary>Use a floating header bar in windowed mode</summary>
+			<description/>
 		</key>
 		<key name="always-autohide-cursor" type="b">
 			<default>false</default>
@@ -69,11 +74,8 @@
 		</key>
 		<key name="always-open-new-window" type="b">
 			<default>false</default>
-			<summary>Open new window when opening new files</summary>
+			<summary>Always open new window</summary>
 			<description>
-                                When opening new files through D-Bus (e.g.
-                                using a file manager), open the file in a new
-                                window.
 			</description>
 		</key>
 		<key name="always-append-to-playlist" type="b">
@@ -84,7 +86,7 @@
 		</key>
 		<key name="always-show-title-buttons" type="b">
 			<default>false</default>
-			<summary>Show title buttons in fullscreen mode</summary>
+			<summary>Always show title buttons</summary>
 			<description>
                                 If true, title buttons (close, maximize,
                                 minimize, etc.) are always shown. If false, the
@@ -166,10 +168,58 @@
 			<description>
 			</description>
 		</key>
+		<key name="youtube-video-quality" type="i">
+			<default>1</default>
+			<summary>Video Resolution</summary>
+			<description>
+			</description>
+		</key>
+		<key name="youtube-audio-quality" type="i">
+			<default>0</default>
+			<summary>Audio Quality</summary>
+			<description>
+			</description>
+		</key>
+		<key name="youtube-video-codec" type="i">
+			<default>0</default>
+			<summary>Video codec</summary>
+			<description>
+			</description>
+		</key>
+		<key name="youtube-video-output" type="i">
+			<default>0</default>
+			<summary>Video ouput</summary>
+			<description>
+			</description>
+		</key>
+		<key name="youtube-separator-line" type="s">
+			<default>""</default>
+			<summary>Youtube Options:</summary>
+			<description>
+			</description>
+		</key>
+		<key name="youtube-info-link" type="s">
+			<default>""</default>
+			<summary>Info</summary>
+			<description>
+			</description>
+		</key>
+		<!--key name="youtube-theater-mode" type="b">
+			<default>false</default>
+			<summary>Theater mode *This mode is used by 144p and 240p only*</summary>
+			<description>
+			</description>
+		</key-->
+		<key name="startup-request" type="b">
+			<default>false</default>
+			<summary>Has requested startup video</summary>
+			<description>
+			</description>
+		</key>
 	</schema>
 
-	<schema	path="/io/github/celluloid-player/celluloid/window-state/"
-		id="io.github.celluloid-player.Celluloid.window-state">
+	<schema	path="/io/github/ecotubehq/player/window-state/"
+		id="io.github.ecotubehq.player.window-state">
 		<key name="width" type="i">
 			<default>640</default>
 			<summary>Width of the window</summary>

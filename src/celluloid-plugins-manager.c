@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021, 2023-2024 gnome-mpv
+ * Copyright (c) 2016-2021, 2023 gnome-mpv
  *
  * This file is part of Celluloid.
  *
@@ -171,9 +171,7 @@ response_handler(GtkNativeDialog *self, gint response_id, gpointer data)
 
 	if(response_id == GTK_RESPONSE_ACCEPT)
 	{
-		CelluloidFileChooser *chooser = CELLULOID_FILE_CHOOSER(self);
-
-		src = celluloid_file_chooser_get_file(chooser);
+		src = gtk_file_chooser_get_file(GTK_FILE_CHOOSER(self));
 		copy_file_to_directory(CELLULOID_PLUGINS_MANAGER(data), src);
 	}
 
@@ -187,6 +185,7 @@ add_handler(GtkButton *button, gpointer data)
 	CelluloidPluginsManager *pmgr = data;
 	CelluloidFileChooser *dialog = NULL;
 	GtkFileFilter *filter;
+	GtkFileChooser *chooser;
 
 	dialog =
 		celluloid_file_chooser_new
@@ -196,27 +195,28 @@ add_handler(GtkButton *button, gpointer data)
 			TRUE );
 
 	filter = NULL;
+	chooser = GTK_FILE_CHOOSER(dialog);
 
 	filter = gtk_file_filter_new();
 	gtk_file_filter_set_name(filter, _("All Files"));
 	gtk_file_filter_add_pattern(filter, "*");
-	celluloid_file_chooser_add_filter(dialog, filter);
+	gtk_file_chooser_add_filter(chooser, filter);
 
 	filter = gtk_file_filter_new();
 	gtk_file_filter_set_name(filter, _("Lua Plugins"));
 	gtk_file_filter_add_mime_type(filter, "text/x-lua");
-	celluloid_file_chooser_add_filter(dialog, filter);
-	celluloid_file_chooser_set_filter(dialog, filter);
+	gtk_file_chooser_add_filter(chooser, filter);
+	gtk_file_chooser_set_filter(chooser, filter);
 
 	filter = gtk_file_filter_new();
 	gtk_file_filter_set_name(filter, _("JavaScript Plugins"));
 	gtk_file_filter_add_mime_type(filter, "application/javascript");
-	celluloid_file_chooser_add_filter(dialog, filter);
+	gtk_file_chooser_add_filter(chooser, filter);
 
 	filter = gtk_file_filter_new();
 	gtk_file_filter_set_name(filter, _("C Plugins"));
 	gtk_file_filter_add_mime_type(filter, "application/x-sharedlib");
-	celluloid_file_chooser_add_filter(dialog, filter);
+	gtk_file_chooser_add_filter(chooser, filter);
 
 	g_signal_connect(	dialog,
 				"response",
@@ -287,28 +287,31 @@ changed_handler(	GFileMonitor *monitor,
 		}
 
 		// Populate the list box with files in the plugins directory
-		filename = g_dir_read_name(dir);
-
-		while(filename)
+		do
 		{
-			gchar *full_path =
-				g_build_filename
-				(pmgr->directory, filename, NULL);
-			GtkWidget *item =
-				celluloid_plugins_manager_item_new
-				(	pmgr->parent_window,
-					filename,
-					full_path );
-
-			adw_preferences_group_add
-				(pmgr->pref_group, item);
-
-			empty = FALSE;
-
-			g_free(full_path);
+			gchar *full_path;
 
 			filename = g_dir_read_name(dir);
+			full_path =	g_build_filename
+					(pmgr->directory, filename, NULL);
+
+			if(g_file_test(full_path, G_FILE_TEST_IS_REGULAR))
+			{
+				GtkWidget *item;
+
+				item =	celluloid_plugins_manager_item_new
+					(	pmgr->parent_window,
+						filename,
+						full_path );
+				adw_preferences_group_add
+					(pmgr->pref_group, item);
+
+				empty = FALSE;
+			}
+
+			g_free(full_path);
 		}
+		while(filename);
 
 		gtk_widget_set_visible(pmgr->placeholder, empty);
 
@@ -341,23 +344,38 @@ copy_file_to_directory(CelluloidPluginsManager *pmgr, GFile *src)
 
 	if(error)
 	{
-		gchar *src_path =
-			g_file_get_path(src)?
-			NULL:
-			g_file_get_uri(src);
-		gchar *message =
-			g_strdup_printf
-			(	_("Failed to copy file from '%s' to '%s'. Reason: %s"),
+		GtkWidget *error_dialog = NULL;
+		gchar *src_path = NULL;
+
+		src_path = g_file_get_path(src)?:g_file_get_uri(src);
+
+		error_dialog =	gtk_message_dialog_new
+				(	pmgr->parent_window,
+					GTK_DIALOG_MODAL|
+					GTK_DIALOG_DESTROY_WITH_PARENT,
+					GTK_MESSAGE_ERROR,
+					GTK_BUTTONS_OK,
+					_("Failed to copy file from '%s' "
+					"to '%s'. Reason: %s"),
+					src_path,
+					dest_path,
+					error->message );
+
+		g_signal_connect(	error_dialog,
+					"response",
+					G_CALLBACK(gtk_window_destroy),
+					NULL );
+
+		g_warning(	"Failed to copy file from '%s' to '%s'. "
+				"Reason: %s",
 				src_path,
 				dest_path,
 				error->message );
 
-		g_signal_emit_by_name(pmgr, "error-raised", message, NULL);
-		g_warning("%s", message);
+		gtk_widget_set_visible(error_dialog, TRUE);
 
 		g_error_free(error);
 		g_free(src_path);
-		g_free(message);
 	}
 
 	g_clear_object(&dest);
@@ -374,17 +392,6 @@ celluloid_plugins_manager_class_init(CelluloidPluginsManagerClass *klass)
 	obj_class->finalize = celluloid_plugins_manager_finalize;
 	obj_class->set_property = celluloid_plugins_manager_set_property;
 	obj_class->get_property = celluloid_plugins_manager_get_property;
-
-	g_signal_new(	"error-raised",
-			G_TYPE_FROM_CLASS(klass),
-			G_SIGNAL_RUN_FIRST,
-			0,
-			NULL,
-			NULL,
-			g_cclosure_marshal_VOID__STRING,
-			G_TYPE_NONE,
-			1,
-			G_TYPE_STRING );
 
 	pspec = g_param_spec_pointer
 		(	"parent",
@@ -444,9 +451,6 @@ celluloid_plugins_manager_init(CelluloidPluginsManager *pmgr)
 	adw_status_page_set_title
 		(	ADW_STATUS_PAGE(pmgr->placeholder),
 			_("No Plugins Found") );
-	adw_status_page_set_description
-		(	ADW_STATUS_PAGE(pmgr->placeholder),
-			_("Click the <b>Add…</b> button to install a new plugin") );
 	adw_status_page_set_icon_name
 		(	ADW_STATUS_PAGE(pmgr->placeholder),
 			"application-x-addon-symbolic" );

@@ -65,6 +65,10 @@ celluloid_view_show_shortcuts_dialog(CelluloidView *view);
 void
 celluloid_view_show_about_window(CelluloidView *view);
 
+// Added by Sako
+void
+celluloid_view_show_usage_window(CelluloidView *view);
+
 void
 celluloid_view_show_message_toast(CelluloidView *view, const gchar *msg);
 

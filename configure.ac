@@ -1,9 +1,9 @@
 AC_PREREQ([2.69])
 
-AC_INIT(	[celluloid],
-		[0.27],
-		[http://github.com/celluloid-player/celluloid/issues],
-		[celluloid],
+AC_INIT(	[ecotube],
+		[0.26],
+		[https://github.com/sakoba365/ecotube/issues],
+		[ecotube],
 		[http://github.com/celluloid/celluloid] )
 
 AC_CONFIG_SRCDIR([src/celluloid-main.c])
@@ -90,14 +90,14 @@ AS_IF([test "x$GLIB_GENMARSHAL" = "x"], [
 	AC_MSG_ERROR([Could not find glib-genmarshal])
 ])
 
-PKG_CHECK_MODULES(DEPS, [gtk4 >= 4.10.0 glib-2.0 >= 2.66 libadwaita-1 >= 1.4.0 mpv >= 1.107 epoxy])
+PKG_CHECK_MODULES(DEPS, [gtk4 >= 4.6.1 glib-2.0 >= 2.66 libadwaita-1 >= 1.2.0 mpv >= 1.107 epoxy])
 AC_SEARCH_LIBS([sqrt], [m])
 
 AC_DEFINE([GLIB_VERSION_MIN_REQUIRED], [GLIB_VERSION_2_66], [Dont warn using older APIs])
 AC_DEFINE([GLIB_VERSION_MAX_ALLOWED], [GLIB_VERSION_2_66], [Prevents using newer APIs])
 
-AC_DEFINE([GDK_VERSION_MIN_REQUIRED], [GDK_VERSION_4_10], [Dont warn using older APIs])
-AC_DEFINE([GDK_VERSION_MAX_ALLOWED], [GDK_VERSION_4_10], [Prevents using newer APIs])
+AC_DEFINE([GDK_VERSION_MIN_REQUIRED], [GDK_VERSION_4_6], [Dont warn using older APIs])
+AC_DEFINE([GDK_VERSION_MAX_ALLOWED], [GDK_VERSION_4_6], [Prevents using newer APIs])
 
 AC_DEFINE_UNQUOTED([G_LOG_DOMAIN], "$PACKAGE_NAME", [Default logging facility])
 

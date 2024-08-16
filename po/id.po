@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: celluloid\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-06 23:09+0700\n"
-"PO-Revision-Date: 2024-04-23 19:07+0000\n"
-"Last-Translator: Juan Manuel <juanmanueldilo09@gmail.com>\n"
+"POT-Creation-Date: 2023-08-21 04:15+0700\n"
+"PO-Revision-Date: 2022-10-17 00:17+0000\n"
+"Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/celluloid/"
 "celluloid/id/>\n"
 "Language: id\n"
@@ -17,44 +17,39 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 4.15-dev\n"
 
-#: data/io.github.celluloid_player.Celluloid.gschema.xml:11
+#: data/io.github.ecotubehq.player.gschema.xml:11
 msgid ""
 "Whether the settings has already been migrated from the previous version"
 msgstr "Apakah setelan telah dimigrasikan dari versi sebelumnya"
 
-#: data/io.github.celluloid_player.Celluloid.gschema.xml:17
+#: data/io.github.ecotubehq.player.gschema.xml:17
 msgid "Automatically resize window to fit video"
 msgstr "Ubah ukuran jendela secara otomatis agar sesuai dengan video"
 
-#: data/io.github.celluloid_player.Celluloid.gschema.xml:23
+#: data/io.github.ecotubehq.player.gschema.xml:23
 msgid "Prefer dark theme"
 msgstr "Lebih suka tema gelap"
 
-#: data/io.github.celluloid_player.Celluloid.gschema.xml:29
+#: data/io.github.ecotubehq.player.gschema.xml:29
 msgid "Enable client-side decorations"
 msgstr "Aktifkan dekorasi sisi klien"
 
-#: data/io.github.celluloid_player.Celluloid.gschema.xml:35
+#: data/io.github.ecotubehq.player.gschema.xml:35
 msgid "Use floating controls in windowed mode"
 msgstr "Gunakan kontrol mengambang dalam mode jendela"
 
-#: data/io.github.celluloid_player.Celluloid.gschema.xml:41
-#, fuzzy
-msgid "Use a floating header bar in windowed mode"
-msgstr "Gunakan kontrol mengambang dalam mode jendela"
-
-#: data/io.github.celluloid_player.Celluloid.gschema.xml:46
+#: data/io.github.ecotubehq.player.gschema.xml:41
 msgid "Automatically hide mouse cursor in windowed mode"
 msgstr "Sembunyikan kursor secara otomatis di mode jendela"
 
-#: data/io.github.celluloid_player.Celluloid.gschema.xml:52
+#: data/io.github.ecotubehq.player.gschema.xml:47
 msgid "The minimum cursor speed at which floating controls will be unhidden."
 msgstr ""
 "Kecepatan kursor minimum di mana kontrol mengambang akan disembunyikan."
 
-#: data/io.github.celluloid_player.Celluloid.gschema.xml:59
+#: data/io.github.ecotubehq.player.gschema.xml:54
 msgid ""
 "Size of the dead zone in which cursor movement will not cause the controls "
 "to be shown."
@@ -62,27 +57,27 @@ msgstr ""
 "Ukuran zona mati di mana gerakan kursor tidak akan menyebabkan kontrol "
 "ditampilkan."
 
-#: data/io.github.celluloid_player.Celluloid.gschema.xml:65
+#: data/io.github.ecotubehq.player.gschema.xml:60
 msgid "Use skip buttons to control the playlist"
 msgstr "Gunakan tombol lewati untuk mengontrol daftar putar"
 
-#: data/io.github.celluloid_player.Celluloid.gschema.xml:71
+#: data/io.github.ecotubehq.player.gschema.xml:66
 msgid "Remember last location in file chooser"
 msgstr "Ingat lokasi terakhir di pemilih file"
 
-#: data/io.github.celluloid_player.Celluloid.gschema.xml:77
+#: data/io.github.ecotubehq.player.gschema.xml:72
 msgid "Always open new window"
 msgstr "Selalu buka di jendela baru"
 
-#: data/io.github.celluloid_player.Celluloid.gschema.xml:83
+#: data/io.github.ecotubehq.player.gschema.xml:78
 msgid "Always append opened files to playlist"
 msgstr "Selalu tambahkan berkas yang dibuka ke daftar putar"
 
-#: data/io.github.celluloid_player.Celluloid.gschema.xml:89
+#: data/io.github.ecotubehq.player.gschema.xml:84
 msgid "Always show title buttons"
 msgstr "Selalu tampilkan tombol judul"
 
-#: data/io.github.celluloid_player.Celluloid.gschema.xml:90
+#: data/io.github.ecotubehq.player.gschema.xml:85
 msgid ""
 "If true, title buttons (close, maximize, minimize, etc.) are always shown. "
 "If false, the buttons will be hidden in fullscreen mode."
@@ -90,11 +85,11 @@ msgstr ""
 "Jika benar, tombol judul (tutup, maksimalkan, minimalkan, dll.) selalu "
 "ditampilkan. Jika salah, tombol akan disembunyikan dalam mode layar penuh."
 
-#: data/io.github.celluloid_player.Celluloid.gschema.xml:98
+#: data/io.github.ecotubehq.player.gschema.xml:93
 msgid "Give focus to the window when opening new files"
 msgstr "Berikan fokus ke jendela saat membuka file baru"
 
-#: data/io.github.celluloid_player.Celluloid.gschema.xml:99
+#: data/io.github.ecotubehq.player.gschema.xml:94
 msgid ""
 "If true, Celluloid will give focus to the window when a new file is opened. "
 "If false, no attempt will be made."
@@ -102,99 +97,98 @@ msgstr ""
 "Jika benar, Celluloid akan memberikan fokus ke jendela ketika file baru "
 "dibuka. Jika salah, tidak ada upaya yang akan dilakukan."
 
-#: data/io.github.celluloid_player.Celluloid.gschema.xml:107
-#: src/celluloid-application.c:582
+#: data/io.github.ecotubehq.player.gschema.xml:102
+#: src/celluloid-application.c:577
 msgid "Options to pass to mpv"
 msgstr "Opsi untuk diteruskan ke mpv"
 
-#: data/io.github.celluloid_player.Celluloid.gschema.xml:113
+#: data/io.github.ecotubehq.player.gschema.xml:108
 msgid "Path to mpv configuration file"
 msgstr "Jalur ke berkas konfigurasi mpv"
 
-#: data/io.github.celluloid_player.Celluloid.gschema.xml:119
+#: data/io.github.ecotubehq.player.gschema.xml:114
 msgid "Load mpv configuration file"
 msgstr "Muat berkas konfigurasi mpv"
 
-#: data/io.github.celluloid_player.Celluloid.gschema.xml:125
+#: data/io.github.ecotubehq.player.gschema.xml:120
 msgid "Path to mpv input configuration file"
 msgstr "Jalur ke berkas konfigurasi input mpv"
 
-#: data/io.github.celluloid_player.Celluloid.gschema.xml:131
+#: data/io.github.ecotubehq.player.gschema.xml:126
 msgid "Load mpv input configuration file"
 msgstr "Muat berkas konfigurasi input mpv"
 
-#: data/io.github.celluloid_player.Celluloid.gschema.xml:137
+#: data/io.github.ecotubehq.player.gschema.xml:132
 msgid "Enable MPRIS support"
 msgstr "Aktifkan dukugan MPRIS"
 
-#: data/io.github.celluloid_player.Celluloid.gschema.xml:143
+#: data/io.github.ecotubehq.player.gschema.xml:138
 msgid "Enable menubar accelerator key handling"
 msgstr "Aktifkan penanganan tombol akselerator bilah menu"
 
-#: data/io.github.celluloid_player.Celluloid.gschema.xml:149
+#: data/io.github.ecotubehq.player.gschema.xml:144
 msgid "Prefetch metadata"
 msgstr "Ambil metadata terlebih dahulu"
 
-#: data/io.github.celluloid_player.Celluloid.gschema.xml:155
+#: data/io.github.ecotubehq.player.gschema.xml:150
 msgid "Ignore playback errors"
 msgstr "Abaikan kesalahan pemutaran"
 
-#: data/io.github.celluloid_player.Celluloid.gschema.xml:161
+#: data/io.github.ecotubehq.player.gschema.xml:156
 msgid "Inhibit session idling"
 msgstr "Cegah sesi tidak aktif"
 
-#: data/io.github.celluloid_player.Celluloid.gschema.xml:167
+#: data/io.github.ecotubehq.player.gschema.xml:162
 msgid "Make video area draggable"
 msgstr "Jadikan area video dapat diseret"
 
-#: data/io.github.celluloid_player.Celluloid.gschema.xml:177
+#: data/io.github.ecotubehq.player.gschema.xml:172
 msgid "Width of the window"
 msgstr "Lebar jendela"
 
-#: data/io.github.celluloid_player.Celluloid.gschema.xml:183
+#: data/io.github.ecotubehq.player.gschema.xml:178
 msgid "Height of the window"
 msgstr "Tinggi jendela"
 
-#: data/io.github.celluloid_player.Celluloid.gschema.xml:189
+#: data/io.github.ecotubehq.player.gschema.xml:184
 msgid "Whether or not the window is maximized"
 msgstr "Apakah jendela dimaksimalkan atau tidak"
 
-#: data/io.github.celluloid_player.Celluloid.gschema.xml:196
+#: data/io.github.ecotubehq.player.gschema.xml:191
 msgid "Volume of player"
 msgstr "Volume pemutar"
 
-#: data/io.github.celluloid_player.Celluloid.gschema.xml:202
+#: data/io.github.ecotubehq.player.gschema.xml:197
 msgid "Whether or not to loop when the end of playlist is reached"
 msgstr "Apakah daftar putar diulang ketika akhir daftar putar tercapai"
 
-#: data/io.github.celluloid_player.Celluloid.gschema.xml:208
+#: data/io.github.ecotubehq.player.gschema.xml:203
 msgid "Width of the playlist"
 msgstr "Lebar daftar putar"
 
-#: data/io.github.celluloid_player.Celluloid.gschema.xml:214
+#: data/io.github.ecotubehq.player.gschema.xml:209
 msgid "Show/hide the controls"
 msgstr "Memperlihatkan/menyembunyikan kontrol"
 
-#: data/io.github.celluloid_player.Celluloid.gschema.xml:220
+#: data/io.github.ecotubehq.player.gschema.xml:215
 msgid "Show/hide the playlist"
 msgstr "Tampilkan/sembunyikan daftar putar"
 
-#: data/io.github.celluloid_player.Celluloid.gschema.xml:226
+#: data/io.github.ecotubehq.player.gschema.xml:221
 msgid "URI of the last folder accessed"
 msgstr "URI dari folder yang diakses terakhir"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:7
-#: data/io.github.celluloid_player.Celluloid.desktop.in:4
-#: src/celluloid-application.c:458
+#: data/io.github.ecotubehq.player.appdata.xml.in:7
+#: data/io.github.ecotubehq.player.desktop.in:4
+#: src/celluloid-application.c:453
 msgid "Celluloid"
 msgstr "Celluloid"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:8
-#, fuzzy
-msgid "Plays videos"
-msgstr "Putar film dan video"
+#: data/io.github.ecotubehq.player.appdata.xml.in:8
+msgid "GTK+ frontend for mpv"
+msgstr "Tampilan depan GTK+ untuk mpv"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:16
+#: data/io.github.ecotubehq.player.appdata.xml.in:16
 msgid ""
 "Celluloid is a simple media player that can play virtually all video and "
 "audio formats. It supports playlists and MPRIS2 media player controls. The "
@@ -208,296 +202,235 @@ msgstr ""
 "juga dapat diadaptasi untuk sistem lain yang tidak menggunakan dekorasi sisi "
 "klien (CSD). Hal ini didasarkan pada perpustakaan MPV dan GTK."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:23
+#: data/io.github.ecotubehq.player.appdata.xml.in:23
 msgid "Features:"
 msgstr "Fitur-fitur:"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:25
+#: data/io.github.ecotubehq.player.appdata.xml.in:25
 msgid "Drag and drop playlist"
 msgstr "Seret dan lepas daftar putar"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:26
+#: data/io.github.ecotubehq.player.appdata.xml.in:26
 msgid "Loading external mpv configuration files"
 msgstr "Memuat berkas konfigurasi mpv eksternal"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:27
+#: data/io.github.ecotubehq.player.appdata.xml.in:27
 msgid "MPRIS2 D-Bus interface"
 msgstr "Antarmuka MPRIS2 D-Bus"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:36
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:69
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:101
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:144
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:207
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:252
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:287
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:326
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:379
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:409
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:448
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:479
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:507
+#: data/io.github.ecotubehq.player.appdata.xml.in:30
+msgid "The Celluloid Developers"
+msgstr "Pengembang Celluloid"
+
+#: data/io.github.ecotubehq.player.appdata.xml.in:34
+#: data/io.github.ecotubehq.player.appdata.xml.in:77
+#: data/io.github.ecotubehq.player.appdata.xml.in:140
+#: data/io.github.ecotubehq.player.appdata.xml.in:185
+#: data/io.github.ecotubehq.player.appdata.xml.in:220
+#: data/io.github.ecotubehq.player.appdata.xml.in:259
+#: data/io.github.ecotubehq.player.appdata.xml.in:312
+#: data/io.github.ecotubehq.player.appdata.xml.in:342
+#: data/io.github.ecotubehq.player.appdata.xml.in:381
+#: data/io.github.ecotubehq.player.appdata.xml.in:412
+#: data/io.github.ecotubehq.player.appdata.xml.in:440
 msgid "This release contains the following changes:"
 msgstr "Rilis ini berisi perubahan berikut:"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:40
-msgid ""
-"Add a loading screen that gets displayed during initialization and buffering."
-msgstr ""
-
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:44
-msgid ""
-"Reduce the time it takes for the main window to get displayed after "
-"launching."
-msgstr ""
-
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:48
-msgid ""
-"Opening and closing the preferences dialog will no longer trigger an mpv "
-"reset unless options that require it are changed."
-msgstr ""
-
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:52
-msgid "Update the look for controls and header bar in floating mode."
-msgstr ""
-
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:55
-msgid "Update some of the deprecated GTK API usage."
-msgstr ""
-
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:58
-#, fuzzy
-msgid "Add support for multi-file user scripts."
-msgstr "Tambahan dukungan untuk memuat trek video eksternal."
-
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:62
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:94
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:137
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:173
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:200
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:245
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:280
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:319
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:372
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:402
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:441
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:472
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:500
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:528
-msgid "This listing is incomplete. See git log for complete changelog."
-msgstr ""
-"Daftar ini tidak lengkap. Lihat catatan git untuk daftar perubahan yang "
-"lengkap."
-
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:73
-msgid "Fix a bug where the header bar keeps hiding even when a menu is open."
-msgstr ""
-
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:76
-msgid "Use toasts instead of dialog to report mpv errors."
-msgstr ""
-
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:79
-#, fuzzy
-msgid "Change default screenshot format to PNG."
-msgstr ""
-"Ubah template nama file tangkapan layar default menjadi FILENAME-TIMESTAMP "
-"(%f-%P)."
-
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:82
-msgid ""
-"Fix crash that happens when the mpv-config-file key in GSettings contains a "
-"path rather than a URI."
-msgstr ""
-
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:86
-msgid "Expose the Position MPRIS property."
-msgstr ""
-
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:89
-msgid ""
-"Use the numeric style class for the time/duration label, which stops it from "
-"jumping around as it changes."
-msgstr ""
-
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:105
+#: data/io.github.ecotubehq.player.appdata.xml.in:38
 msgid "Fix crash when using multiple windows."
 msgstr ""
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:108
+#: data/io.github.ecotubehq.player.appdata.xml.in:41
 msgid "Port the about dialog to libadwaita."
 msgstr ""
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:111
+#: data/io.github.ecotubehq.player.appdata.xml.in:44
 msgid "Fix cursor not autohiding on KDE."
 msgstr ""
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:114
+#: data/io.github.ecotubehq.player.appdata.xml.in:47
 msgid "Fix mouse presses/releases becoming unreliable during playback."
 msgstr ""
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:117
+#: data/io.github.ecotubehq.player.appdata.xml.in:50
 msgid ""
 "Make it possible to build on Windows. Celluloid still crashes on mouse "
 "clicks, but it runs and can play videos."
 msgstr ""
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:121
+#: data/io.github.ecotubehq.player.appdata.xml.in:54
 #, fuzzy
 msgid "Add Estonian translation by vaba."
 msgstr "Menambahkan terjemahan Bahasa Slovenia oleh @bertronika."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:124
+#: data/io.github.ecotubehq.player.appdata.xml.in:57
 #, fuzzy
 msgid "Add Georgian translation by temuri doghonadze."
 msgstr "Menambahkan terjemahan Bahasa Slovenia oleh @bertronika."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:127
+#: data/io.github.ecotubehq.player.appdata.xml.in:60
 #, fuzzy
 msgid "Add Lithuanian translation by Jonas Smol."
 msgstr "Menambahkan terjemahan Bahasa Ukraina oleh @vl-nix"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:130
+#: data/io.github.ecotubehq.player.appdata.xml.in:63
 #, fuzzy
 msgid "Add Occitan translation by Quentin PAGÈS."
 msgstr "Tambahkan terjemahan Occidental oleh OIS."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:133
+#: data/io.github.ecotubehq.player.appdata.xml.in:66
 #, fuzzy
 msgid "Add Tamil translation by K.B.Dharun Krishna."
 msgstr "Tambahan translasi Bahasa Basque oleh @aldatsa."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:148
+#: data/io.github.ecotubehq.player.appdata.xml.in:70
+#: data/io.github.ecotubehq.player.appdata.xml.in:106
+#: data/io.github.ecotubehq.player.appdata.xml.in:133
+#: data/io.github.ecotubehq.player.appdata.xml.in:178
+#: data/io.github.ecotubehq.player.appdata.xml.in:213
+#: data/io.github.ecotubehq.player.appdata.xml.in:252
+#: data/io.github.ecotubehq.player.appdata.xml.in:305
+#: data/io.github.ecotubehq.player.appdata.xml.in:335
+#: data/io.github.ecotubehq.player.appdata.xml.in:374
+#: data/io.github.ecotubehq.player.appdata.xml.in:405
+#: data/io.github.ecotubehq.player.appdata.xml.in:433
+#: data/io.github.ecotubehq.player.appdata.xml.in:461
+msgid "This listing is incomplete. See git log for complete changelog."
+msgstr ""
+"Daftar ini tidak lengkap. Lihat catatan git untuk daftar perubahan yang "
+"lengkap."
+
+#: data/io.github.ecotubehq.player.appdata.xml.in:81
 #, fuzzy
 msgid "Add Malay translation by @dinazmi."
 msgstr "Tambahan translasi Bahasa Basque oleh @aldatsa."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:151
+#: data/io.github.ecotubehq.player.appdata.xml.in:84
 msgid "Use libadwaita."
 msgstr ""
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:154
+#: data/io.github.ecotubehq.player.appdata.xml.in:87
 msgid "Fix on_load hook in scripts not triggering."
 msgstr ""
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:157
+#: data/io.github.ecotubehq.player.appdata.xml.in:90
 #, fuzzy
 msgid "Add option to make the video area draggable."
 msgstr "Jadikan area video dapat diseret"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:160
+#: data/io.github.ecotubehq.player.appdata.xml.in:93
 msgid "Fix autofit breaking when playing small videos."
 msgstr ""
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:163
+#: data/io.github.ecotubehq.player.appdata.xml.in:96
 msgid "Make controls layout adaptive."
 msgstr ""
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:166
+#: data/io.github.ecotubehq.player.appdata.xml.in:99
 #, fuzzy
 msgid "Display chapter marks in the seek bar."
 msgstr "Tampilkan waktu di posisi kursor saat posisi kursor di seek bar."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:169
+#: data/io.github.ecotubehq.player.appdata.xml.in:102
 #, fuzzy
 msgid "Display chapter titles in the seek bar popover."
 msgstr "Tampilkan waktu di posisi kursor saat posisi kursor di seek bar."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:180
+#: data/io.github.ecotubehq.player.appdata.xml.in:113
 msgid "This is mostly a bugfix release. It contains the following changes:"
 msgstr ""
 "Ini sebagian besar merupakan rilis perbaikan bug. Ini berisi perubahan "
 "berikut:"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:184
+#: data/io.github.ecotubehq.player.appdata.xml.in:117
 msgid "Fix autofit triggering regardless of settings."
 msgstr "Perbaiki pemicu pas otomatis terlepas dari pengaturannya."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:187
+#: data/io.github.ecotubehq.player.appdata.xml.in:120
 msgid "Fix window size shrinking across sessions."
 msgstr "Perbaiki ukuran jendela yang menyusut di seluruh sesi."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:190
+#: data/io.github.ecotubehq.player.appdata.xml.in:123
 msgid "Fix crash when playing files with names containing invalid encoding."
 msgstr ""
 "Perbaiki kerusakan saat memutar file dengan nama yang berisi penyandian "
 "tidak valid."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:193
+#: data/io.github.ecotubehq.player.appdata.xml.in:126
 msgid "Fix drag-and-drop not working with some file managers."
 msgstr "Perbaiki drag-and-drop tidak berfungsi dengan beberapa pengelola file."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:196
+#: data/io.github.ecotubehq.player.appdata.xml.in:129
 msgid "Fix playback starting when the last playlist item is removed."
 msgstr ""
 "Perbaiki pemutaran yang dimulai saat item daftar putar terakhir dihapus."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:211
+#: data/io.github.ecotubehq.player.appdata.xml.in:144
 msgid "Migrate to GTK4."
 msgstr "Migrasi ke GTK4."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:214
+#: data/io.github.ecotubehq.player.appdata.xml.in:147
 msgid "Add Greek translation by @lepa22."
 msgstr "Tambahkan terjemahan bahasa Yunani oleh @lepa22."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:217
+#: data/io.github.ecotubehq.player.appdata.xml.in:150
 msgid "Add Korean translation by @jullee96."
 msgstr "Tambahkan terjemahan bahasa Korea oleh @jullee96."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:220
+#: data/io.github.ecotubehq.player.appdata.xml.in:153
 msgid "Add Norwegian Bokmål translation by Allan Nordhøy."
 msgstr "Tambahkan terjemahan Bokmål Norwegia oleh Allan Nordhøy."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:223
+#: data/io.github.ecotubehq.player.appdata.xml.in:156
 msgid "Add Occidental translation by OIS."
 msgstr "Tambahkan terjemahan Occidental oleh OIS."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:226
+#: data/io.github.ecotubehq.player.appdata.xml.in:159
 msgid "Add Arabic translation by Mohamed Benkouider."
 msgstr "Tambahkan terjemahan bahasa Arab oleh Mohamed Benkouider."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:229
+#: data/io.github.ecotubehq.player.appdata.xml.in:162
 msgid "Add Urdu translation by Ahmed Iqbal."
 msgstr "Tambahkan terjemahan bahasa Urdu oleh Ahmed Iqbal."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:232
+#: data/io.github.ecotubehq.player.appdata.xml.in:165
 msgid "Add option to show title buttons in fullscreen mode."
 msgstr "Tambahkan opsi untuk menampilkan tombol judul dalam mode layar penuh."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:235
+#: data/io.github.ecotubehq.player.appdata.xml.in:168
 msgid "Add option to present the window when opening files."
 msgstr "Tambahkan opsi untuk menampilkan jendela saat membuka file."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:238
+#: data/io.github.ecotubehq.player.appdata.xml.in:171
 msgid ""
 "Change default screenshot filename template to FILENAME-TIMESTAMP (%f-%P)."
 msgstr ""
 "Ubah template nama file tangkapan layar default menjadi FILENAME-TIMESTAMP "
 "(%f-%P)."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:241
+#: data/io.github.ecotubehq.player.appdata.xml.in:174
 msgid "Fix inaccurate timestamp preview."
 msgstr "Perbaiki pratinjau stempel waktu yang tidak akurat."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:256
+#: data/io.github.ecotubehq.player.appdata.xml.in:189
 msgid "Add Basque translation by @aldatsa."
 msgstr "Tambahan translasi Bahasa Basque oleh @aldatsa."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:259
+#: data/io.github.ecotubehq.player.appdata.xml.in:192
 msgid "Make the shuffle and loop command line options work properly."
 msgstr "Opsi baris perintah acak dan ulang berfungsi dengan baik."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:262
+#: data/io.github.ecotubehq.player.appdata.xml.in:195
 msgid "Make the main menu button toggleable by pressing F10."
 msgstr "Jadikan tombol menu utama dapat dialihkan dengan menekan F10."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:265
+#: data/io.github.ecotubehq.player.appdata.xml.in:198
 msgid "Add a setting for always appending opened files to the playlist."
 msgstr ""
 "Tambahkan pengaturan untuk selalu menambahkan file yang dibuka ke daftar "
 "putar."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:268
+#: data/io.github.ecotubehq.player.appdata.xml.in:201
 msgid ""
 "Allow appending files to playlist by holding shift while dropping files onto "
 "the video area."
@@ -505,11 +438,11 @@ msgstr ""
 "Izinkan penambahan file ke daftar putar dengan menahan tombol shift sambil "
 "menjatuhkan file ke area video."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:272
+#: data/io.github.ecotubehq.player.appdata.xml.in:205
 msgid "Make CSD header bar toggleable via the mpv property \"border\"."
 msgstr "Jadikan header bar CSD dapat diubah lewat properti mpv \"batas\"."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:275
+#: data/io.github.ecotubehq.player.appdata.xml.in:208
 msgid ""
 "Include Flatpak manifest in the repo. This allows Celluloid to be built in "
 "one click in apps like GNOME Builder."
@@ -517,12 +450,12 @@ msgstr ""
 "Sertakan manifes Flatpak di repo. Ini memungkinkan Celluloid untuk dibangun "
 "dengan satu klik di aplikasi seperti GNOME Builder."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:291
+#: data/io.github.ecotubehq.player.appdata.xml.in:224
 msgid "Make it possible to activate context menu when the playlist is empty."
 msgstr ""
 "Memungkinkan untuk mengaktifkan menu konteks ketika daftar putar kosong."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:294
+#: data/io.github.ecotubehq.player.appdata.xml.in:227
 msgid ""
 "Prevent constant resizing of the seek bar due to timestamp label resizing as "
 "its value changes."
@@ -530,7 +463,7 @@ msgstr ""
 "Cegah pengubahan ukuran seek bar secara konstan karena perubahan ukuran "
 "label timestamp saat nilainya berubah."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:298
+#: data/io.github.ecotubehq.player.appdata.xml.in:231
 msgid ""
 "Only show a single error dialog when a large number of errors occurs in "
 "rapid succession."
@@ -538,11 +471,11 @@ msgstr ""
 "Hanya tampilkan satu dialog kesalahan ketika sejumlah besar kesalahan "
 "terjadi secara berurutan dengan cepat."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:302
+#: data/io.github.ecotubehq.player.appdata.xml.in:235
 msgid "Add menu item for opening folders."
 msgstr "Tambahkan item menu untuk membuka folder."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:305
+#: data/io.github.ecotubehq.player.appdata.xml.in:238
 msgid ""
 "Adjust position of UI elements of modal dialogs in non-CSD mode to be more "
 "consistent with CSD mode."
@@ -550,51 +483,51 @@ msgstr ""
 "Sesuaikan posisi elemen UI dari dialog modal dalam mode non-CSD agar lebih "
 "konsisten dengan mode CSD."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:309
+#: data/io.github.ecotubehq.player.appdata.xml.in:242
 msgid "Add support for loading external video tracks."
 msgstr "Tambahan dukungan untuk memuat trek video eksternal."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:312
+#: data/io.github.ecotubehq.player.appdata.xml.in:245
 msgid "Make playlist shuffle toggleable."
 msgstr "Buat daftar putar dapat diacak."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:315
+#: data/io.github.ecotubehq.player.appdata.xml.in:248
 msgid "Make arrow key bindings work with arrow keys on numpad."
 msgstr ""
 "Jadikan keybinding tombol panah berfungsi dengan tombol panah di numpad."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:330
+#: data/io.github.ecotubehq.player.appdata.xml.in:263
 msgid ""
 "Adjust the range of volume button based on the value of the volume-max "
 "property."
 msgstr "Sesuaikan rentang tombol volume berdasarkan nilai properti volume-max."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:334
+#: data/io.github.ecotubehq.player.appdata.xml.in:267
 msgid "Retain window maximization state across sessions."
 msgstr "Pertahankan status maksimalisasi jendela di seluruh sesi."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:337
+#: data/io.github.ecotubehq.player.appdata.xml.in:270
 msgid "Retain loop state across sessions."
 msgstr "Pertahankan status putar ulang di seluruh sesi."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:340
+#: data/io.github.ecotubehq.player.appdata.xml.in:273
 msgid "Implement playlist search."
 msgstr "Mengimplementasikan pencarian daftar putar."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:343
+#: data/io.github.ecotubehq.player.appdata.xml.in:276
 msgid "Update the list of shortcuts in Keyboard Shortcuts dialog."
 msgstr "Memperbarui daftar pintasan di dialog Pintasan Papan Ketik."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:346
+#: data/io.github.ecotubehq.player.appdata.xml.in:279
 msgid "Correctly handle quotes and escape sequences in extra mpv options."
 msgstr ""
 "Tangani kutipan dan urutan keluar dengan benar dalam opsi mpv tambahan."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:349
+#: data/io.github.ecotubehq.player.appdata.xml.in:282
 msgid "Display time at cursor position when hovering the seek bar."
 msgstr "Tampilkan waktu di posisi kursor saat posisi kursor di seek bar."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:352
+#: data/io.github.ecotubehq.player.appdata.xml.in:285
 msgid ""
 "Deprecate '--mpv-options'. Options starting with '--mpv-' can be used to set "
 "mpv options instead. For example, passing '--mpv-vf=vflip' to Celluloid is "
@@ -604,7 +537,7 @@ msgstr ""
 "untuk menyetel opsi mpv. Misalnya, meneruskan '--mpv-vf=vflip' ke Celluloid "
 "sama dengan meneruskan '--vf=vflip' ke mpv."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:358
+#: data/io.github.ecotubehq.player.appdata.xml.in:291
 msgid ""
 "Add support for configuring dead zone, an area in which mouse movement will "
 "not cause controls to be shown."
@@ -612,27 +545,27 @@ msgstr ""
 "Tambahkan dukungan untuk mengkonfigurasi zona mati, area di mana gerakan "
 "mouse tidak akan menyebabkan kontrol ditampilkan."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:362
+#: data/io.github.ecotubehq.player.appdata.xml.in:295
 msgid "Make window sizing work correctly with HiDPI displays."
 msgstr "Buat pengaturan jendela berfungsi dengan benar dengan display HiDPI."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:365
+#: data/io.github.ecotubehq.player.appdata.xml.in:298
 msgid "Add Finnish translation by Kimmo Kujansuu."
 msgstr "Menambahkan terjemahan Bahasa Finlandia oleh Kimmo Kujansuu."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:368
+#: data/io.github.ecotubehq.player.appdata.xml.in:301
 msgid "Add Slovenian translation by @bertronika."
 msgstr "Menambahkan terjemahan Bahasa Slovenia oleh @bertronika."
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:383
+#: data/io.github.ecotubehq.player.appdata.xml.in:316
 msgid "Add Persian translation by @danialbehzadi"
 msgstr "Menambahkan terjemahan Bahasa Persia oleh @danialbehzadi"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:386
+#: data/io.github.ecotubehq.player.appdata.xml.in:319
 msgid "Add Ukranian translation by @vl-nix"
 msgstr "Menambahkan terjemahan Bahasa Ukraina oleh @vl-nix"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:389
+#: data/io.github.ecotubehq.player.appdata.xml.in:322
 msgid ""
 "Add support for showing/hiding window decorations using the mpv option --"
 "border"
@@ -640,82 +573,82 @@ msgstr ""
 "Tambahkan dukungan untuk menampilkan/menyembunyikan dekorasi jendela "
 "menggunakan opsi mpv --border"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:392
+#: data/io.github.ecotubehq.player.appdata.xml.in:325
 msgid "Add menu item for opening discs"
 msgstr "Tambahkan item menu untuk membuka kaset"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:395
+#: data/io.github.ecotubehq.player.appdata.xml.in:328
 msgid "Block cursor autohide when volume popup is open in windowed mode"
 msgstr ""
 "Blokir kursor sembunyi secara otomatis saat popup volume terbuka dalam mode "
 "jendela"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:398
+#: data/io.github.ecotubehq.player.appdata.xml.in:331
 msgid "Fix crash with mpv 0.30"
 msgstr "Perbaiki kerusakan dengan mpv 0.30"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:413
+#: data/io.github.ecotubehq.player.appdata.xml.in:346
 msgid "Rename project to Celluloid"
 msgstr "Mengubah nama proyek menjadi Celluloid"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:416
+#: data/io.github.ecotubehq.player.appdata.xml.in:349
 msgid "Add Turkish translation by @TeknoMobil"
 msgstr "Menambahkan terjemahan Bahasa Turki oleh @TeknoMobil"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:419
+#: data/io.github.ecotubehq.player.appdata.xml.in:352
 msgid "Add Esperanto translation by @F3nd0"
 msgstr "Tambahkan terjemahan Esperanto oleh @F3nd0"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:422
+#: data/io.github.ecotubehq.player.appdata.xml.in:355
 msgid "Migrate from opengl-cb to the new render API"
 msgstr "Migrasi dari opengl-cb ke render API baru"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:425
+#: data/io.github.ecotubehq.player.appdata.xml.in:358
 msgid "Handle numpad keybindings"
 msgstr "Menangani pengaturan tombol numpad"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:428
+#: data/io.github.ecotubehq.player.appdata.xml.in:361
 msgid "Handle unicode keybindings"
 msgstr "Menangani pengaturan tombol unicode"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:431
+#: data/io.github.ecotubehq.player.appdata.xml.in:364
 msgid "Forward media key events to mpv"
 msgstr "Teruskan peristiwa kunci media ke mpv"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:434
+#: data/io.github.ecotubehq.player.appdata.xml.in:367
 msgid ""
 "Add dconf key for controlling cursor speed at which controls are unhidden"
 msgstr ""
 "Tambahkan kunci dconf untuk mengontrol kecepatan kursor di mana kontrol "
 "tidak disembunyikan"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:437
+#: data/io.github.ecotubehq.player.appdata.xml.in:370
 msgid "Add option for suppressing playback errors"
 msgstr "Tambahkan opsi untuk menekan kesalahan pemutaran"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:452
+#: data/io.github.ecotubehq.player.appdata.xml.in:385
 msgid "Split up the General tab in the preferences dialog"
 msgstr "Pisahkan tab Umum di dialog preferensi"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:455
+#: data/io.github.ecotubehq.player.appdata.xml.in:388
 msgid "Improve behavior when toggling playlist under tiling window managers"
 msgstr ""
 "Tingkatkan perilaku saat beralih daftar putar di bawah pengelola jendela "
 "tiling"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:458
+#: data/io.github.ecotubehq.player.appdata.xml.in:391
 msgid "Move app menu items to primary menu"
 msgstr "Pindahkan item menu aplikasi ke menu utama"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:461
+#: data/io.github.ecotubehq.player.appdata.xml.in:394
 msgid "Use separate MPRIS DBus connection for each window"
 msgstr "Gunakan koneksi MPRIS DBus terpisah untuk setiap jendela"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:464
+#: data/io.github.ecotubehq.player.appdata.xml.in:397
 msgid "Add support for MPRIS property LoopStatus"
 msgstr "Tambahkan dukungan untuk properti LoopStatus MPRIS"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:467
+#: data/io.github.ecotubehq.player.appdata.xml.in:400
 msgid ""
 "Add option --mpv-options for setting arbitrary mpv options from the command-"
 "line"
@@ -723,11 +656,11 @@ msgstr ""
 "Tambahkan opsi --mpv-options untuk menyetel opsi mpv sembarang dari command-"
 "line"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:483
+#: data/io.github.ecotubehq.player.appdata.xml.in:416
 msgid "Set default screenshot directory to XDG_PICTURES_DIR"
 msgstr "Mengubah direktori tangkapan layar bawaan menjadi XDG_PICTURES_DIR"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:486
+#: data/io.github.ecotubehq.player.appdata.xml.in:419
 msgid ""
 "Improve handling of --window-scale, --autofit, --autofit-larger, and --"
 "autofit-smaller"
@@ -735,185 +668,181 @@ msgstr ""
 "Meningkatkan penanganan --window-scale, --autofit, --autofit-larger, dan --"
 "autofit-smaller"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:490
+#: data/io.github.ecotubehq.player.appdata.xml.in:423
 msgid "Add command line option for setting WM_ROLE"
 msgstr "Tambahkan opsi command line untuk mengatur WM_ROLE"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:493
+#: data/io.github.ecotubehq.player.appdata.xml.in:426
 msgid "Add context menu item for removing playlist items"
 msgstr "Tambahkan item menu konteks untuk menghapus item daftar putar"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:496
+#: data/io.github.ecotubehq.player.appdata.xml.in:429
 msgid "Add context menu item for copying location of playlist items"
 msgstr "Tambahkan item menu konteks untuk menyalin lokasi item daftar putar"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:511
+#: data/io.github.ecotubehq.player.appdata.xml.in:444
 msgid ""
 "Add option to make skip buttons change playlist entries rather than chapters"
 msgstr ""
 "Tambahkan opsi untuk membuat tombol lewati mengubah entri daftar putar "
 "daripada bab"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:515
+#: data/io.github.ecotubehq.player.appdata.xml.in:448
 msgid "Make the file chooser accept non-local locations"
 msgstr ""
 "Buat pemilih berkas menerima lokasi berkas yang tidak ada di penyimpanan "
 "lokal"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:518
+#: data/io.github.ecotubehq.player.appdata.xml.in:451
 msgid "Add right-click menu entry for looping a single file"
 msgstr "Tambahkan entri menu klik kanan untuk mengulang satu file"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:521
+#: data/io.github.ecotubehq.player.appdata.xml.in:454
 msgid "Handle property change events for fullscreen and window-scale"
 msgstr ""
 "Menangani peristiwa perubahan properti untuk layar penuh dan skala jendela"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:524
+#: data/io.github.ecotubehq.player.appdata.xml.in:457
 msgid "Add option to autohide mouse cursor in windowed mode"
 msgstr ""
 "Tambahkan opsi untuk menyembunyikan kursor mouse secara otomatis dalam mode "
 "jendela"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:538
+#: data/io.github.ecotubehq.player.appdata.xml.in:471
 msgid "The main window showing the application in action"
 msgstr "Jendela utama menunjukkan aplikasi dalam aksi"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:542
+#: data/io.github.ecotubehq.player.appdata.xml.in:475
 msgid "The main window with CSD disabled"
 msgstr "Jendela utama dengan CSD dinonaktifkan"
 
-#: data/io.github.celluloid_player.Celluloid.appdata.xml.in:546
+#: data/io.github.ecotubehq.player.appdata.xml.in:479
 msgid "The main window with playlist open"
 msgstr "Jendela utama dengan daftar putar terbuka"
 
-#: data/io.github.celluloid_player.Celluloid.desktop.in:5
+#: data/io.github.ecotubehq.player.desktop.in:5
 msgid "Multimedia Player"
 msgstr "Pemutar Multimedia"
 
-#: data/io.github.celluloid_player.Celluloid.desktop.in:6
+#: data/io.github.ecotubehq.player.desktop.in:6
 msgid "Play movies and videos"
 msgstr "Putar film dan video"
 
 #. Translators: Search terms to find this application. Don't translate the semicolons! The list MUST also end with a semicolon!
-#: data/io.github.celluloid_player.Celluloid.desktop.in:17
+#: data/io.github.ecotubehq.player.desktop.in:17
 msgid "Video;Movie;Film;Clip;Series;Player;DVD;TV;Disc;Album;Music;GNOME;mpv;"
 msgstr "Video;Movie;Film;Clip;Series;Player;DVD;TV;Disc;Album;Music;GNOME;mpv;"
 
-#: data/io.github.celluloid_player.Celluloid.desktop.in:23
+#: data/io.github.ecotubehq.player.desktop.in:23
 msgid "New Window"
 msgstr "Jendela Baru"
 
-#: data/io.github.celluloid_player.Celluloid.desktop.in:27
+#: data/io.github.ecotubehq.player.desktop.in:27
 msgid "Add to Playlist"
 msgstr "Tambahkan ke Daftar Putar"
 
-#: src/celluloid-application.c:502
+#: src/celluloid-application.c:497
 msgid "Playing"
 msgstr "Memutar"
 
-#: src/celluloid-application.c:558
+#: src/celluloid-application.c:553
 msgid "Show release version"
 msgstr "Tampilkan versi rilis"
 
-#: src/celluloid-application.c:566
+#: src/celluloid-application.c:561
 msgid "Enqueue"
 msgstr "Mengantri"
 
-#: src/celluloid-application.c:574
+#: src/celluloid-application.c:569
 msgid "Create a new window"
 msgstr "Buat jendela baru"
 
-#: src/celluloid-application.c:583
+#: src/celluloid-application.c:578
 msgid "OPTIONS"
 msgstr "OPSI"
 
-#: src/celluloid-application.c:590
+#: src/celluloid-application.c:585
 msgid "Set the window role"
 msgstr "Atur peran jendela"
 
-#: src/celluloid-application.c:598
+#: src/celluloid-application.c:593
 msgid "Don't connect to an already-running instance"
 msgstr "Jangan sambungkan ke instance yang sudah berjalan"
 
-#: src/celluloid-application.c:609
+#: src/celluloid-application.c:604
 msgid "Set the mpv option MPVOPTION to VALUE"
 msgstr "Setel opsi mpv MPVOPTION ke VALUE"
 
-#: src/celluloid-application.c:610
+#: src/celluloid-application.c:605
 msgid "VALUE"
 msgstr "NILAI"
 
-#: src/celluloid-common.c:270
+#: src/celluloid-common.c:261
 msgid "invalid encoding"
 msgstr "pengkodean tidak valid"
 
-#: src/celluloid-control-box.c:452
+#: src/celluloid-control-box.c:444
 msgid "Pause"
 msgstr "Jeda"
 
-#: src/celluloid-control-box.c:452 src/celluloid-control-box.c:726
+#: src/celluloid-control-box.c:444 src/celluloid-control-box.c:710
 msgid "Play"
 msgstr "Putar"
 
-#: src/celluloid-control-box.c:729
+#: src/celluloid-control-box.c:713
 msgid "Stop"
 msgstr "Berhenti"
 
-#: src/celluloid-control-box.c:732
+#: src/celluloid-control-box.c:716
 msgid "Forward"
 msgstr "Maju"
 
-#: src/celluloid-control-box.c:735
+#: src/celluloid-control-box.c:719
 msgid "Rewind"
 msgstr "Mundur"
 
-#: src/celluloid-control-box.c:738
+#: src/celluloid-control-box.c:722
 msgid "Next Chapter"
 msgstr "Bab Selanjutnya"
 
-#: src/celluloid-control-box.c:741
+#: src/celluloid-control-box.c:725
 msgid "Previous Chapter"
 msgstr "Bab Sebelumnya"
 
-#: src/celluloid-control-box.c:744 src/celluloid-playlist-widget.c:565
+#: src/celluloid-control-box.c:728
 msgid "Loop Playlist"
 msgstr "Loop Daftar Putar"
 
-#: src/celluloid-control-box.c:747
+#: src/celluloid-control-box.c:731
 msgid "Shuffle Playlist"
 msgstr "Acak Daftar Putar"
 
-#: src/celluloid-control-box.c:750
-#, fuzzy
-msgid "Toggle Playlist"
-msgstr "Alihkan _Daftar Putar"
-
-#: src/celluloid-control-box.c:753 src/celluloid-header-bar.c:248
+#: src/celluloid-control-box.c:734 src/celluloid-control-box.c:737
+#: src/celluloid-header-bar.c:248
 msgid "Toggle Fullscreen"
 msgstr "Alihkan Layar Penuh"
 
-#: src/celluloid-file-chooser.c:145 src/celluloid-plugins-manager.c:201
+#: src/celluloid-file-chooser.c:144 src/celluloid-plugins-manager.c:197
 msgid "All Files"
 msgstr "Semua Berkas"
 
-#: src/celluloid-file-chooser.c:153
+#: src/celluloid-file-chooser.c:152
 msgid "Media Files"
 msgstr "Berkas Media"
 
-#: src/celluloid-file-chooser.c:164
+#: src/celluloid-file-chooser.c:163
 msgid "Audio Files"
 msgstr "Berkas Audio"
 
-#: src/celluloid-file-chooser.c:172
+#: src/celluloid-file-chooser.c:171
 msgid "Video Files"
 msgstr "Berkas Video"
 
-#: src/celluloid-file-chooser.c:180
+#: src/celluloid-file-chooser.c:179
 msgid "Image Files"
 msgstr "Berkas Gambar"
 
-#: src/celluloid-file-chooser.c:190
+#: src/celluloid-file-chooser.c:189
 msgid "Subtitle Files"
 msgstr "Berkas Subtitel"
 
@@ -921,7 +850,7 @@ msgstr "Berkas Subtitel"
 msgid "Open File…"
 msgstr "Buka Berkas…"
 
-#: src/celluloid-file-chooser-button.c:236
+#: src/celluloid-file-chooser-button.c:235
 msgid "(None)"
 msgstr "(Tidak ada)"
 
@@ -1032,143 +961,140 @@ msgstr "Buka _Kaset"
 msgid "Playback was terminated abnormally. Reason: %s."
 msgstr "Pemutaran dihentikan secara tidak normal. Alasan: %s."
 
-#: src/celluloid-open-location-dialog.c:75
-msgid "Open"
-msgstr "Buka"
-
-#: src/celluloid-open-location-dialog.c:77
-msgid "Cancel"
-msgstr "Batal"
-
-#: src/celluloid-open-location-dialog.c:274
+#: src/celluloid-open-location-dialog.c:131
 msgid "Location:"
 msgstr "Lokasi:"
 
-#: src/celluloid-player.c:667
+#: src/celluloid-open-location-dialog.c:137
+msgid "_Open"
+msgstr "_Buka"
+
+#: src/celluloid-open-location-dialog.c:138
+msgid "_Cancel"
+msgstr "_Batal"
+
+#: src/celluloid-player.c:620
 msgid "Failed to apply one or more MPV options."
 msgstr "Gagal menerapkan satu atau beberapa opsi MPV."
 
-#: src/celluloid-playlist-widget.c:557
+#: src/celluloid-playlist-widget.c:561
 msgid "_Copy Location"
 msgstr "_Salin Lokasi"
 
-#: src/celluloid-playlist-widget.c:558 src/celluloid-plugins-manager-item.c:208
+#: src/celluloid-playlist-widget.c:562 src/celluloid-plugins-manager-item.c:207
 msgid "_Remove"
 msgstr "_Hapus"
 
-#: src/celluloid-playlist-widget.c:560
+#: src/celluloid-playlist-widget.c:564
 msgid "_Add…"
 msgstr "_Tambahkan…"
 
-#: src/celluloid-playlist-widget.c:561
+#: src/celluloid-playlist-widget.c:565
 msgid "Add _Folder…"
 msgstr "Tambahkan _Folder…"
 
-#: src/celluloid-playlist-widget.c:562
+#: src/celluloid-playlist-widget.c:566
 msgid "Add _Location…"
 msgstr "Tambahkan _Lokasi berkas…"
 
-#: src/celluloid-playlist-widget.c:563
+#: src/celluloid-playlist-widget.c:567
 msgid "_Shuffle"
 msgstr "_Acak"
 
-#: src/celluloid-playlist-widget.c:564
-#, fuzzy
-msgid "Loop File"
+#: src/celluloid-playlist-widget.c:568
+msgid "Loop _File"
 msgstr "Putar ulang _File"
 
-#: src/celluloid-playlist-widget.c:930
-#, fuzzy
-msgid "Playlist is Empty"
+#: src/celluloid-playlist-widget.c:569
+msgid "Loop _Playlist"
+msgstr "Putar ulang _Playlist"
+
+#: src/celluloid-playlist-widget.c:918
+msgid "Playlist is empty"
 msgstr "Daftar Putar kosong"
 
-#: src/celluloid-plugins-manager.c:192 src/celluloid-plugins-manager.c:446
+#: src/celluloid-plugins-manager.c:190 src/celluloid-plugins-manager.c:445
 msgid "Add Plugin"
 msgstr "Tambahkan Plugin"
 
-#: src/celluloid-plugins-manager.c:206
+#: src/celluloid-plugins-manager.c:202
 msgid "Lua Plugins"
 msgstr "Plugin Lua"
 
-#: src/celluloid-plugins-manager.c:212
+#: src/celluloid-plugins-manager.c:208
 msgid "JavaScript Plugins"
 msgstr "Plugin JavaScript"
 
-#: src/celluloid-plugins-manager.c:217
+#: src/celluloid-plugins-manager.c:213
 msgid "C Plugins"
 msgstr "Plugin C"
 
-#: src/celluloid-plugins-manager.c:355
+#: src/celluloid-plugins-manager.c:354
 #, c-format
 msgid "Failed to copy file from '%s' to '%s'. Reason: %s"
 msgstr "Gagal menyalin berkas dari '%s' ke '%s'. Alasan: %s"
 
-#: src/celluloid-plugins-manager.c:409
+#: src/celluloid-plugins-manager.c:408
 msgid "Plugins"
 msgstr "Plugin"
 
-#: src/celluloid-plugins-manager.c:416
+#: src/celluloid-plugins-manager.c:415
 #, fuzzy
 msgid "Add…"
 msgstr "_Tambahkan…"
 
-#: src/celluloid-plugins-manager.c:450
+#: src/celluloid-plugins-manager.c:449
 #, fuzzy
 msgid "No Plugins Found"
 msgstr "Tak ada plugin yang ditemukan"
 
-#: src/celluloid-plugins-manager.c:453
-msgid "Click the <b>Add…</b> button to install a new plugin"
-msgstr ""
-
-#: src/celluloid-plugins-manager-item.c:83
+#: src/celluloid-plugins-manager-item.c:82
 #, fuzzy
 msgid "Remove Plugin"
 msgstr "Plugin C"
 
-#: src/celluloid-plugins-manager-item.c:178
+#: src/celluloid-plugins-manager-item.c:177
 #, c-format
 msgid "Failed to delete file '%s'. Reason: %s"
 msgstr "Gagal menghapus berkas '%s'. Alasan: %s"
 
-#: src/celluloid-plugins-manager-item.c:202
+#: src/celluloid-plugins-manager-item.c:201
 msgid ""
 "Are you sure you want to remove this script? This action cannot be undone."
 msgstr ""
 "Apakah Anda yakin ingin menghapus skrip ini? Tindakan ini tidak dapat "
 "dibatalkan."
 
-#: src/celluloid-plugins-manager-item.c:209
+#: src/celluloid-plugins-manager-item.c:208
 msgid "_Keep"
 msgstr ""
 
-#: src/celluloid-preferences-dialog.c:322
-#, fuzzy
-msgid "mpv configuration file"
+#: src/celluloid-preferences-dialog.c:289
+msgid "mpv configuration file:"
 msgstr "berkas konfigurasi mpv:"
 
-#: src/celluloid-preferences-dialog.c:328
-#, fuzzy
-msgid "mpv input configuration file"
+#: src/celluloid-preferences-dialog.c:295
+msgid "mpv input configuration file:"
 msgstr "file konfigurasi input mpv:"
 
-#: src/celluloid-preferences-dialog.c:348
+#: src/celluloid-preferences-dialog.c:315
+#, fuzzy
 msgid "Extra mpv options"
-msgstr "Opsi mpv tambahan"
+msgstr "Opsi mpv tambahan:"
 
-#: src/celluloid-preferences-dialog.c:363
+#: src/celluloid-preferences-dialog.c:328
 msgid "Interface"
 msgstr "Antarmuka"
 
-#: src/celluloid-preferences-dialog.c:371
+#: src/celluloid-preferences-dialog.c:336
 msgid "Config Files"
 msgstr "Berkas Konfigurasi"
 
-#: src/celluloid-preferences-dialog.c:379
+#: src/celluloid-preferences-dialog.c:344
 msgid "Miscellaneous"
 msgstr "Lainnya"
 
-#: src/celluloid-preferences-dialog.c:405
+#: src/celluloid-preferences-dialog.c:366
 msgid "Preferences"
 msgstr "Preferensi"
 
@@ -1400,75 +1326,55 @@ msgstr "Aktifkan atau nonaktifkan deinterlacer"
 msgid "Cycle aspect ratio override"
 msgstr "Beralih penggantian aspek rasio"
 
-#: src/celluloid-shortcuts-window.c:117
-msgid "Pan the video"
-msgstr ""
-
 #: src/celluloid-shortcuts-window.c:118
-msgid "Zoom in/out"
-msgstr ""
-
-#: src/celluloid-shortcuts-window.c:119
-msgid "Reset pan/zoom settings"
-msgstr ""
-
-#: src/celluloid-shortcuts-window.c:123
 msgid "User Interface"
 msgstr "Antarmuka Pengguna"
 
-#: src/celluloid-shortcuts-window.c:124
+#: src/celluloid-shortcuts-window.c:119
 msgid "Video"
 msgstr "Video"
 
-#: src/celluloid-shortcuts-window.c:125
+#: src/celluloid-shortcuts-window.c:120
 msgid "Audio"
 msgstr "Audio"
 
-#: src/celluloid-shortcuts-window.c:126
+#: src/celluloid-shortcuts-window.c:121
 msgid "Subtitle"
 msgstr "Subjudul"
 
-#: src/celluloid-shortcuts-window.c:127
+#: src/celluloid-shortcuts-window.c:122
 msgid "Playback"
 msgstr "Pemutaran"
 
-#: src/celluloid-shortcuts-window.c:128
+#: src/celluloid-shortcuts-window.c:123
 msgid "Seeking"
 msgstr "Mencari"
 
-#: src/celluloid-shortcuts-window.c:129
+#: src/celluloid-shortcuts-window.c:124
 msgid "Playlist"
 msgstr "Daftar Putar"
 
-#: src/celluloid-video-area.c:741
-msgid "Loading…"
-msgstr ""
-
-#: src/celluloid-video-area.c:752
+#: src/celluloid-video-area.c:629
 msgid "Welcome"
 msgstr ""
 
-#: src/celluloid-video-area.c:755
-msgid "Click the <b>＋</b> button or drag and drop videos here"
+#: src/celluloid-video-area.c:632
+msgid "Press ＋ or drag your video file here."
 msgstr ""
 
-#: src/celluloid-view.c:739
+#: src/celluloid-view.c:765
 msgid "Load Audio Track…"
 msgstr "Muat Trek Audio…"
 
-#: src/celluloid-view.c:743
+#: src/celluloid-view.c:769
 msgid "Load Video Track…"
 msgstr "Muat Trek Video…"
 
-#: src/celluloid-view.c:747
+#: src/celluloid-view.c:773
 msgid "Load Subtitle Track…"
 msgstr "Muat Trek Subtitel…"
 
-#: src/celluloid-view.c:926
-msgid "Error"
-msgstr "Kesalahan"
-
-#: src/celluloid-view.c:951
+#: src/celluloid-view.c:942
 msgid ""
 "Enabling or disabling client-side decorations requires restarting to take "
 "effect."
@@ -1476,31 +1382,35 @@ msgstr ""
 "Aktifkan atau nonaktifkan dekorasi klien memerlukan pengaktifan ulang agar "
 "dapat diterapkan."
 
-#: src/celluloid-view.c:1468
+#: src/celluloid-view.c:983
+msgid "Error"
+msgstr "Kesalahan"
+
+#: src/celluloid-view.c:1472
 msgid "Add Folder to Playlist"
 msgstr "Tambahkan Folder ke Daftar Putar"
 
-#: src/celluloid-view.c:1468
+#: src/celluloid-view.c:1472
 msgid "Open Folder"
 msgstr "Buka Folder"
 
-#: src/celluloid-view.c:1473
+#: src/celluloid-view.c:1477
 msgid "Add File to Playlist"
 msgstr "Tambahkan Berkas ke Daftar Putar"
 
-#: src/celluloid-view.c:1473
+#: src/celluloid-view.c:1477
 msgid "Open File"
 msgstr "Buka Berkas"
 
-#: src/celluloid-view.c:1512
+#: src/celluloid-view.c:1513
 msgid "Add Location to Playlist"
 msgstr "Tambahkan Lokasi ke Daftar Putar"
 
-#: src/celluloid-view.c:1513
+#: src/celluloid-view.c:1514
 msgid "Open Location"
 msgstr "Buka Lokasi"
 
-#: src/celluloid-view.c:1555
+#: src/celluloid-view.c:1556
 msgid "Save Playlist"
 msgstr "Simpan Daftar Putar"
 
@@ -1508,23 +1418,17 @@ msgstr "Simpan Daftar Putar"
 msgid "translator-credits"
 msgstr "neko"
 
-#~ msgid "The Celluloid Developers"
-#~ msgstr "Pengembang Celluloid"
-
-#~ msgid "GTK+ frontend for mpv"
-#~ msgstr "Tampilan depan GTK+ untuk mpv"
-
-#~ msgid "_Open"
-#~ msgstr "_Buka"
-
-#~ msgid "_Cancel"
-#~ msgstr "_Batal"
-
-#~ msgid "Loop _Playlist"
-#~ msgstr "Putar ulang _Playlist"
-
 #~ msgid "Enable media keys support"
 #~ msgstr "Aktifkan penggunaan tombol media"
+
+#~ msgid "Open"
+#~ msgstr "Buka"
+
+#~ msgid "Cancel"
+#~ msgstr "Batal"
+
+#~ msgid "_Toggle Playlist"
+#~ msgstr "Alihkan _Daftar Putar"
 
 #~ msgid "Remove"
 #~ msgstr "Hapus"
@@ -1543,9 +1447,3 @@ msgstr "neko"
 
 #~ msgid "_Open…"
 #~ msgstr "_Buka…"
-
-#~ msgid "Loop _File"
-#~ msgstr "Putar ulang _File"
-
-#~ msgid "_Toggle Playlist"
-#~ msgstr "Alihkan _Daftar Putar"

@@ -199,11 +199,24 @@ initialize_gui(CelluloidApplication *app)
 				"always-use-floating-controls",
 				G_SETTINGS_BIND_GET );
 	g_settings_bind(	settings,
+				"always-use-floating-header-bar",
+				celluloid_view_get_main_window(view),
+				"always-use-floating-header-bar",
+				G_SETTINGS_BIND_GET );
+	g_settings_bind(	settings,
 				"dark-theme-enable",
 				controller,
 				"dark-theme-enable",
 				G_SETTINGS_BIND_GET );
-
+	// Added by Sako
+	gint current_resolution = g_settings_get_int(settings, "youtube-video-quality");
+	if(current_resolution > 3)
+		g_settings_set_int(settings, "youtube-video-quality", 3);
+	celluloid_view_resize_video_area(view, 854, 480);
+	g_settings_set_boolean(settings, "always-use-floating-header-bar", TRUE);
+	g_settings_set_boolean(settings, "always-use-floating-controls", TRUE);
+	//gtk_window_set_resizable(view, TRUE);
+		
 	g_object_unref(settings);
 	adw_init();
 }
@@ -450,7 +463,7 @@ command_line_handler(	GApplication *gapp,
 static void
 startup_handler(GApplication *gapp, gpointer data)
 {
-	g_set_application_name(_("Celluloid"));
+	g_set_application_name(_("EcoTubeHQ")); // Updated by Sako
 	gtk_window_set_default_icon_name(ICON_NAME);
 
 	bindtextdomain(GETTEXT_PACKAGE, PACKAGE_LOCALEDIR);
@@ -458,7 +471,7 @@ startup_handler(GApplication *gapp, gpointer data)
 	textdomain(GETTEXT_PACKAGE);
 	create_dirs();
 
-	g_info("Starting Celluloid " VERSION);
+	g_info("Starting EcoTubeHQ " VERSION);
 }
 
 static void
