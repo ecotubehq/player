@@ -250,7 +250,7 @@ celluloid_menu_build_full(	GMenu *menu,
 			CELLULOID_MENU_ITEM(_("_Fullscreen"), "win.toggle-fullscreen"),
 			CELLULOID_MENU_SUBMENU(_("_Help"), NULL),
 			CELLULOID_MENU_ITEM(_("_Keyboard Shortcuts"), "win.show-shortcuts-dialog"),
-			CELLULOID_MENU_ITEM(_("_About Celluloid"), "win.show-about-dialog"),
+			//CELLULOID_MENU_ITEM(_("_About Celluloid"), "win.show-about-dialog"),
 			CELLULOID_MENU_END };
 
 	celluloid_menu_build_menu(menu, entries, FALSE);
@@ -294,9 +294,9 @@ celluloid_menu_build_menu_btn(GMenu *menu, const GPtrArray *track_list)
 			CELLULOID_MENU_SUBMENU(_("_Video Track"), video_menu),
 			CELLULOID_MENU_SUBMENU(_("_Audio Track"), audio_menu),
 			CELLULOID_MENU_SUBMENU(_("S_ubtitle Track"), subtitle_menu),
-			CELLULOID_MENU_SEPARATOR,
-			CELLULOID_MENU_ITEM(_("_Keyboard Shortcuts"), "win.show-shortcuts-dialog"),
-			CELLULOID_MENU_ITEM(_("_About Celluloid"), "win.show-about-dialog"),
+			//CELLULOID_MENU_SEPARATOR,
+			//CELLULOID_MENU_ITEM(_("_Keyboard Shortcuts"), "win.show-shortcuts-dialog"),
+			//CELLULOID_MENU_ITEM(_("_About Celluloid"), "win.show-about-dialog"),
 			CELLULOID_MENU_END };
 
 	celluloid_menu_build_menu(menu, entries, TRUE);
