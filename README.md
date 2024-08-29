@@ -10,7 +10,7 @@ EcoTubeHQ Video Player offers high quality video playback for many DRM-free stre
 
 
 
-![screenshot](https://raw.githubusercontent.com/ecotubehq/player/master/ecotube-1.png)
+![screenshot](https://raw.githubusercontent.com/ecotubehq/player/master/ecotube-3.png)
 
 More details...
 
