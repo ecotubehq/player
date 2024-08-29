@@ -35,6 +35,7 @@
 #include "celluloid-menu.h"
 #include "celluloid-common.h"
 #include "celluloid-def.h"
+#include <stdlib.h> 
 
 enum
 {
@@ -1884,168 +1885,10 @@ celluloid_view_show_about_window (CelluloidView *view)
 }
 
 void
-celluloid_view_show_usage_window (CelluloidView *view)
-{
-        /*adw_show_about_window(GTK_WINDOW(view), 
-                              "application-name", "EcoTube+ Video Player.\n\nEcoTube+ plays videos from many streaming services and offers high quality video at minimal bitrates.\n\n-------------------------------------------------\n\nHow to use.\n\nTo play a video simply copy the video URL from the browser, click \"+\" at the top left of the player, select Open Location [the aforementioned browser URL is automatically entered]. Playback will initiate when the Open button is clicked.\n\nDouble click the mouse on the player screen to play video full-screen.\n\nPress the spacebar or the right mouse key to pause / start video playback.\n\n-------------------------------------------------\n\nEcoTube+ Preferences.\n\nAV Options\n\nVideo Output\n\nBQ - Best Quality - AMD FSR Video Upscaling [Default]\nHQ - High Guality - Lanczos Video Upscaling\nLE - Low Energy - Bicubic Video Upscaling\n\nYouTube Options\n\nVideo Codec\n\nav1 - Best quality video with lowest bitrate [Default]\nvp9 - Good quality video with low bitrate\nh.264 - Lowest quality video with the highest bitrate\n\n*Note: If the video codec for output is set to av1 but this codec isn't available then vp9 will be utilised, and if vp9 isn't available then h.264 will be used. Similarly, if vp9 is selected but isn't available then h.264 will be output. \n\nAvailable video resolutions for av1 & vp9 [to minimize the video bitrate 1080p and 60fps are not supported]:\n\n720p\n480p [Default]\n360p\n240p\n144p\n\n*Note: YouTube's h.264 output only supports 144p, 360p and 720p for the majority of videos. If av1 or vp9 is selected at 240p or 480p on one of these videos then h.264 is output at the next available resolution, i.e. 240p is output at 360p & 480p is output at 720p.\n\nAudio Quality *av1 and vp9 only*\n\nHi - 160Kbps\nLo - 70Kbps [Default]\n\nTheater Mode *This mode is used by 144p and 240p only*\n\nIf Theater Mode is turned off and the video resolution is 144p or 240p then a double-click on the player screen removes the window decoration. If the window is moved to a desired location and \"Always on top\" is turned on prior to the double-click then the window will always be visible in the position of your choice during video output. A second double-click on the player screen will restore the window decorations.\n\nWhen Theater Mode is turned on then a double-click on the player screen will play 144p and 240p videos in the center of a black screen at 3x resultion:\n144p video resolution = 432 x 768\n240p video resolution = 720 x 1278\nPressing Esc or double clicking the playback area will return the player to normal playback.\n\n-------------------------------------------------\n\nEcoTube+ Concept: Colin Bett\nCoding: Sako Adams\n\nForked from the Celluloid Video Player\n\nThis application comes with absolutely no warranty. See the GNU General Public Licence, version 3 or later for details - https://www.gnu.org/licenses/gpl-3.0.html.\n",
-                              "comment", "How to use it!",
-                              NULL);
-       */
-       		/*show_message_dialog(	view,
-					GTK_MESSAGE_ERROR,
-					_("Error"),
-					"br",
-					"Hello <b>Sako</b>" );*/
-	    GtkWidget* hello_markup = gtk_message_dialog_new_with_markup(
-        GTK_WINDOW(view), GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK,
-        "<b>EcoTubeHQ Video Player offers high quality video playback for many DRM-free streaming services at minimal bitrates. Hardware acceleration is utilised where possible during video playback to optimize quality and minimize CPU usage.</b>!\n"\
-        "---------------------------------------------------------------------------------------------------------------------------------------------------\n\n"\
-        "<b><i>How to use.</i></b>\n\n"\
-        "To play a video from an online streaming service simply copy the video URL from the browser, click '+' at the top left of the player and select 'Open Location'. The player automatically places the copied video location imto the 'Location' entry box - click the 'Open' button to initiate playback."\
-        "\nPress the spacebar or right click the mouse on the player screen to pause / play video playback.\n\n---------------------------------------------------------------------------------------------------------------------------------------------------\n\n"\
-        "<b><i>EcoTubeHQ Preferences.</i></b>\n\n"\
-        "<b>AV Options</b>\n\n"\
-        "<i>Video Output</i>\n"\
-        "<b>BQ - Best Quality -</b> AMD FSR Video Upscaling [Default\n"\
-        "<b>HQ - High Guality -</b> Lanczos Video Upscaling\n"\
-        "<b>LE - Low Energy -</b> Bicubic Video Upscaling"
-        "<b>YouTube Options</b>\n\n"\
-        "<i>Video Codec</i>\n\n"\
-        "<b>av1 -</b> Best quality video with lowest bitrate [Default]\n"\
-        "<b>vp9 -</b> Good quality video with low bitrate\n"\
-        "<b>h.264 -</b> Lowest quality video with the highest bitrate\n\n"\
-        "*Note: If the video codec is set to av1 but this codec isn't available then vp9 will be utilised, and if vp9 isn't available then h.264 will be used.\n"\
-		"\n<b><i>Video Resolution</i></b>\n\n"\
-		"<b>720p</b>\n"\
-		"<b>480p [Default]</b>\n"\
-		"<b>360p</b>\n"\
-		"<b>240p</b>\n"\
-		"<b>144p</b>\n\n"\
-		"<b>*</b>Note: To minimize video data usage 1080p and 60fps are not supported.\n\n"\
-"<i>Audio Quality *av1 and vp9 only*</i>\n"\
+celluloid_view_show_usage_window (CelluloidView *view){
 
-"<b>Hi -</b> 160Kbps\n"\
-"<b>Lo -</b> 70Kbps [Default]\n\n"\
+	system("xdg-open https://github.com/ecotubehq/player"); 
 
-"-------------------------------------------------\n\n"\
-
-"EcoTubeHQ <b>Original Concept: Colin Bett</b>\n"\
-"Coding and additional ideas: <b>Sako Adams</b>\n"\
-
-"Forked from the Celluloid Video Player\n"\
-
-"This application comes with absolutely no warranty. See the GNU General Public Licence, version 3 or later for details - https://www.gnu.org/licenses/gpl-3.0.html.\n\n");
-
-    // We *could* add secondary text, either plain text or with
-    // markup, but we haven't done it here, just to show what the end
-    // result looks like. Either way, printf-style formatting is
-    // available.
-
-    // gtk_message_dialog_format_secondary_markup(
-    //     GTK_MESSAGE_DIALOG(hello_markup),
-    //     "This is <i>secondary</i> markup.");
-
-    // Again, this displays the second dialog as a modal dialog.
-    //gtk_dialog_run(GTK_DIALOG(hello_markup));
-
-    //gtk_widget_destroy(hello_markup);
-		gtk_window_set_title(GTK_WINDOW(hello_markup), "EcoTubeHQ Video Player.");
-		gtk_window_set_modal(GTK_WINDOW(hello_markup), FALSE);
-		//gtk_widget_set_size_request(GTK_WINDOW(hello_markup), 730, 1150);
-		gtk_widget_set_visible(hello_markup, TRUE);
-		
-/*		
-    GtkWidget *window, *vbox, *scrolled_window, *label;
-
-    window = GTK_WINDOW(view);//gtk_application_window_new( app );
-
-    //gtk_window_set_default_size (GTK_WINDOW (window), 100, 50);
-
-    vbox = gtk_box_new( GTK_ORIENTATION_VERTICAL, 10 );
-
-    scrolled_window = gtk_scrolled_window_new();
-
-    label = gtk_label_new("<0.o>");
-    gtk_label_set_markup(GTK_LABEL(label), "<b>EcoTube+ plays videos from many streaming services and offers high quality video at minimal bitrates.</b>"\
-        "<span>---------------------------------------------------------------------------------------------------------------------------------------------------\n\n"\
-        "<b><i>How to use.</i></b>\n\n"\
-        "To play a video simply copy the video URL from the browser, click \"+\" at the top left of the player, select Open Location [the aforementioned browser URL is automatically entered]. Playback will initiate when the Open button is clicked.\n\nDouble click the mouse on the player screen to play video full-screen.\n\nPress the spacebar or the right mouse key to pause / start video playback."\
-        "\n\n---------------------------------------------------------------------------------------------------------------------------------------------------<span>\n\n"\
-        "<b><i>EcoTube+ Preferences.</i></b>\n\n"\
-        "<b>AV Options</b>\n\n"\
-        "<i>Video Output</i>\n"\
-        "<b>BQ - Best Quality -</b> AMD FSR Video Upscaling [Default\n"\
-        "<b>HQ - High Guality -</b> Lanczos Video Upscaling\n"\
-        "<b>LE - Low Energy -</b> Bicubic Video Upscaling"
-        "<b>YouTube Options</b>\n\n"\
-        "<i>Video Codec</i>\n\n"\
-        "<b>av1 -</b> Best quality video with lowest bitrate [Default]\n"\
-        "<b>vp9 -</b> Good quality video with low bitrate\n"\
-        "<b>h.264 -</b> Lowest quality video with the highest bitrate\n\n"\
-        "Available video resolutions for av1 and vp9 [to minimize the video bitrate 1080p and 60fps are not supported]:\n"\
-		"<b>720p</b>\n"\
-		"<b>480p [Default]</b>\n"\
-		"<b>360p</b>\n"\
-		"<b>240p</b>\n"\
-		"<b>144p</b>\n\n"\
-		"<b>*</b>Note: YouTube's h.264 output only supports 144p, 360p and 720p for the majority of videos. If av1 or vp9 is selected at 240p or 480p on one of these videos then h.264 is output at the next available resolution, i.e. 240p is output at 360p and 480p is output at 720p.\n\n"\
-"<i>Audio Quality *av1 and vp9 only*</i>\n"\
-
-"<b>Hi -</b> 160Kbps\n"\
-"<b>Lo -</b> 70Kbps [Default]\n\n"\
-
-"Theater Mode *This mode is used by 144p and 240p only*\n\n"\
-
-"If Theater Mode is turned off and the video resolution is 144p or 240p then a double-click on the player screen removes the window decoration. If the window is moved to a desired location and \"Always on top\" is turned on prior to the double-click then the window will always be visible in the position of your choice during video output. A second double-click on the player screen will restore the window decorations.\n"\
-
-"When Theater Mode is turned on then a double-click on the player screen will play 144p and 240p videos in the center of a black screen at 3x resultion:\n"\
-"144p video resolution = 432 x 768\n"\
-"240p video resolution = 720 x 1278\n"\
-"Pressing Esc or double clicking the playback area will return the player to normal playback.\n"\
-
-"-------------------------------------------------\n\n"\
-
-"EcoTube+ <b>Concept: Colin Bett</b>\n"\
-"Coding: <b>Sako Adams</b>\n"\
-
-"Forked from the Celluloid Video Player\n"\
-
-"This application comes with absolutely no warranty. See the GNU General Public Licence, version 3 or later for details - https://www.gnu.org/licenses/gpl-3.0.html.\n\n");
-
-    gtk_scrolled_window_set_child( GTK_SCROLLED_WINDOW( scrolled_window ),
-        label );
-
-    gtk_box_append( GTK_BOX( vbox ), scrolled_window );
-
-    gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( scrolled_window ),
-        GTK_POLICY_ALWAYS,
-        GTK_POLICY_ALWAYS );
-
-    gtk_window_set_child( GTK_WINDOW( window ), vbox );
-
-    gtk_widget_show( window );
-    */
-	  /*GtkWidget *dialog = gtk_about_dialog_new();
-	  //gtk_about_dialog_set_name(GTK_ABOUT_DIALOG(dialog), "Battery");
-	  gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(dialog), "0.9"); 
-	  gtk_about_dialog_set_copyright(GTK_ABOUT_DIALOG(dialog), "(c) Jan Bodnar");
-	  gtk_about_dialog_set_comments(GTK_ABOUT_DIALOG(dialog), "Battery is a simple tool for battery checking.");
-	  gtk_about_dialog_set_website(GTK_ABOUT_DIALOG(dialog), "http://www.batteryhq.net");
-	  //gtk_about_dialog_set_logo(GTK_ABOUT_DIALOG(dialog), pixbuf);
-	  //gtk_dialog_run(GTK_DIALOG (dialog));
-	  */
-/*const gchar *const authors[] = AUTHORS;
-		adw_show_about_window(GTK_WINDOW(view), 
-"name", "GNOME Test Program", 
-                                 "version", VERSION,
-			             "copyright", "(C) 1998-2001 The Free Software Foundation",
-				     "comments", "Program to display GNOME functions.",
-			             "authors", authors,
-			             "documenters", NULL,
-			             "translator-credits", _("translator-credits"),
-				     "logo", ICON_NAME,
-                              NULL);
-                              */
 }
 
 void
