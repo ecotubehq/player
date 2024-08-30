@@ -4,22 +4,22 @@
          xmlns:gnome="http://api.gnome.org/doap-extensions#"
          xmlns="http://usefulinc.com/ns/doap#">
 
-  <name xml:lang="en">Celluloid</name>
+  <name xml:lang="en">ecotube</name>
   <shortdesc xml:lang="en">Plays videos</shortdesc>
-  <homepage rdf:resource="https://celluloid-player.github.io" />
-  <bug-database rdf:resource="https://github.com/celluloid-player/celluloid/issues" />
+  <homepage rdf:resource="https://github.com/ecotubehq/player" />
+  <bug-database rdf:resource="https://github.com/ecotubehq/player/issues" />
   <programming-language>C</programming-language>
   <platform>GTK 4</platform>
   <platform>Libadwaita</platform>
 
   <maintainer>
     <foaf:Person>
-      <foaf:name>gnome-mpv</foaf:name>
-      <foaf:mbox rdf:resource="mailto:gnome-mpv@km.away.im" />
+      <foaf:name>ecotubehq-player</foaf:name>
+      <foaf:mbox rdf:resource="mailto:sakoadam@googlemail.com" />
       <foaf:account>
         <foaf:OnlineAccount>
           <foaf:accountServiceHomepage rdf:resource="https://github.com" />
-          <foaf:accountName>gnome-mpv</foaf:accountName>
+          <foaf:accountName>ecotubehq-player</foaf:accountName>
         </foaf:OnlineAccount>
       </foaf:account>
     </foaf:Person>

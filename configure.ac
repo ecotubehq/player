@@ -2,9 +2,9 @@ AC_PREREQ([2.69])
 
 AC_INIT(	[ecotube],
 		[0.26],
-		[https://github.com/sakoba365/ecotube/issues],
+		[https://github.com/ecotubehq/player/issues],
 		[ecotube],
-		[http://github.com/celluloid/celluloid] )
+		[https://github.com/ecotubehq/player] )
 
 AC_CONFIG_SRCDIR([src/celluloid-main.c])
 AC_CONFIG_MACRO_DIR([m4])
