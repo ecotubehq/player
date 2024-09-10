@@ -1,6 +1,6 @@
 AUTOMAKE_OPTIONS = foreign
 
-bin_PROGRAMS = celluloid
+bin_PROGRAMS = ecotube
 
 mpris_generated = mpris/celluloid-mpris-gdbus.c mpris/celluloid-mpris-gdbus.h
 mpris_files =	mpris/celluloid-mpris.c mpris/celluloid-mpris.h \
