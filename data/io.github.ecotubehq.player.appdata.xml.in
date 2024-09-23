@@ -23,9 +23,9 @@
    <li>MPRIS2 D-Bus interface</li>
   </ul>
  </description>
- <developer_name>Colin and Sako</developer_name>
+ <developer_name>EcoTube Partners</developer_name>
  <releases>
-  <release date="2024-07-27" version="1.1">
+  <release date="2024-09-21" version="1.1">
    <description translatable="no">
     <p>
      First release as Demo

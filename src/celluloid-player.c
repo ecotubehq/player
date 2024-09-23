@@ -412,7 +412,6 @@ mpv_property_changed(CelluloidMpv *mpv, const gchar *name, gpointer value)
 	CelluloidPlayer *player = CELLULOID_PLAYER(mpv);
 	CelluloidPlayerPrivate *priv = get_private(mpv);
 
-	//printf("name #1: %s\n", name);
 	if(g_strcmp0(name, "pause") == 0)
 	{
 		gboolean idle_active = FALSE;
@@ -424,14 +423,11 @@ mpv_property_changed(CelluloidMpv *mpv, const gchar *name, gpointer value)
 		if(idle_active && !pause && !priv->init_vo_config)
 		{
 			load_from_playlist(player);
-			printf("Paused #1: %s-%b-%b\n", name, pause, priv->init_vo_config);
 			GSettings *settings =		g_settings_new(CONFIG_ROOT);
 			int video_resolution_index = g_settings_get_int(settings, "youtube-video-quality");
 			if(video_resolution_index > 3){
 				g_settings_set_int(settings, "youtube-video-quality", 3);
 			}
-		}else{
-			printf("Paused #2: %s-%b-%b\n", name, pause, priv->init_vo_config);
 		}
 	}
 	else if(g_strcmp0(name, "playlist") == 0)
@@ -813,7 +809,7 @@ load_config_file(CelluloidMpv *mpv)
 	GSettings *settings = g_settings_new(CONFIG_ROOT);
 	gchar *v_quality[] = {"144" ,"240", "360", "480", "720", "None"};
 	gchar *v_codec[] = {"av01", "vp09", "avc"};
-	gchar *v_output[] = {"ewa-lanczos", "bicubic_fast", "FSR"};//{"spline16", "ewa-lanczos", "ewa-hanning"};
+	gchar *v_output[] = {"ewa-lanczos", "bicubic_fast", "FSR"};
 
 
 	int video_resolution_index = g_settings_get_int(settings, "youtube-video-quality");
@@ -848,9 +844,9 @@ load_config_file(CelluloidMpv *mpv)
 			if(g_settings_get_int(settings, "youtube-video-codec") != 2){
 				snprintf(selectedOpions, sizeof(selectedOpions), "ytdl-format=bv*[height<=%s]+ba/b[height<=%s] /(wv*+ba/b)[height<=%s]/(wv*+ba/b)/ wv*+ba/w\nscale=%s\ncache=%s\nstream-buffer-size=%s\nprofile=gpu-hq\nreset-on-next-file=all\nhwdec=no\n%s",
 				selected_v_quality, selected_v_quality, selected_v_quality, selected_v_output, "yes", "4MiB", fsr);
-				printf("Loading video for No: %s\n", "h.24");
+				g_info("Loading video for No: %s\n", "h.24");
 			}else{
-				printf("Loading video for: %s\n", "h.24");
+				g_info("Loading video for: %s\n", "h.24");
 				snprintf(selectedOpions, sizeof(selectedOpions), "ytdl-format=bv*[height>=%s]+ba/b[height>=%s] /(wv*+ba/b)[height>=%s]/(wv*+ba/b)/ wv*+ba/w\nscale=%s\ncache=%s\nstream-buffer-size=%s\nprofile=gpu-hq\nreset-on-next-file=all\nhwdec=no\n%s",
 				selected_v_quality, selected_v_quality, selected_v_quality, selected_v_output, "yes", "4MiB", fsr);				
 			}
@@ -861,7 +857,7 @@ load_config_file(CelluloidMpv *mpv)
 
 	}
 	if(strcmp(prevSetting, selectedOpions) == 0){
-		printf("No change was made: %s\n", prevSetting);
+		g_info("No change was made: %s\n", prevSetting);
 		return ;
 	}
 
@@ -875,7 +871,6 @@ load_config_file(CelluloidMpv *mpv)
 	gchar *path = g_file_get_path(file);
 		
 	g_info("Loading config file: %s", path);
-	printf("Loading config file: %s\n", path);
 	celluloid_mpv_load_config_file(mpv, path);
 	g_free(path);
 	g_object_unref(file);
