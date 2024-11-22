@@ -585,6 +585,8 @@ initialize(CelluloidMpv *mpv)
 	CELLULOID_MPV_CLASS(celluloid_player_parent_class)->initialize(mpv);
 
 	load_scripts(player);
+	//add_file_to_playlist(player, "https://www.youtube.com/watch?v=fhdVawea56A");
+	//celluloid_mpv_set_property_flag(mpv, "pause", TRUE);
 }
 
 static gint
@@ -802,7 +804,7 @@ load_input_conf(CelluloidPlayer *player, const gchar *input_conf)
 
 	fclose(tmp_file);
 }
-
+gboolean was_added = FALSE;
 static void
 load_config_file(CelluloidMpv *mpv)
 {
@@ -870,7 +872,7 @@ load_config_file(CelluloidMpv *mpv)
 	GFile *file = g_file_new_for_uri(mpv_conf);
 	gchar *path = g_file_get_path(file);
 		
-	g_info("Loading config file: %s", path);
+	//g_info("Loading config file: %s", path);
 	celluloid_mpv_load_config_file(mpv, path);
 	g_free(path);
 	g_object_unref(file);
@@ -878,6 +880,15 @@ load_config_file(CelluloidMpv *mpv)
 	if(video_resolution_index < 3){
 		g_settings_set_int(settings, "youtube-video-quality", 3);
 	}*/
+	if(!was_added){
+		CelluloidPlayer *player = CELLULOID_PLAYER(mpv);
+		add_file_to_playlist(player, "https://www.youtube.com/watch?v=Re7FqKh7i_c");
+		add_file_to_playlist(player, "https://www.youtube.com/watch?v=Icew8R-VWSY");
+		add_file_to_playlist(player, "https://www.youtube.com/watch?v=l6cxYnWTFi0");
+		add_file_to_playlist(player, "https://www.youtube.com/watch?v=tbkOZTSvrHs");
+		celluloid_mpv_set_property_flag(mpv, "pause", TRUE);
+		was_added = TRUE;
+	}
 	
 	g_object_unref(settings);
 }
@@ -1121,7 +1132,7 @@ update_playlist(CelluloidPlayer *player)
 
 			g_ptr_array_add(priv->playlist, entry);
 		}
-
+		//add_file_to_playlist(player, "https://www.youtube.com/watch?v=fhdVawea56A");
 		mpv_free_node_contents(&playlist);
 		g_object_notify(G_OBJECT(player), "playlist");
 	}
