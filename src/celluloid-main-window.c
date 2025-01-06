@@ -758,8 +758,10 @@ celluloid_main_window_load_state(CelluloidMainWindow *wnd)
 
 		priv->playlist_width
 			= g_settings_get_int(settings, "playlist-width");
+		priv->playlist_width = 200; // fix playlist width
 		priv->playlist_visible
 			= g_settings_get_boolean(settings, "show-playlist");
+		priv->playlist_visible = FALSE; // hide playlist onload
 		controls_visible
 			= g_settings_get_boolean(settings, "show-controls");
 		volume = g_settings_get_double(settings, "volume");
