@@ -5,7 +5,7 @@
  <metadata_license>CC-BY-SA-4.0</metadata_license>
  <project_license>GPL-3.0+</project_license>
  <name>ecotube</name>
- <summary>GTK+ frontend for mpv</summary>
+ <summary>Energy Efficient Video Player</summary>
  <launchable type="desktop-id">io.github.ecotubehq.player.desktop</launchable>
  <translation type="gettext">ecotube</translation>
  <content_rating type="oars-1.1" />
@@ -14,21 +14,23 @@
  </provides>
  <description translatable="no">
   <p>
-    EcoTubeHQ Video Player offers high quality video playback for many DRM-free streaming services at minimal bitrates .
+    EcoTubeHQ is an easy to use video player aimed at playing DRM-free video streaming services [YouTube, Rumble, Twitter-X etc] at minimal bitrates, thus minimizing energy usage when downloading data. Hardware acceleration is employed where possible. Playback can be paused / restarted by right-clicking on the player window or pressing the space bar. 
   </p>
   <p>Features:</p>
   <ul>
-   <li>Drag and drop playlist</li>
-   <li>AMD FidelityFX Super Resolution</li>
-   <li>MPRIS2 D-Bus interface</li>
+   <li>EcoTubeHQ can play high efficiency av1 codec YouTube videos, if av1 isn't available then vp9 is utilized, and if vp9 isn't available then h.264 is utilized. The end result is highest quality / lowest bitrate video. Alternatively, EcoTubeHQ can be set to utilize only vp9 or h.264 codecs.</li>
+   <li>EcoTubeHQ offers multiple methods of video upscaling: AMD FidelityFX Super Resolution [BQ Best Quality], Lanczos [HQ High Quality] and Bicubic [LE Low Energy].</li>
+   <li>EcoTubeHQ restricts the maximum video resolution and framerate. When comparing conventionally upscaled 1080p video to 720p AMD FSR upscaled video there is a significant data reduction with negligible quality diminution, and data usage is further reduced by outputting all video at 30fps.</li>
+   <li>EcoTubeHQ offers two Opus audio bitrates for av1 and vp9 YouTube videos - 70kbps [default] and 160kbps. Audio volume can be increased up to 130% by rotating the mouse wheel on the playback window. The volume resets to 100% when the player is restarted.</li>
+   <li>EcoTubeHQ offers the option to drop URLs onto a playlist. These items can be dragged into an order of your choosing.</li>
   </ul>
  </description>
  <developer_name>EcoTube Partners</developer_name>
  <releases>
-  <release date="2024-09-21" version="1.1">
+  <release date="2024-09-21" version="25.1">
    <description translatable="no">
     <p>
-     First release as Demo
+     Beta
     </p>
    </description>
   </release>
