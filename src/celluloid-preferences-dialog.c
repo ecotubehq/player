@@ -320,16 +320,17 @@ build_page(	const PreferencesDialogItem *items,
 		}
 		if(type == ITEM_INFO_LABEL_BOX)
 		{
-			/*
+			/**/
 			//widget = adw_banner_new(label);
 			widget = gtk_label_new(NULL);
 			char *markup;
-			markup = g_markup_printf_escaped("<span color=\"blue\"><u>\%s</u></span>", label);
+			//markup = g_markup_printf_escaped("<span color=\"blue\"><u>\%s</u></span>", label);
+			markup = g_markup_printf_escaped("<span><u>\%s</u></span>", label);
 			gtk_label_set_markup(GTK_LABEL(widget), markup);
 			g_free(markup);
 			adw_preferences_row_set_title
 				(ADW_PREFERENCES_ROW(widget), label);
-			*/
+			
 		}
 		if(type == ITEM_TYPE_COMBO_AUDIO)
 		{
