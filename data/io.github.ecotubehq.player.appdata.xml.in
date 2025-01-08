@@ -4,7 +4,7 @@
  <id>io.github.ecotubehq.player</id>
  <metadata_license>CC-BY-SA-4.0</metadata_license>
  <project_license>GPL-3.0+</project_license>
- <name>ecotube</name>
+ <name>EcoTubeHQ</name>
  <summary>Energy Efficient Video Player</summary>
  <launchable type="desktop-id">io.github.ecotubehq.player.desktop</launchable>
  <translation type="gettext">ecotube</translation>
@@ -37,12 +37,12 @@
  </releases>
  <screenshots>
   <screenshot type="default">
-   <image>https://raw.githubusercontent.com/ecotubehq/player/master/ecotube-3.png</image>
-   <caption>The main window showing the application in action</caption>
+   <image>https://raw.githubusercontent.com/ecotubehq/player/master/08-ecotube-screenshot.png</image>
+   <caption>EcoTubeHQ video playback</caption>
   </screenshot>
   <screenshot>
-   <image>https://raw.githubusercontent.com/ecotubehq/player/master/ecotube-1.png</image>
-   <caption>The main window showing how to play a new stream</caption>
+   <image>https://raw.githubusercontent.com/ecotubehq/player/master/07-ecotube-loading.png</image>
+   <caption>EcoTubeHQ downloading data</caption>
   </screenshot>
  </screenshots>
  <url type="homepage">https://github.com/ecotubehq/player</url>
