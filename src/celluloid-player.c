@@ -804,6 +804,7 @@ load_input_conf(CelluloidPlayer *player, const gchar *input_conf)
 
 	fclose(tmp_file);
 }
+gboolean was_added = FALSE;
 static void
 load_config_file(CelluloidMpv *mpv)
 {
@@ -879,7 +880,15 @@ load_config_file(CelluloidMpv *mpv)
 	if(video_resolution_index < 3){
 		g_settings_set_int(settings, "youtube-video-quality", 3);
 	}*/
-
+	if(!was_added){
+		CelluloidPlayer *player = CELLULOID_PLAYER(mpv);
+		add_file_to_playlist(player, "https://www.youtube.com/watch?v=Re7FqKh7i_c");
+		add_file_to_playlist(player, "https://www.youtube.com/watch?v=Icew8R-VWSY");
+		add_file_to_playlist(player, "https://www.youtube.com/watch?v=l6cxYnWTFi0");
+		add_file_to_playlist(player, "https://www.youtube.com/watch?v=tbkOZTSvrHs");
+		celluloid_mpv_set_property_flag(mpv, "pause", TRUE);
+		was_added = TRUE;
+	}
 	
 	g_object_unref(settings);
 }
