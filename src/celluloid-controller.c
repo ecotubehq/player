@@ -240,6 +240,8 @@ update_extra_mpv_options(CelluloidController *controller);
 
 G_DEFINE_TYPE(CelluloidController, celluloid_controller, G_TYPE_OBJECT)
 
+void sa_append_default_videos(CelluloidModel *model);
+
 static void
 constructed(GObject *object)
 {
@@ -564,7 +566,7 @@ close_request_handler(CelluloidView *view, gpointer data)
 
 	return TRUE;
 }
-
+gboolean is_default= TRUE;
 static void
 playlist_item_activated_handler(CelluloidView *view, gint pos, gpointer data)
 {
@@ -572,7 +574,12 @@ playlist_item_activated_handler(CelluloidView *view, gint pos, gpointer data)
 	CelluloidModel *model = controller->model;
 	gboolean idle_active = FALSE;
 	gint64 playlist_pos = -1;
-
+	if(is_default)
+	{
+		printf("Almost there\n");
+		is_default = FALSE;
+		sa_append_default_videos(model);
+	}
 	g_object_get(	model,
 			"idle-active", &idle_active,
 			"playlist-pos", &playlist_pos,
@@ -1089,7 +1096,9 @@ window_resize_handler(	CelluloidModel *model,
 			gpointer data )
 {
 	CelluloidController *controller = data;
-
+	if(1<2){
+		return;
+	}
 	celluloid_view_resize_video_area(controller->view, (gint)width, (gint)height);
 }
 
@@ -1208,9 +1217,10 @@ video_area_resize_handler(	CelluloidView *view,
 
 	// Rate-limit the call to update_window_scale(), which will update the
 	// window-scale property in the model, to no more than once every 250ms.
-	controller->resize_timeout_tag = g_timeout_add(	250,
+	// disable resizing
+	/*controller->resize_timeout_tag = g_timeout_add(	250,
 							update_window_scale,
-							params );
+							params );*/
 }
 
 static void
@@ -1512,4 +1522,20 @@ CelluloidModel *
 celluloid_controller_get_model(CelluloidController *controller)
 {
 	return controller->model;
+}
+void sa_append_default_videos(CelluloidModel *model){
+	GPtrArray *playlist = NULL;
+	gchar *videos[] = {"https://www.youtube.com/watch?v=YbxpieEQ7bc" ,
+					   "https://www.youtube.com/watch?v=jSFo_92cJ-U",
+					  "https://www.youtube.com/watch?v=Re7FqKh7i_c", 
+					  "https://www.youtube.com/watch?v=Icew8R-VWSY", 
+					  "https://alchemicalscience.org/thunderstorm-generator-complete-diy-build-guide-malcolm-bendalls-plasmoid-tech"
+					  };
+	
+	for(gint i=0; i<5; i++){
+		gchar *uri = videos[i];		
+		g_object_get(model, "playlist", &playlist, NULL);
+		CelluloidPlaylistEntry *entry = celluloid_playlist_entry_new(uri, NULL);
+		g_ptr_array_add(playlist, entry);	  
+	}
 }

@@ -218,7 +218,7 @@ playlist_row_reordered_handler(	CelluloidPlaylistWidget *widget,
 				gint src,
 				gint dest,
 				gpointer data );
-
+void sa_load_default_videos_1(CelluloidView *view);
 static void
 constructed(GObject *object)
 {
@@ -752,39 +752,6 @@ update_title(CelluloidView *view)
 		}else{
 			media_bitrate = "160kbps";
 		}
-		/*if(media_bitrate){
-			if (strstr(media_bitrate, "kbps") != NULL) {
-				//sprintf(media_bitrate, "%s", media_bitrate);
-			}else{
-				bitrate_double = strtod(media_bitrate, &eptr);
-				if(!has_bitrate && bitrate_double > 0){
-					printf("set has_bitrate to true because has_bitrate=%f\n", bitrate_double);
-					has_bitrate = TRUE;
-				}
-				sprintf(media_bitrate, "%.2fkbps", bitrate_double/1000);
-			}
-		}else{
-			media_bitrate = "N/A";//"128kps";
-		}*/
-		/*if(media_codec_name && media_height){
-			if(strcmp("aac", media_codec_name) != 0){
-				media_bitrate = "128kps";
-			}
-			else if(strcmp("opus",media_codec_name) != 0){
-				media_bitrate = "160kps";
-			}
-			else if(strcmp("opus",media_codec_name) != 0 && strcmp("360", media_height) !=0){
-				media_bitrate = "138kps";
-			}
-			else if(strcmp("aac",media_codec_name) != 0 && strcmp("360", media_height) !=0){
-				media_bitrate = "160kps";
-			}
-			else if(strcmp("opus",media_codec_name) != 0 && strcmp("720", media_height) !=0){
-				media_bitrate = "160kps";
-			}
-		}*/
-
-        //printf("update tile: %s and codec: %s and media_format: %s \n", title, codec, media_format); 
         if(strcmp("None",selected_v_quality) == 0 || !use_media_title || !view->media_title || view->media_title == NULL){     
         	snprintf(title_buff, sizeof(title_buff), "%s", title);
         }else{
@@ -1707,6 +1674,8 @@ celluloid_view_new(CelluloidApplication *app, gboolean always_floating)
 	}
 
 	g_object_unref(settings);
+	
+	sa_load_default_videos_1(view);
 
 	return view;
 }
@@ -2098,4 +2067,23 @@ celluloid_view_get_main_menu_visible(CelluloidView *view)
 	}
 
 	return result;
+}
+void sa_load_default_videos_1(CelluloidView *view){
+	GPtrArray *playlist = g_ptr_array_new_with_free_func (g_object_unref);
+	gchar *videos[][2] = {
+						{"https://www.youtube.com/watch?v=YbxpieEQ7bc", "The Real Cost of Net Zero: The shocking truth of the renewable energy push"} ,
+						{"https://www.youtube.com/watch?v=jSFo_92cJ-U", "Thorium Reactors: Why is this Technology Quite So Exciting"} , 
+					    {"https://www.youtube.com/watch?v=Re7FqKh7i_c", "\"I am Exposing the Whole Damn Thing!\" | Randall Carlson"} , 
+						{"https://www.youtube.com/watch?v=Icew8R-VWSY", "Expert View: Malcolm Bendall's MSAART Plasmoid Energy Thunderstorm Generator"} , 
+						{"https://alchemicalscience.org/thunderstorm-generator-complete-diy-build-guide-malcolm-bendalls-plasmoid-tech", "Thunderstorm Generator | COMPLETE DIY BUILD GUIDE | Malcolm Bendall’s Plasmoid Tech"} 
+					 };
+	
+	for(gint i=0; i<5; i++){
+		//gchar *video[] =  videos[i];
+		gchar *uri = videos[i][0];	
+		gchar *title = videos[i][1];	
+		CelluloidPlaylistEntry *entry = celluloid_playlist_entry_new(uri, title);	
+		g_ptr_array_add(playlist, entry);	  
+	}
+	celluloid_view_update_playlist(view, playlist);
 }

@@ -24,6 +24,17 @@
    <li>EcoTubeHQ offers two Opus audio bitrates for av1 and vp9 YouTube videos - 70kbps [default] and 160kbps. Audio volume can be increased up to 130% by rotating the mouse wheel on the playback window. The volume resets to 100% when the player is restarted.</li>
    <li>EcoTubeHQ offers the option to drop URLs onto a playlist. These items can be dragged into an order of your choosing.</li>
   </ul>
+  
+  	<p>
+		EcoTubeHQ video player outputs DRM-free video streaming services [YouTube, Rumble, Bitchute etc] at modest bitrates whilst preserving quality, thus saving energy by minimizing downloaded data. Hardware acceleration is employed where possible.
+  	</p>
+	<p>Features:</p>
+	<ul>
+	<li>EcoTubeHQ outputs av1 codec YouTube videos by default, if av1 isn't available then vp9 is utilized, and if vp9 isn't available then h.264 is output. The result is highest quality / lowest bitrate video. Alternatively, EcoTubeHQ can be set to utilize only vp9 or h.264 video codecs.</li>
+	<li>EcoTubeHQ offers three video upscaling techniques: AMD FidelityFX Super Resolution [BQ Best Quality], Lanczos [HQ High Quality] and Bicubic [LE Low Energy]. Using 720p AMD FSR video upscaling instead of 1080p conventional upscaling gives comparable video quality and significantly reduces data requirements.</li>
+	<li>EcoTubeHQ restricts videos to 30fps to further minimize data usage.</li>
+	<li>EcoTubeHQ offers two Opus audio bitrates for av1 and vp9 YouTube videos - 70kbps [default] and 160kbps.</li>
+	</ul>
  </description>
  <developer_name>EcoTube Partners</developer_name>
  <releases>
