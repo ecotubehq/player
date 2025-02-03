@@ -6,9 +6,9 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-08-21 04:15+0700\n"
-"PO-Revision-Date: 2023-08-10 22:52+0000\n"
-"Last-Translator: Emanuele Spadaro <emanuelespadaro1@gmail.com>\n"
-"Language-Team: Italian <https://hosted.weblate.org/projects/celluloid/"
+"PO-Revision-Date: 2025-26-01 11:42+0100\n"
+"Last-Translator: Albano Battistella <albanobattistella@gmail.com>\n"
+"Language-Team: Italian <Zorin Os Team>\n"
 "celluloid/it/>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -126,7 +126,7 @@ msgstr "Abilita il supporto MPRIS"
 
 #: data/io.github.ecotubehq.player.gschema.xml:138
 msgid "Enable menubar accelerator key handling"
-msgstr ""
+msgstr "Abilita la gestione dei tasti di scelta rapida della barra dei menu"
 
 #: data/io.github.ecotubehq.player.gschema.xml:144
 msgid "Prefetch metadata"
@@ -242,50 +242,47 @@ msgstr "Questa versione contiene le seguenti modifiche:"
 
 #: data/io.github.ecotubehq.player.appdata.xml.in:38
 msgid "Fix crash when using multiple windows."
-msgstr ""
+msgstr "Risolto il problema dell'arresto anomalo che si verificava quando si utilizzavano più finestre."
 
 #: data/io.github.ecotubehq.player.appdata.xml.in:41
 msgid "Port the about dialog to libadwaita."
-msgstr ""
+msgstr "POrting della finestra di dialogo Informazioni su libadwaita."
 
 #: data/io.github.ecotubehq.player.appdata.xml.in:44
 msgid "Fix cursor not autohiding on KDE."
-msgstr ""
+msgstr "Risolto il problema con il cursore che non si nascondeva automaticamente su KDE."
 
 #: data/io.github.ecotubehq.player.appdata.xml.in:47
 msgid "Fix mouse presses/releases becoming unreliable during playback."
-msgstr ""
+msgstr "Risolto il problema per cui le pressioni/rilasci del mouse diventano inaffidabili durante la riproduzione."
 
 #: data/io.github.ecotubehq.player.appdata.xml.in:50
 msgid ""
 "Make it possible to build on Windows. Celluloid still crashes on mouse "
 "clicks, but it runs and can play videos."
-msgstr ""
+msgstr "" 
+"Reso possibile la compilazione su Windows. Celluloid si blocca ancora con i clic del mouse,"
+"ma funziona e può riprodurre video."
 
 #: data/io.github.ecotubehq.player.appdata.xml.in:54
-#, fuzzy
 msgid "Add Estonian translation by vaba."
-msgstr "Aggiunta traduzione slovena di @bertronika."
+msgstr "Aggiunta la traduzione in estone da vaba."
 
 #: data/io.github.ecotubehq.player.appdata.xml.in:57
-#, fuzzy
 msgid "Add Georgian translation by temuri doghonadze."
-msgstr "Aggiunta traduzione slovena di @bertronika."
+msgstr "Aggiunta la traduzione in georgiano da temuri doghonadze."
 
 #: data/io.github.ecotubehq.player.appdata.xml.in:60
-#, fuzzy
 msgid "Add Lithuanian translation by Jonas Smol."
-msgstr "Aggiunta traduzione ucraina di @vl-nix"
+msgstr "Aggiunta la traduzione lituana da Jonas Smol."
 
 #: data/io.github.ecotubehq.player.appdata.xml.in:63
-#, fuzzy
 msgid "Add Occitan translation by Quentin PAGÈS."
-msgstr "Aggiunta traduzione occidentale di OIS."
+msgstr "Aggiunta la traduzione occitana da Quentin PAGÈS."
 
 #: data/io.github.ecotubehq.player.appdata.xml.in:66
-#, fuzzy
 msgid "Add Tamil translation by K.B.Dharun Krishna."
-msgstr "Aggiunta traduzione basca di @aldatsa."
+msgstr "Aggiunta la traduzione in Tamil da K.B.Dharun Krishna."
 
 #: data/io.github.ecotubehq.player.appdata.xml.in:70
 #: data/io.github.ecotubehq.player.appdata.xml.in:106
@@ -304,42 +301,36 @@ msgstr ""
 "Questa lista è incompleta. Consultare git log per il changelog completo."
 
 #: data/io.github.ecotubehq.player.appdata.xml.in:81
-#, fuzzy
 msgid "Add Malay translation by @dinazmi."
-msgstr "Aggiunta traduzione basca di @aldatsa."
+msgstr "Aggiunta la traduzione in malese di @dinazmi."
 
 #: data/io.github.ecotubehq.player.appdata.xml.in:84
 msgid "Use libadwaita."
-msgstr ""
+msgstr "Usa libadwaita."
 
 #: data/io.github.ecotubehq.player.appdata.xml.in:87
 msgid "Fix on_load hook in scripts not triggering."
-msgstr ""
+msgstr "Risolto il problema dell'hook on_load negli script che non si attiva."
 
 #: data/io.github.ecotubehq.player.appdata.xml.in:90
-#, fuzzy
 msgid "Add option to make the video area draggable."
-msgstr "Rendi l'area del video trascinabile"
+msgstr "Aggiunta l'opzione per rendere trascinabile l'area video."
 
 #: data/io.github.ecotubehq.player.appdata.xml.in:93
 msgid "Fix autofit breaking when playing small videos."
-msgstr ""
+msgstr "Correzione del problema di adattamento automatico durante la riproduzione di video di piccole dimensioni."
 
 #: data/io.github.ecotubehq.player.appdata.xml.in:96
 msgid "Make controls layout adaptive."
-msgstr ""
+msgstr "Reso la disposizione dei controlli adattiva."
 
 #: data/io.github.ecotubehq.player.appdata.xml.in:99
-#, fuzzy
 msgid "Display chapter marks in the seek bar."
-msgstr ""
-"Mostra il tempo quando il cursore si sovrappone alla barra di selezione."
+msgstr "Visualizza i segni di capitolo nella barra di ricerca."
 
 #: data/io.github.ecotubehq.player.appdata.xml.in:102
-#, fuzzy
 msgid "Display chapter titles in the seek bar popover."
-msgstr ""
-"Mostra il tempo quando il cursore si sovrappone alla barra di selezione."
+msgstr "Visualizza i titoli dei capitoli nella barra di ricerca a comparsa."
 
 #: data/io.github.ecotubehq.player.appdata.xml.in:113
 msgid "This is mostly a bugfix release. It contains the following changes:"
@@ -348,7 +339,7 @@ msgstr ""
 
 #: data/io.github.ecotubehq.player.appdata.xml.in:117
 msgid "Fix autofit triggering regardless of settings."
-msgstr ""
+msgstr "Risolto il problema con l'attivazione dell'adattamento automatico indipendentemente dalle impostazioni."
 
 #: data/io.github.ecotubehq.player.appdata.xml.in:120
 msgid "Fix window size shrinking across sessions."
@@ -408,7 +399,7 @@ msgstr ""
 
 #: data/io.github.ecotubehq.player.appdata.xml.in:168
 msgid "Add option to present the window when opening files."
-msgstr ""
+msgstr "Aggiunta l'opzione per presentare la finestra all'apertura dei file."
 
 #: data/io.github.ecotubehq.player.appdata.xml.in:171
 msgid ""
@@ -427,7 +418,7 @@ msgstr "Aggiunta traduzione basca di @aldatsa."
 
 #: data/io.github.ecotubehq.player.appdata.xml.in:192
 msgid "Make the shuffle and loop command line options work properly."
-msgstr ""
+msgstr "Reso funzionante correttamente le opzioni della riga di comando shuffle e loop."
 
 #: data/io.github.ecotubehq.player.appdata.xml.in:195
 msgid "Make the main menu button toggleable by pressing F10."
@@ -449,7 +440,7 @@ msgstr ""
 
 #: data/io.github.ecotubehq.player.appdata.xml.in:205
 msgid "Make CSD header bar toggleable via the mpv property \"border\"."
-msgstr ""
+msgstr "Reso la barra dell'intestazione CSD attivabile/disattivabile tramite la proprietà mpv \"border\"."
 
 #: data/io.github.ecotubehq.player.appdata.xml.in:208
 msgid ""
@@ -1055,19 +1046,16 @@ msgid "Plugins"
 msgstr "Plugin"
 
 #: src/celluloid-plugins-manager.c:415
-#, fuzzy
 msgid "Add…"
-msgstr "A_ggiungi…"
+msgstr "Aggiungi…"
 
 #: src/celluloid-plugins-manager.c:449
-#, fuzzy
 msgid "No Plugins Found"
 msgstr "Nessun plugin trovato"
 
 #: src/celluloid-plugins-manager-item.c:82
-#, fuzzy
 msgid "Remove Plugin"
-msgstr "Plugin in C"
+msgstr "Rimuovi Plugin"
 
 #: src/celluloid-plugins-manager-item.c:177
 #, c-format
@@ -1083,7 +1071,7 @@ msgstr ""
 
 #: src/celluloid-plugins-manager-item.c:208
 msgid "_Keep"
-msgstr ""
+msgstr "_Mantenere"
 
 #: src/celluloid-preferences-dialog.c:289
 msgid "mpv configuration file:"
@@ -1094,9 +1082,8 @@ msgid "mpv input configuration file:"
 msgstr "file di configurazione degli input di mpv:"
 
 #: src/celluloid-preferences-dialog.c:315
-#, fuzzy
 msgid "Extra mpv options"
-msgstr "Opzioni extra di mpv:"
+msgstr "Opzioni extra di mpv"
 
 #: src/celluloid-preferences-dialog.c:328
 msgid "Interface"
@@ -1372,11 +1359,11 @@ msgstr "Playlist"
 
 #: src/celluloid-video-area.c:629
 msgid "Welcome"
-msgstr ""
+msgstr "Benvenuti"
 
 #: src/celluloid-video-area.c:632
 msgid "Press ＋ or drag your video file here."
-msgstr ""
+msgstr "Premi ＋ o trascina il file video qui."
 
 #: src/celluloid-view.c:765
 msgid "Load Audio Track…"
