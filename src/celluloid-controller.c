@@ -576,9 +576,9 @@ playlist_item_activated_handler(CelluloidView *view, gint pos, gpointer data)
 	gint64 playlist_pos = -1;
 	if(is_default)
 	{
-		printf("Almost there\n");
 		is_default = FALSE;
 		sa_append_default_videos(model);
+		set_video_area_status(controller, CELLULOID_VIDEO_AREA_STATUS_LOADING);
 	}
 	g_object_get(	model,
 			"idle-active", &idle_active,
