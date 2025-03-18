@@ -57,9 +57,11 @@ enum PreferencesDialogItemType
 	ITEM_TYPE_COMBO_CODECV,
 	ITEM_SEPARATOR_LABEL_BOX,
 	ITEM_INFO_LABEL_BOX,
+	ITEM_INFO_VERSION_BOX,
 	ITEM_4K_SWITCH,
 	ITEM_PLAYER_DEFAULT_SIZE,
-	ITEM_TYPE_THEATER_MODE
+	ITEM_TYPE_THEATER_MODE,
+	ITEM_INFO_CLOSE_BOX
 };
 
 struct PreferencesDialogItem
@@ -112,11 +114,29 @@ save_settings(AdwPreferencesWindow *dialog)
 	{
 		g_signal_emit_by_name(dlg, "mpv-reset-request");
 		dlg->needs_mpv_reset = FALSE;
+	}	
+	
+
+	return FALSE;
+}
+static gboolean
+save_and_close_settings(GtkWidget *button, gpointer *data)
+{
+	CelluloidPreferencesDialog *dlg = CELLULOID_PREFERENCES_DIALOG(data);
+	if(dlg != NULL){
+		g_settings_apply(dlg->settings);
+
+		if(dlg->needs_mpv_reset || check_change())
+		{
+			g_signal_emit_by_name(dlg, "mpv-reset-request");
+			dlg->needs_mpv_reset = FALSE;
+		}	
+		gtk_window_close(data);	
+
 	}
 
 	return FALSE;
 }
-
 static void
 free_signal_data(gpointer data, GClosure *closure)
 {
@@ -125,6 +145,7 @@ free_signal_data(gpointer data, GClosure *closure)
 
 static GtkWidget *
 build_page(	const PreferencesDialogItem *items,
+		CelluloidPreferencesDialog *dlg,
 		GSettings *settings,
 		const char *title,
 		const char *icon_name )
@@ -320,17 +341,33 @@ build_page(	const PreferencesDialogItem *items,
 		}
 		if(type == ITEM_INFO_LABEL_BOX)
 		{
-			/**/
-			//widget = adw_banner_new(label);
-			widget = gtk_label_new(NULL);
-			char *markup;
-			//markup = g_markup_printf_escaped("<span color=\"blue\"><u>\%s</u></span>", label);
-			markup = g_markup_printf_escaped("<span><u>\%s</u></span>", label);
-			gtk_label_set_markup(GTK_LABEL(widget), markup);
-			g_free(markup);
-			adw_preferences_row_set_title
-				(ADW_PREFERENCES_ROW(widget), label);
+				GtkWidget *version_label;
+
+				widget = adw_action_row_new();
+				adw_preferences_row_set_title
+					(ADW_PREFERENCES_ROW(widget), "");
+					
+				version_label = gtk_label_new(NULL);
+				char *markup;
+				markup = g_markup_printf_escaped("<span><b>\%s</b>                                                             \n25.3.2</span>", label);
+				gtk_label_set_markup(GTK_LABEL(version_label), markup);
+				g_free(markup);
 			
+				gtk_widget_set_valign
+				(version_label, GTK_ALIGN_START);
+			adw_action_row_add_suffix
+				(ADW_ACTION_ROW(widget), version_label);
+				
+			
+		}
+		if(type == ITEM_INFO_CLOSE_BOX){
+			widget = gtk_button_new_with_label(label);	
+			GtkRoot *root = gtk_widget_get_root(GTK_WIDGET(widget));
+			CelluloidPreferencesDialog *self = CELLULOID_PREFERENCES_DIALOG(root);
+
+			g_signal_connect (widget, "clicked",
+                        G_CALLBACK (save_and_close_settings), dlg);	
+            
 		}
 		if(type == ITEM_TYPE_COMBO_AUDIO)
 		{
@@ -620,6 +657,9 @@ celluloid_preferences_dialog_init(CelluloidPreferencesDialog *dlg)
 	/* Added by Sako */
 	const PreferencesDialogItem av_items[]
 		= {	{NULL,
+			"youtube-info-link",
+			ITEM_INFO_LABEL_BOX},
+			{NULL,
 			"youtube-video-output",
 			ITEM_TYPE_COMBO_OUTPUTV},
 			{NULL,
@@ -634,12 +674,9 @@ celluloid_preferences_dialog_init(CelluloidPreferencesDialog *dlg)
 			{NULL,
 			"youtube-audio-quality",
 			ITEM_TYPE_COMBO_AUDIO},
-			/*{NULL,
-			"youtube-theater-mode",
-			ITEM_TYPE_THEATER_MODE},*/
 			{NULL,
-			"youtube-info-link",
-			ITEM_INFO_LABEL_BOX},
+			"close-info-pref",
+			ITEM_INFO_CLOSE_BOX},
 			{NULL, NULL, ITEM_TYPE_INVALID} };
 	/* End Added by Sako */
 	dlg->settings = g_settings_new(CONFIG_ROOT);
@@ -652,6 +689,7 @@ celluloid_preferences_dialog_init(CelluloidPreferencesDialog *dlg)
     /* Added by Sako */
 	page = build_page
 		(	av_items,
+			dlg,
 			dlg->settings,
 			_("AV Options"),
 			"document-open-symbolic" );
@@ -660,6 +698,7 @@ celluloid_preferences_dialog_init(CelluloidPreferencesDialog *dlg)
 					
 	page = build_page
 		(	interface_items,
+			dlg,
 			dlg->settings,
 			_("Interface"),
 			"preferences-desktop-appearance-symbolic" );
@@ -668,6 +707,7 @@ celluloid_preferences_dialog_init(CelluloidPreferencesDialog *dlg)
 	if(1>2){ // disable temporarly
 		page = build_page
 			(	config_items,
+				dlg,
 				dlg->settings,
 				_("Config Files"),
 				"document-properties-symbolic" );
@@ -677,6 +717,7 @@ celluloid_preferences_dialog_init(CelluloidPreferencesDialog *dlg)
 	if(1>2){ // disable temporarly
 		page = build_page
 			(	misc_items,
+				dlg,
 				dlg->settings,
 				_("Miscellaneous"),
 				"preferences-other-symbolic" );

@@ -821,10 +821,8 @@ load_config_file(CelluloidMpv *mpv)
 
 	gchar *fsr;
 	if(g_settings_get_int(settings, "youtube-video-output") == 0){
-		//snprintf(fsr, sizeof(fsr), "profile=gpu-hq\nglsl-shader=\"/usr/local/share/sako/FSR.glsl\"\nprofile-cond=math.min(display_width / width, display_height / height) < 2.0");
 		fsr = "profile=gpu-hq\nglsl-shader=\"/usr/local/share/sako/FSR.glsl\"\nprofile-cond=math.min(display_width / width, display_height / height) < 2.0";
 	}else{
-		//snprintf(fsr, sizeof(fsr), "");
 		fsr = "";
 	}
 	char selectedOpions[2024];
@@ -832,13 +830,11 @@ load_config_file(CelluloidMpv *mpv)
 		if(strcmp("best",selected_v_codec) != 0){
 			if(g_settings_get_int(settings, "youtube-video-codec") != 2 && 
 				g_settings_get_int(settings, "youtube-video-quality") != 1){
-				snprintf(selectedOpions, sizeof(selectedOpions), "ytdl-format=bv*[height=%s][vcodec~='%s']+ba/bv*[height<=%s][vcodec~='vp']+ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b)\nscale=%s\ncache=%s\nstream-buffer-size=%s\n%s\nreset-on-next-file=all\nhwdec=no",
+				snprintf(selectedOpions, sizeof(selectedOpions), "ytdl-format=bv*[height=%s][vcodec~='%s']+ba/bv*[height<=?720]+ba/bv*[height<=%s][vcodec~='vp']+ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b)\nscale=%s\ncache=%s\nstream-buffer-size=%s\n%s\nreset-on-next-file=all\nhwdec=no",
 				selected_v_quality, selected_v_codec, selected_v_quality, selected_v_quality, selected_v_output, "yes", "4MiB", fsr);
-				//printf("Loading video for No: %s\n", "h.24");
 			}else{
 				snprintf(selectedOpions, sizeof(selectedOpions), "ytdl-format=bv*[height=%s][vcodec~='%s']+ba/bv*[height>=%s][vcodec~='vp']+ba/(wv*+ba/b)[height>=%s]/(wv*+ba/b)\nscale=%s\ncache=%s\nstream-buffer-size=%s\n%s\nreset-on-next-file=all\nhwdec=no",
 				selected_v_quality, selected_v_codec, selected_v_quality, selected_v_quality, selected_v_output, "yes", "4MiB", fsr);
-				//printf("Loading video for: %s\n", "h.24");				
 			}
 			
 		}else{

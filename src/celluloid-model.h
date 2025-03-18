@@ -143,6 +143,9 @@ celluloid_model_get_video_geometry(	CelluloidModel *model,
 gchar *
 celluloid_model_get_current_path(CelluloidModel *model);
 
+void
+celluloid_model_update_mpv_options(	CelluloidModel *model);
+
 G_END_DECLS
 
 #endif

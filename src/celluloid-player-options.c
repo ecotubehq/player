@@ -298,7 +298,7 @@ autofit_handler(CelluloidMpv *mpv, gpointer data)
 				dim[1] = dim[1] * 2; //480;				
 			}
 		}else{
-			printf("Apply Autofit %ldx%ld\n", dim[0], dim[1]);
+			//printf("Apply Autofit %ldx%ld\n", dim[0], dim[1]);
 		}
 		gboolean theater_mode = TRUE; //g_settings_get_boolean(settings, "youtube-theater-mode");
 		/*if(theater_mode){

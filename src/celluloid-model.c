@@ -149,6 +149,8 @@ mpv_prop_change_handler(	CelluloidMpv *mpv,
 				gpointer value,
 				gpointer data );
 
+static gboolean
+sa_get_bat_status();
 G_DEFINE_TYPE(CelluloidModel, celluloid_model, CELLULOID_TYPE_PLAYER)
 
 static gboolean
@@ -1299,4 +1301,33 @@ celluloid_model_get_current_path(CelluloidModel *model)
 	mpv_free(path);
 
 	return buf;
+}
+void
+celluloid_model_update_mpv_options(	CelluloidModel *model){
+	CelluloidMpv *mpv = CELLULOID_MPV(model);
+	celluloid_mpv_set_option_string(mpv, "demuxer-hysteresis-secs", "5");
+	celluloid_mpv_set_option_string(mpv, "cache-secs", "10");
+	gboolean status = sa_get_bat_status();
+	if(status){
+		celluloid_mpv_set_option_string(mpv, "hwdec", "yes");
+	}else{
+		celluloid_mpv_set_option_string(mpv, "hwdec", "no");
+	}
+
+}
+static gboolean
+sa_get_bat_status(){
+	FILE *fptr;
+	
+	fptr = fopen("/sys/class/power_supply/BAT0/status", "r");
+	if(fptr == NULL) {
+		return FALSE;
+	}
+	char status[100];
+	fgets(status, 100, fptr);
+
+	const gchar *gstatus = status;
+	fclose(fptr); 
+	
+	return strstr(gstatus, "Discharging")!=NULL?TRUE:FALSE;
 }

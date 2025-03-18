@@ -200,7 +200,13 @@
 		</key>
 		<key name="youtube-info-link" type="s">
 			<default>""</default>
-			<summary>EcoTubeHQ v2025_rc2</summary>
+			<summary>EcoTube</summary>
+			<description>
+			</description>
+		</key>
+		<key name="close-info-pref" type="s">
+			<default>""</default>
+			<summary>OK</summary>
 			<description>
 			</description>
 		</key>

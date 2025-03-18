@@ -243,6 +243,11 @@ G_DEFINE_TYPE(CelluloidController, celluloid_controller, G_TYPE_OBJECT)
 void sa_append_default_videos(CelluloidModel *model);
 
 static void
+stream_src_handler(	CelluloidView *view,
+			gchar uri,
+			gpointer data );
+			
+static void
 constructed(GObject *object)
 {
 	CelluloidController *controller;
@@ -904,6 +909,10 @@ connect_signals(CelluloidController *controller)
 				"playlist-reordered",
 				G_CALLBACK(playlist_reordered_handler),
 				controller );
+	g_signal_connect(	controller->view,
+				"stream-src",
+				G_CALLBACK(stream_src_handler),
+				controller );
 }
 
 static gboolean
@@ -1538,4 +1547,21 @@ void sa_append_default_videos(CelluloidModel *model){
 		CelluloidPlaylistEntry *entry = celluloid_playlist_entry_new(uri, NULL);
 		g_ptr_array_add(playlist, entry);	  
 	}
+}
+static void
+stream_src_handler(	CelluloidView *view,
+			gchar uri,
+			gpointer data ){
+	CelluloidController *controller = CELLULOID_CONTROLLER(data);
+	celluloid_model_update_mpv_options(controller->model);
+	
+	/*
+	CelluloidController *controller = CELLULOID_CONTROLLER(data);
+	CelluloidModel *model = controller->model;
+	gchar *options = "hwdec=yes cache-secs=10 demuxer-hysteresis-secs=5";
+
+
+	g_object_set(model, "extra-options", options, NULL);
+	*/
+
 }

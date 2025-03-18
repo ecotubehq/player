@@ -963,7 +963,7 @@ open_location_dialog_response_handler(	GtkDialog *dialog,
 		const gchar *uri =
 			celluloid_open_location_dialog_get_string
 			(location_dialog);
-
+		
 		GPtrArray *args = data;
 		CelluloidView *view = g_ptr_array_index(args, 0);
 		gboolean *append = g_ptr_array_index(args, 1);
@@ -973,7 +973,12 @@ open_location_dialog_response_handler(	GtkDialog *dialog,
 
 		g_list_store_append(list, file);
 
+		if(args->len == 3){
+			gchar *stream_src = g_ptr_array_index(args, 2);
+			g_signal_emit_by_name(view, "stream-src", uri);
+		}
 		g_signal_emit_by_name(view, "file-open", list, *append);
+		
 
 		g_object_unref(list);
 		g_free(append);
@@ -1614,6 +1619,16 @@ celluloid_view_class_init(CelluloidViewClass *klass)
 			2,
 			G_TYPE_INT,
 			G_TYPE_INT );
+	g_signal_new(	"stream-src",
+			G_TYPE_FROM_CLASS(klass),
+			G_SIGNAL_RUN_FIRST,
+			0,
+			NULL,
+			NULL,
+			g_cclosure_marshal_VOID__CHAR,
+			G_TYPE_NONE,
+			1,
+			G_TYPE_CHAR );
 }
 
 static void
@@ -1739,18 +1754,19 @@ celluloid_view_show_open_location_dialog(CelluloidView *view, gboolean append)
 	GtkWidget *dlg;
 	GPtrArray *args;
 	gboolean *append_buf;
-
+	gchar *stream_src = "stream-src";
 	dlg =	celluloid_open_location_dialog_new
 		(	GTK_WINDOW(view),
 			append?
 			_("Add Location to Playlist"):
 			_("Open Location") );
-	args = g_ptr_array_sized_new(2);
+	args = g_ptr_array_sized_new(3);
 	append_buf = g_malloc(sizeof(gboolean));
 	*append_buf = append;
 
 	g_ptr_array_add(args, view);
 	g_ptr_array_add(args, append_buf);
+	g_ptr_array_add(args, stream_src);
 
 	g_signal_connect
 		(	dlg,
