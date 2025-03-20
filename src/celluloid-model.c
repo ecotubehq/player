@@ -1305,6 +1305,7 @@ celluloid_model_get_current_path(CelluloidModel *model)
 void
 celluloid_model_update_mpv_options(	CelluloidModel *model){
 	CelluloidMpv *mpv = CELLULOID_MPV(model);
+	celluloid_mpv_set_option_string(mpv, "cache-pause-initial", "yes");
 	celluloid_mpv_set_option_string(mpv, "demuxer-hysteresis-secs", "5");
 	celluloid_mpv_set_option_string(mpv, "cache-secs", "10");
 	gboolean status = sa_get_bat_status();

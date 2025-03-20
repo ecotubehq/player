@@ -212,7 +212,7 @@ initialize_gui(CelluloidApplication *app)
 	gint current_resolution = g_settings_get_int(settings, "youtube-video-quality");
 	if(current_resolution > 3)
 		g_settings_set_int(settings, "youtube-video-quality", 3);
-	celluloid_view_resize_video_area(view, 1250, 850);
+	celluloid_view_resize_video_area(view, 768, 432);
 	g_settings_set_boolean(settings, "always-use-floating-header-bar", TRUE);
 	g_settings_set_boolean(settings, "always-use-floating-controls", TRUE);
 	//gtk_window_set_resizable(view, TRUE);
