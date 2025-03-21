@@ -547,6 +547,14 @@ file_open_handler(	CelluloidView *view,
 
 		g_free(uri);
 	}
+	// resized based on the selected resolution
+	GSettings *settings =		g_settings_new(CONFIG_ROOT);
+	int video_resolution_index = g_settings_get_int(settings, "youtube-video-quality");
+	if(video_resolution_index > 0){
+		celluloid_view_resize_video_area(controller->view, 1278, 720);
+	}else{
+		celluloid_view_resize_video_area(controller->view, 768, 432);
+	}
 }
 
 static void
@@ -1105,10 +1113,7 @@ window_resize_handler(	CelluloidModel *model,
 			gpointer data )
 {
 	CelluloidController *controller = data;
-	if(1<2){
-		return;
-	}
-	celluloid_view_resize_video_area(controller->view, (gint)width, (gint)height);
+	//celluloid_view_resize_video_area(controller->view, (gint)width, (gint)height);
 }
 
 static void

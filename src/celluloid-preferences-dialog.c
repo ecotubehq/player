@@ -349,7 +349,7 @@ build_page(	const PreferencesDialogItem *items,
 					
 				version_label = gtk_label_new(NULL);
 				char *markup;
-				markup = g_markup_printf_escaped("<span><b>\%s</b>                                                             \n25.3.2</span>", label);
+				markup = g_markup_printf_escaped("<span><b>\%s</b>                                                             \n25.3.3</span>", label);
 				gtk_label_set_markup(GTK_LABEL(version_label), markup);
 				g_free(markup);
 			

@@ -1104,7 +1104,13 @@ mpv_reset_request_handler(AdwPreferencesWindow *dialog, gpointer data)
 	/* Updated by Sako
 	 *  Resize window when user changes the config
 	 * */
-	printf("reset window: %s\n", "view");
+	 int video_resolution_index = g_settings_get_int(settings, "youtube-video-quality");
+	 if(video_resolution_index > 0){
+		celluloid_main_window_resize_video_area(wnd, 1278, 720);
+	 }else{
+		celluloid_main_window_resize_video_area(wnd, 768, 432);
+	 }
+	//printf("reset window: %s\n", "view");
 	//gint64 selected_min_size = g_settings_get_int(settings, "youtube-player-size");
 	/*
 	int min_h = 360;//selected_min_size == 0 ? 360 : 480;
