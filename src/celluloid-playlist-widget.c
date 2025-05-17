@@ -241,6 +241,7 @@ static GtkWidget *
 make_row(GObject *object, gpointer data)
 {
 	GtkWidget *row = gtk_list_box_row_new();
+	GtkWidget *row_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);
 	CelluloidPlaylistItem *item = CELLULOID_PLAYLIST_ITEM(object);
 	const gchar *title = celluloid_playlist_item_get_title(item);
 	const gchar *uri = celluloid_playlist_item_get_uri(item);
@@ -260,6 +261,7 @@ make_row(GObject *object, gpointer data)
 	}
 
 	label = gtk_label_new(text);
+	gtk_widget_set_tooltip_text(label, text);
 	g_free(text);
 
 	g_assert(label);
@@ -281,8 +283,18 @@ make_row(GObject *object, gpointer data)
 	gtk_widget_set_halign(label, GTK_ALIGN_START);
 	gtk_widget_set_margin_start(label, 6);
 	gtk_widget_set_margin_end(label, 6);
-	gtk_list_box_row_set_child(GTK_LIST_BOX_ROW(row), label);
 
+	gtk_widget_set_halign(label, GTK_ALIGN_START);
+	gtk_widget_set_margin_top(label, 12);
+	gtk_widget_set_hexpand(label, TRUE);
+	gtk_label_set_max_width_chars(GTK_LABEL(label), 40);
+	gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
+	
+	//gtk_list_box_row_set_child(GTK_LIST_BOX_ROW(row), label);
+	gtk_box_append(GTK_BOX(row_vbox), label);
+	//gtk_box_append(GTK_BOX(row_vbox), duration_label);
+	gtk_list_box_row_set_child(GTK_LIST_BOX_ROW(row), row_vbox);
+	
 	return row;
 }
 
@@ -302,6 +314,9 @@ constructed(GObject *object)
 		(GTK_LIST_BOX(self->list_box), FALSE);
 	gtk_list_box_set_placeholder
 		(GTK_LIST_BOX(self->list_box), self->placeholder);
+
+	gtk_widget_add_css_class
+		(self->list_box, "navigation-sidebar");
 
 	gtk_list_box_bind_model
 		(	GTK_LIST_BOX(self->list_box),
@@ -402,6 +417,7 @@ constructed(GObject *object)
 	gtk_viewport_set_child(viewport, self->list_box);
 	gtk_viewport_set_scroll_to_focus(viewport, FALSE);
 
+	//gtk_widget_set_size_request(GTK_WIDGET(self->scrolled_window), 350, 150);
 	gtk_scrolled_window_set_child
 		(	GTK_SCROLLED_WINDOW(self->scrolled_window),
 			 GTK_WIDGET(viewport) );
@@ -838,6 +854,8 @@ celluloid_playlist_widget_class_init(CelluloidPlaylistWidgetClass *klass)
 	obj_class->constructed = constructed;
 	obj_class->set_property = set_property;
 	obj_class->get_property = get_property;
+	
+	gtk_widget_class_set_css_name(GTK_WIDGET_CLASS(klass), "playlist");
 
 	pspec = g_param_spec_int64
 		(	"playlist-count",
@@ -912,13 +930,15 @@ celluloid_playlist_widget_init(CelluloidPlaylistWidget *wgt)
 	wgt->css_provider = gtk_css_provider_new();
 
 	gtk_widget_add_css_class(wgt->placeholder, "dim-label");
-
+	
 	gtk_widget_set_vexpand
 		(wgt->scrolled_window, TRUE);
-	gtk_label_set_ellipsize
-		(GTK_LABEL(wgt->placeholder), PANGO_ELLIPSIZE_END);
+	gtk_widget_set_hexpand
+		(wgt->scrolled_window, TRUE);
+	gtk_label_set_ellipsize(GTK_LABEL(wgt->placeholder), PANGO_ELLIPSIZE_END);
 	gtk_orientable_set_orientation
 		(GTK_ORIENTABLE(wgt), GTK_ORIENTATION_VERTICAL);
+
 }
 
 GtkWidget *

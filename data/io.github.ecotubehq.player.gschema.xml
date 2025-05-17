@@ -210,12 +210,13 @@
 			<description>
 			</description>
 		</key>
-		<!--key name="youtube-theater-mode" type="b">
-			<default>false</default>
-			<summary>Theater mode *This mode is used by 144p and 240p only*</summary>
+		<key name="youtube-display-deband" type="b">
+			<default>true</default>
+			<summary>Deband</summary>
 			<description>
+				Deband on / off
 			</description>
-		</key-->
+		</key>
 		<key name="startup-request" type="b">
 			<default>false</default>
 			<summary>Has requested startup video</summary>
@@ -270,7 +271,7 @@
 			</description>
 		</key>
 		<key name="show-playlist" type="b">
-			<default>false</default>
+			<default>true</default> 
 			<summary>Show/hide the playlist</summary>
 			<description>
 			</description>

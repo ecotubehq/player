@@ -979,7 +979,6 @@ open_location_dialog_response_handler(	GtkDialog *dialog,
 		}
 		g_signal_emit_by_name(view, "file-open", list, *append);
 		
-
 		g_object_unref(list);
 		g_free(append);
 		g_ptr_array_free(args, TRUE);
@@ -1110,35 +1109,19 @@ mpv_reset_request_handler(AdwPreferencesWindow *dialog, gpointer data)
 	 }else{
 		celluloid_main_window_resize_video_area(wnd, 768, 432);
 	 }
-	//printf("reset window: %s\n", "view");
-	//gint64 selected_min_size = g_settings_get_int(settings, "youtube-player-size");
-	/*
-	int min_h = 360;//selected_min_size == 0 ? 360 : 480;
-	int min_w = min_h == 360? 640 : 850;
-	celluloid_main_window_resize_video_area
-		(wnd, min_w, min_h);
-	*/
-	gboolean theater_mode = FALSE;//g_settings_get_boolean(settings, "youtube-theater-mode");
+
+	gboolean theater_mode = FALSE;
 	if(theater_mode){
 		g_settings_set_boolean(settings, "always-use-floating-header-bar", TRUE);
 		g_settings_set_boolean(settings, "always-use-floating-controls", TRUE);
 		int video_resolution_index = g_settings_get_int(settings, "youtube-video-quality");
-		//gtk_window_set_resizable(wnd, FALSE);
 		if(video_resolution_index == 0){
 			int width = 734;
 			int height = 432;
-			//celluloid_view_resize_video_area(CELLULOID_CONTROLLER(data)->view, width, height);
 			celluloid_main_window_resize_video_area(wnd, width, height);
-		}
-		/*else if(video_resolution_index == 1){
-			int width = 1278;
-			int height = 720;
-			//celluloid_view_resize_video_area(CELLULOID_CONTROLLER(data)->view, width, height);
-			celluloid_main_window_resize_video_area(wnd, width, height);
-		}*/else{
+		}else{
 			int width = 432;
 			int height = 768;
-			//celluloid_view_resize_video_area(CELLULOID_CONTROLLER(data)->view, width, height);
 			celluloid_main_window_resize_video_area(wnd, width, height);			
 		}
 
@@ -1834,7 +1817,8 @@ celluloid_view_show_preferences_dialog(CelluloidView *view)
 				G_CALLBACK(mpv_reset_request_handler),
 				view );
 
-	gtk_widget_set_visible(dialog, TRUE);
+	celluloid_preferences_dialog_present
+		(CELLULOID_PREFERENCES_DIALOG(dialog));
 }
 
 void
@@ -1877,9 +1861,8 @@ celluloid_view_show_about_window (CelluloidView *view)
 
 void
 celluloid_view_show_usage_window (CelluloidView *view){
-
-	system("xdg-open https://github.com/ecotubehq/player"); 
-
+	//system("xdg-open file:///usr/local/share/ecotube/player-info.pdf");
+	system("yt-dlp https://www.youtube.com/watch?v=pBk4NYhWNMM -o ~/");
 }
 
 void

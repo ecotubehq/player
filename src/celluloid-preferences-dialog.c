@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2024 gnome-mpv
+ * Copyright (c) 2014-2025 gnome-mpv
  *
  * This file is part of Celluloid.
  *
@@ -33,16 +33,24 @@
 typedef struct PreferencesDialogItem PreferencesDialogItem;
 typedef enum PreferencesDialogItemType PreferencesDialogItemType;
 
+enum
+{
+	PROP_0,
+	PROP_PARENT,
+	N_PROPERTIES
+};
+
 struct _CelluloidPreferencesDialog
 {
-	AdwPreferencesWindow parent_instance;
+	AdwPreferencesDialog parent_instance;
 	GSettings *settings;
 	gboolean needs_mpv_reset;
+	GtkWindow *parent;
 };
 
 struct _CelluloidPreferencesDialogClass
 {
-	AdwPreferencesWindowClass parent_class;
+	AdwPreferencesDialogClass parent_class;
 };
 
 enum PreferencesDialogItemType
@@ -60,7 +68,7 @@ enum PreferencesDialogItemType
 	ITEM_INFO_VERSION_BOX,
 	ITEM_4K_SWITCH,
 	ITEM_PLAYER_DEFAULT_SIZE,
-	ITEM_TYPE_THEATER_MODE,
+	ITEM_DEBAND_MODE,
 	ITEM_INFO_CLOSE_BOX
 };
 
@@ -71,10 +79,185 @@ struct PreferencesDialogItem
 	PreferencesDialogItemType type;
 };
 
-G_DEFINE_TYPE(CelluloidPreferencesDialog, celluloid_preferences_dialog, ADW_TYPE_PREFERENCES_WINDOW)
+G_DEFINE_TYPE(CelluloidPreferencesDialog, celluloid_preferences_dialog, ADW_TYPE_PREFERENCES_DIALOG)
 
-char c_prevSetting[256];
-static gboolean check_change(void);
+static void
+set_property(	GObject *object,
+		guint property_id,
+		const GValue *value,
+		GParamSpec *pspec );
+
+static void
+get_property(	GObject *object,
+		guint property_id,
+		GValue *value,
+		GParamSpec *pspec );
+
+static void
+constructed(GObject *object);
+
+static void
+file_set_handler(CelluloidFileChooserButton *button, gpointer data);
+
+static void
+handle_changed(GSettings *settings, const gchar *key, gpointer data);
+
+static void
+handle_plugins_manager_error(	CelluloidPluginsManager *pmgr,
+				const gchar *message,
+				gpointer data );
+
+static gboolean
+save_settings(AdwPreferencesDialog *dialog);
+
+static void
+free_signal_data(gpointer data, GClosure *closure);
+
+static GtkWidget *
+build_page(	const PreferencesDialogItem *items,
+		CelluloidPreferencesDialog *dlg,
+		GSettings *settings,
+		const char *title,
+		const char *icon_name );
+
+static void
+finalize(GObject *object);
+
+static void
+set_property(	GObject *object,
+		guint property_id,
+		const GValue *value,
+		GParamSpec *pspec )
+{
+	CelluloidPreferencesDialog *self = CELLULOID_PREFERENCES_DIALOG(object);
+
+	switch(property_id)
+	{
+		case PROP_PARENT:
+		self->parent = g_value_get_pointer(value);
+		break;
+
+		default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
+		break;
+	}
+}
+
+static void
+get_property(	GObject *object,
+		guint property_id,
+		GValue *value,
+		GParamSpec *pspec )
+{
+	CelluloidPreferencesDialog *self = CELLULOID_PREFERENCES_DIALOG(object);
+
+	switch(property_id)
+	{
+		case PROP_PARENT:
+		g_value_set_pointer(value, self->parent);
+		break;
+
+		default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
+		break;
+	}
+}
+
+static void
+constructed(GObject *object)
+{
+	G_OBJECT_CLASS(celluloid_preferences_dialog_parent_class)->constructed(object);
+
+	CelluloidPreferencesDialog *dlg = CELLULOID_PREFERENCES_DIALOG(object);
+
+	const PreferencesDialogItem interface_items[]
+		= {	{NULL,
+			"autofit-enable",
+			ITEM_TYPE_SWITCH},
+			{NULL,
+			"csd-enable",
+			ITEM_TYPE_SWITCH},
+			{NULL,
+			"dark-theme-enable",
+			ITEM_TYPE_SWITCH},
+			{NULL,
+			"always-use-floating-controls",
+			ITEM_TYPE_SWITCH},
+			{NULL,
+			"draggable-video-area-enable",
+			ITEM_TYPE_SWITCH},
+			{NULL,
+			"always-autohide-cursor",
+			ITEM_TYPE_SWITCH},
+			{NULL,
+			"last-folder-enable",
+			ITEM_TYPE_SWITCH},
+			{NULL, NULL, ITEM_TYPE_INVALID} };
+
+	const PreferencesDialogItem av_items[]
+		= {	{NULL,
+			"youtube-info-link",
+			ITEM_INFO_LABEL_BOX},
+			{NULL,
+			"youtube-video-output",
+			ITEM_TYPE_COMBO_OUTPUTV},
+			{NULL,
+			"youtube-separator-line",
+			ITEM_SEPARATOR_LABEL_BOX},
+			{NULL,
+			"youtube-video-codec",
+			ITEM_TYPE_COMBO_CODECV},
+			{NULL,
+			"youtube-video-quality",
+			ITEM_TYPE_COMBO_BOX},
+			{NULL,
+			"youtube-audio-quality",
+			ITEM_TYPE_COMBO_AUDIO},
+			{NULL,
+			"youtube-display-deband",
+			ITEM_DEBAND_MODE},
+			{NULL,
+			"close-info-pref",
+			ITEM_INFO_CLOSE_BOX},
+			{NULL, NULL, ITEM_TYPE_INVALID} };
+
+			
+	GtkWidget *page = NULL;
+
+	page = build_page
+		(	av_items,
+			dlg,
+			dlg->settings,
+			_("AV Options"),
+			"applications-graphics-symbolic" );
+	adw_preferences_dialog_add(	ADW_PREFERENCES_DIALOG(dlg),
+					ADW_PREFERENCES_PAGE(page));
+					
+	page = build_page
+		(	interface_items,
+			dlg,
+			dlg->settings,
+			_("Interface"),
+			"applications-graphics-symbolic" );
+	adw_preferences_dialog_add(	ADW_PREFERENCES_DIALOG(dlg),
+					ADW_PREFERENCES_PAGE(page));
+
+
+
+	g_signal_connect(	dlg,
+				"closed",
+				G_CALLBACK(save_settings),
+				NULL );
+	g_signal_connect(	dlg->settings,
+				"changed",
+				G_CALLBACK(handle_changed),
+				dlg );
+	/*g_signal_connect(	plugins_manager,
+				"error-raised",
+				G_CALLBACK(handle_plugins_manager_error),
+				dlg );
+				*/
+}
 
 static void
 file_set_handler(CelluloidFileChooserButton *button, gpointer data)
@@ -101,22 +284,35 @@ handle_changed(GSettings *settings, const gchar *key, gpointer data)
 	dlg->needs_mpv_reset |= g_strcmp0(key, "mpv-input-config-enable") == 0;
 	dlg->needs_mpv_reset |= g_strcmp0(key, "mpv-input-config-file") == 0;
 	dlg->needs_mpv_reset |= g_strcmp0(key, "mpv-options") == 0;
+	dlg->needs_mpv_reset |= g_strcmp0(key, "youtube-video-quality") == 0;
+	dlg->needs_mpv_reset |= g_strcmp0(key, "youtube-audio-quality") == 0;
+	dlg->needs_mpv_reset |= g_strcmp0(key, "youtube-video-codec") == 0;
+	dlg->needs_mpv_reset |= g_strcmp0(key, "youtube-video-output") == 0;
+}
+
+static void
+handle_plugins_manager_error(	CelluloidPluginsManager *pmgr,
+				const gchar *message,
+				gpointer data )
+{
+	CelluloidPreferencesDialog *dialog =
+		CELLULOID_PREFERENCES_DIALOG(data);
+
+	g_signal_emit_by_name(dialog, "error-raised", message);
 }
 
 static gboolean
-save_settings(AdwPreferencesWindow *dialog)
+save_settings(AdwPreferencesDialog *dialog)
 {
 	CelluloidPreferencesDialog *dlg = CELLULOID_PREFERENCES_DIALOG(dialog);
 
 	g_settings_apply(dlg->settings);
 
-	if(dlg->needs_mpv_reset || check_change())
+	if(dlg->needs_mpv_reset)
 	{
 		g_signal_emit_by_name(dlg, "mpv-reset-request");
 		dlg->needs_mpv_reset = FALSE;
 	}	
-	
-
 	return FALSE;
 }
 static gboolean
@@ -126,15 +322,14 @@ save_and_close_settings(GtkWidget *button, gpointer *data)
 	if(dlg != NULL){
 		g_settings_apply(dlg->settings);
 
-		if(dlg->needs_mpv_reset || check_change())
+		if(dlg->needs_mpv_reset)
 		{
 			g_signal_emit_by_name(dlg, "mpv-reset-request");
 			dlg->needs_mpv_reset = FALSE;
 		}	
-		gtk_window_close(data);	
+		adw_dialog_force_close(ADW_DIALOG(dlg));	
 
 	}
-
 	return FALSE;
 }
 static void
@@ -144,7 +339,7 @@ free_signal_data(gpointer data, GClosure *closure)
 }
 
 static GtkWidget *
-build_page(	const PreferencesDialogItem *items,
+build_page(	const PreferencesDialogItem *items, 
 		CelluloidPreferencesDialog *dlg,
 		GSettings *settings,
 		const char *title,
@@ -349,7 +544,7 @@ build_page(	const PreferencesDialogItem *items,
 					
 				version_label = gtk_label_new(NULL);
 				char *markup;
-				markup = g_markup_printf_escaped("<span><b>\%s</b>                                                             \n25.3.3</span>", label);
+				markup = g_markup_printf_escaped("<span><b>\%s</b>                                                             \n%s</span>", label, VERSION);
 				gtk_label_set_markup(GTK_LABEL(version_label), markup);
 				g_free(markup);
 			
@@ -362,9 +557,6 @@ build_page(	const PreferencesDialogItem *items,
 		}
 		if(type == ITEM_INFO_CLOSE_BOX){
 			widget = gtk_button_new_with_label(label);	
-			GtkRoot *root = gtk_widget_get_root(GTK_WIDGET(widget));
-			CelluloidPreferencesDialog *self = CELLULOID_PREFERENCES_DIALOG(root);
-
 			g_signal_connect (widget, "clicked",
                         G_CALLBACK (save_and_close_settings), dlg);	
             
@@ -514,7 +706,7 @@ build_page(	const PreferencesDialogItem *items,
 			/**/
 			
 		}		
-		if(type == ITEM_TYPE_THEATER_MODE)
+		if(type == ITEM_DEBAND_MODE)
 		{
 			GtkWidget *switch_theather_mode;
 
@@ -535,7 +727,7 @@ build_page(	const PreferencesDialogItem *items,
 						switch_theather_mode,
 						"active",
 						G_SETTINGS_BIND_DEFAULT );
-			//g_signal_connect (switch_4k, "notify::active", G_CALLBACK (on_notify_active), liststore_resolution);
+			
 		}
 		/* End Added by Sako */
 
@@ -544,12 +736,6 @@ build_page(	const PreferencesDialogItem *items,
 	}
 
 	return pref_page;
-}
-
-static void
-preferences_dialog_constructed(GObject *obj)
-{
-	G_OBJECT_CLASS(celluloid_preferences_dialog_parent_class)->constructed(obj);
 }
 
 static void
@@ -566,8 +752,20 @@ finalize(GObject *object)
 static void
 celluloid_preferences_dialog_class_init(CelluloidPreferencesDialogClass *klass)
 {
-	G_OBJECT_CLASS(klass)->constructed = preferences_dialog_constructed;
-	G_OBJECT_CLASS(klass)->finalize = finalize;
+	GParamSpec *pspec = NULL;
+	GObjectClass *object_class = G_OBJECT_CLASS(klass);
+
+	object_class->constructed = constructed;
+	object_class->finalize = finalize;
+	object_class->set_property = set_property;
+	object_class->get_property = get_property;
+
+	pspec = g_param_spec_pointer
+		(	"parent",
+			"Parent",
+			"Parent window",
+			G_PARAM_CONSTRUCT_ONLY|G_PARAM_READWRITE );
+	g_object_class_install_property(object_class, PROP_PARENT, pspec);
 
 	g_signal_new(	"mpv-reset-request",
 			G_TYPE_FROM_CLASS(klass),
@@ -578,168 +776,27 @@ celluloid_preferences_dialog_class_init(CelluloidPreferencesDialogClass *klass)
 			g_cclosure_marshal_VOID__VOID,
 			G_TYPE_NONE,
 			0 );
-			check_change();
-			
+
+	g_signal_new(	"error-raised",
+			G_TYPE_FROM_CLASS(klass),
+			G_SIGNAL_RUN_FIRST,
+			0,
+			NULL,
+			NULL,
+			g_cclosure_marshal_VOID__STRING,
+			G_TYPE_NONE,
+			1,
+			G_TYPE_STRING );
 }
 
 static void
 celluloid_preferences_dialog_init(CelluloidPreferencesDialog *dlg)
 {
-	const PreferencesDialogItem interface_items[]
-		= {	{NULL,
-			"autofit-enable",
-			ITEM_TYPE_SWITCH},
-			{NULL,
-			"csd-enable",
-			ITEM_TYPE_SWITCH},
-			{NULL,
-			"dark-theme-enable",
-			ITEM_TYPE_SWITCH},
-			{NULL,
-			"always-use-floating-controls",
-			ITEM_TYPE_SWITCH},
-			{NULL,
-			"always-use-floating-header-bar",
-			ITEM_TYPE_SWITCH},
-			{NULL,
-			"draggable-video-area-enable",
-			ITEM_TYPE_SWITCH},
-			{NULL,
-			"always-show-title-buttons",
-			ITEM_TYPE_SWITCH},
-			{NULL,
-			"present-window-on-file-open",
-			ITEM_TYPE_SWITCH},
-			{NULL,
-			"always-autohide-cursor",
-			ITEM_TYPE_SWITCH},
-			{NULL,
-			"use-skip-buttons-for-playlist",
-			ITEM_TYPE_SWITCH},
-			{NULL,
-			"last-folder-enable",
-			ITEM_TYPE_SWITCH},
-			{NULL, NULL, ITEM_TYPE_INVALID} };
-	const PreferencesDialogItem config_items[]
-		= {	{NULL,
-			"mpv-config-enable",
-			ITEM_TYPE_SWITCH},
-			{_("mpv configuration file:"),
-			"mpv-config-file",
-			ITEM_TYPE_FILE_CHOOSER},
-			{NULL,
-			"mpv-input-config-enable",
-			ITEM_TYPE_SWITCH},
-			{_("mpv input configuration file:"),
-			"mpv-input-config-file",
-			ITEM_TYPE_FILE_CHOOSER},
-			{NULL, NULL, ITEM_TYPE_INVALID} };
-	const PreferencesDialogItem misc_items[]
-		= {	{NULL,
-			"always-open-new-window",
-			ITEM_TYPE_SWITCH},
-			{NULL,
-			"always-append-to-playlist",
-			ITEM_TYPE_SWITCH},
-			{NULL,
-			"ignore-playback-errors",
-			ITEM_TYPE_SWITCH},
-			{NULL,
-			"prefetch-metadata",
-			ITEM_TYPE_SWITCH},
-			{NULL,
-			"mpris-enable",
-			ITEM_TYPE_SWITCH},
-			{_("Extra mpv options"),
-			"mpv-options",
-			ITEM_TYPE_TEXT_BOX},
-			{NULL, NULL, ITEM_TYPE_INVALID} };
-	/* Added by Sako */
-	const PreferencesDialogItem av_items[]
-		= {	{NULL,
-			"youtube-info-link",
-			ITEM_INFO_LABEL_BOX},
-			{NULL,
-			"youtube-video-output",
-			ITEM_TYPE_COMBO_OUTPUTV},
-			{NULL,
-			"youtube-separator-line",
-			ITEM_SEPARATOR_LABEL_BOX},
-			{NULL,
-			"youtube-video-codec",
-			ITEM_TYPE_COMBO_CODECV},
-			{NULL,
-			"youtube-video-quality",
-			ITEM_TYPE_COMBO_BOX},
-			{NULL,
-			"youtube-audio-quality",
-			ITEM_TYPE_COMBO_AUDIO},
-			{NULL,
-			"close-info-pref",
-			ITEM_INFO_CLOSE_BOX},
-			{NULL, NULL, ITEM_TYPE_INVALID} };
-	/* End Added by Sako */
 	dlg->settings = g_settings_new(CONFIG_ROOT);
 	dlg->needs_mpv_reset = FALSE;
+	dlg->parent = NULL;
 
 	g_settings_delay(dlg->settings);
-
-	GtkWidget *page = NULL;
-
-    /* Added by Sako */
-	page = build_page
-		(	av_items,
-			dlg,
-			dlg->settings,
-			_("AV Options"),
-			"document-open-symbolic" );
-	adw_preferences_window_add(	ADW_PREFERENCES_WINDOW(dlg),
-					ADW_PREFERENCES_PAGE(page));
-					
-	page = build_page
-		(	interface_items,
-			dlg,
-			dlg->settings,
-			_("Interface"),
-			"preferences-desktop-appearance-symbolic" );
-	adw_preferences_window_add(	ADW_PREFERENCES_WINDOW(dlg),
-					ADW_PREFERENCES_PAGE(page));
-	if(1>2){ // disable temporarly
-		page = build_page
-			(	config_items,
-				dlg,
-				dlg->settings,
-				_("Config Files"),
-				"document-properties-symbolic" );
-		adw_preferences_window_add(	ADW_PREFERENCES_WINDOW(dlg),
-						ADW_PREFERENCES_PAGE(page));
-	}
-	if(1>2){ // disable temporarly
-		page = build_page
-			(	misc_items,
-				dlg,
-				dlg->settings,
-				_("Miscellaneous"),
-				"preferences-other-symbolic" );
-		adw_preferences_window_add(	ADW_PREFERENCES_WINDOW(dlg),
-						ADW_PREFERENCES_PAGE(page));
-	}
-	if(1>2){ // disable temporarly
-		page = GTK_WIDGET(celluloid_plugins_manager_new(GTK_WINDOW(dlg)));
-		adw_preferences_window_add(	ADW_PREFERENCES_WINDOW(dlg),
-						ADW_PREFERENCES_PAGE(page) );
-	}
-
-
-	/* End Added by Sako*/
-	g_signal_connect(	dlg,
-				"close-request",
-				G_CALLBACK(save_settings),
-				NULL );
-	g_signal_connect(	dlg->settings,
-				"changed",
-				G_CALLBACK(handle_changed),
-				dlg );
 }
 
 GtkWidget *
@@ -747,40 +804,16 @@ celluloid_preferences_dialog_new(GtkWindow *parent)
 {
 	GtkWidget *dlg;
 
-
 	dlg = g_object_new(	celluloid_preferences_dialog_get_type(),
+				"parent", parent,
 				"title", _("Preferences"),
-				"modal", TRUE,
-				"transient-for", parent,
 				NULL );
-
-	gtk_widget_set_visible(dlg, TRUE);
 
 	return dlg;
 }
-static gboolean check_change(){
-	char selectedOpions[256];
-	GSettings *settings = g_settings_new(CONFIG_ROOT);
-	gchar *v_quality[] = {"144" ,"240", "360", "480", "720", "None"};
-	gchar *a_quality[] = {"opus", "m4a"};
-	gchar *v_codec[4] = {"av01", "vp09", "avc"};
-	gchar *v_output[] = {"ewa-lanczos", "bicubic_fast"};//, "ewa-hanning"
-	//gchar *p_size[] = {"360", "480"};
 
-	gchar *selected_v_quality= v_quality[g_settings_get_int(settings, "youtube-video-quality")];
-	gchar *selected_a_quality= a_quality[g_settings_get_int(settings, "youtube-audio-quality")];
-	gchar *selected_v_codec= v_codec[g_settings_get_int(settings, "youtube-video-codec")];
-	gchar *selected_v_output= v_output[g_settings_get_int(settings, "youtube-video-output")];
-	gchar *selected_p_size= ""; //v_output[g_settings_get_int(settings, "youtube-player-size")];
-	//gboolean theater_mode = g_settings_get_boolean(settings, "youtube-theater-mode");
-
-	snprintf(selectedOpions, sizeof(selectedOpions), "%s-%s-%s-%s-%s",
-		selected_v_quality, selected_a_quality, selected_v_codec, selected_v_output, selected_p_size);
-	if(strcmp(c_prevSetting, selectedOpions) == 0){
-		//printf("Controler No change was made: %s\n", c_prevSetting);
-		return 0;
-	}
-	//printf("Controler Change was made: %s\n", selectedOpions);
-	memcpy(c_prevSetting, selectedOpions, sizeof c_prevSetting);
-	return 1;
+void
+celluloid_preferences_dialog_present(CelluloidPreferencesDialog *self)
+{
+	adw_dialog_present(ADW_DIALOG(self), GTK_WIDGET(self->parent));
 }

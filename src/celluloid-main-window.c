@@ -68,7 +68,8 @@ struct _CelluloidMainWindowPrivate
 	const GPtrArray *disc_list;
 	GtkWidget *header_bar;
 	GtkWidget *main_box;
-	GtkWidget *video_area_paned;
+	GtkWidget *video_split_view;
+	//GtkWidget *video_area_paned;
 	GtkWidget *video_area;
 	GtkWidget *control_box;
 	GtkWidget *playlist;
@@ -127,25 +128,38 @@ static void
 constructed(GObject *object)
 {
 	CelluloidMainWindowPrivate *priv = get_private(object);
-
+	GSettings *state = g_settings_new(CONFIG_WIN_STATE);
+	
 	priv->playlist = celluloid_playlist_widget_new();
 
+	/*g_settings_bind(	state, "loop-playlist",
+				priv->playlist, "loop-playlist",
+				G_SETTINGS_BIND_DEFAULT );
+				*/
 	gtk_widget_set_visible(priv->playlist, FALSE);
-	gtk_widget_set_visible(priv->control_box, FALSE);
+	
+    GtkWidget *sidebar_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+    GtkWidget *header = adw_header_bar_new();
+    
+    //g_signal_connect(listbox, "row-activated", G_CALLBACK(on_item_activated), data);
 
-	gtk_paned_set_start_child
-		(GTK_PANED(priv->video_area_paned), priv->video_area);
-	gtk_paned_set_end_child
-		(GTK_PANED(priv->video_area_paned), priv->playlist);
-	gtk_paned_set_shrink_start_child
-		(GTK_PANED(priv->video_area_paned), FALSE);
-	gtk_paned_set_shrink_end_child
-		(GTK_PANED(priv->video_area_paned), FALSE);
+    gtk_box_append(GTK_BOX(sidebar_box), header);
+    gtk_box_append(GTK_BOX(sidebar_box), priv->playlist);
 
-	gtk_application_window_set_show_menubar
-		(GTK_APPLICATION_WINDOW(object), !priv->csd);
+    
+	AdwOverlaySplitView *video_split_view = ADW_OVERLAY_SPLIT_VIEW(priv->video_split_view);
+	adw_overlay_split_view_set_content(video_split_view, priv->video_area);
+	adw_overlay_split_view_set_sidebar(video_split_view, sidebar_box);
+	adw_overlay_split_view_set_sidebar_position(video_split_view, GTK_PACK_END);
+	adw_overlay_split_view_set_show_sidebar(video_split_view, FALSE);
+	adw_overlay_split_view_set_collapsed(video_split_view, TRUE);
 
+
+	gtk_application_window_set_show_menubar(GTK_APPLICATION_WINDOW(object), !priv->csd);
+
+	g_object_unref(state);
 	G_OBJECT_CLASS(celluloid_main_window_parent_class)->constructed(object);
+	
 }
 
 static void
@@ -254,7 +268,6 @@ notify_fullscreened_handler(GObject *object, GParamSpec *pspec, gpointer data)
 		(wnd, floating_header_bar);
 	gtk_widget_set_visible
 		(priv->playlist, playlist_visible);
-
 	g_object_unref(settings);
 }
 
@@ -366,7 +379,7 @@ resize_to_target(gpointer data)
 	 */
 	celluloid_playlist_widget_queue_draw
 		(CELLULOID_PLAYLIST_WIDGET(priv->playlist));
-
+	//gtk_widget_set_visible(priv->playlist, TRUE);
 	return FALSE;
 }
 
@@ -479,7 +492,8 @@ celluloid_main_window_init(CelluloidMainWindow *wnd)
 	priv->disc_list = NULL;
 	priv->header_bar = celluloid_header_bar_new();
 	priv->main_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
-	priv->video_area_paned = gtk_paned_new(GTK_ORIENTATION_HORIZONTAL);
+	//priv->video_area_paned = gtk_paned_new(GTK_ORIENTATION_HORIZONTAL);
+	priv->video_split_view = adw_overlay_split_view_new();
 	priv->video_area = celluloid_video_area_new();
 	priv->control_box = celluloid_control_box_new();
 
@@ -564,22 +578,29 @@ celluloid_main_window_init(CelluloidMainWindow *wnd)
 
 	gtk_window_set_title(GTK_WINDOW(wnd), g_get_application_name());
 
-	gtk_paned_set_position(	GTK_PANED(priv->video_area_paned),
+	/*gtk_paned_set_position(	GTK_PANED(priv->video_area_paned),
 				MAIN_WINDOW_DEFAULT_WIDTH
-				-PLAYLIST_DEFAULT_WIDTH );
-	gtk_paned_set_resize_end_child(GTK_PANED(priv->video_area_paned), FALSE);
+				-PLAYLIST_DEFAULT_WIDTH );*/
+	//gtk_paned_set_resize_end_child(GTK_PANED(priv->video_area_paned), FALSE);
 
 	gtk_window_set_default_size(	GTK_WINDOW(wnd),
 					MAIN_WINDOW_DEFAULT_WIDTH,
 					MAIN_WINDOW_DEFAULT_HEIGHT );
+					
+	gtk_widget_set_vexpand(priv->video_split_view, TRUE);
 
-	gtk_widget_set_hexpand(priv->header_bar, TRUE);
-	gtk_widget_set_hexpand(priv->control_box, TRUE);
-	gtk_widget_set_vexpand(priv->video_area_paned, TRUE);
-
+	//gtk_widget_set_hexpand(priv->header_bar, TRUE);
+	//gtk_widget_set_hexpand(priv->control_box, TRUE);
+	//gtk_widget_set_vexpand(priv->video_area_paned, TRUE);
+	
+	gtk_box_append(GTK_BOX(priv->main_box), priv->video_split_view);
+	gtk_window_set_child(GTK_WINDOW(wnd), priv->main_box);
+	//gtk_widget_set_size_request(GTK_WIDGET(wnd), 290, 220);
+	/*
 	gtk_box_append(GTK_BOX(priv->main_box), priv->video_area_paned);
 	gtk_box_append(GTK_BOX(priv->main_box), priv->control_box);
 	gtk_window_set_child(GTK_WINDOW(wnd), priv->main_box);
+	*/
 }
 
 GtkWidget *
@@ -708,7 +729,7 @@ celluloid_main_window_save_state(CelluloidMainWindow *wnd)
 	settings = g_settings_new(CONFIG_WIN_STATE);
 	priv = get_private(wnd);
 	maximized = gtk_window_is_maximized(GTK_WINDOW(wnd));
-	handle_pos = gtk_paned_get_position(GTK_PANED(priv->video_area_paned));
+	//handle_pos = gtk_paned_get_position(GTK_PANED(priv->video_area_paned));
 
 	g_object_get(priv->control_box, "volume", &volume, NULL);
 	gtk_window_get_default_size(GTK_WINDOW(wnd), &width, &height);
@@ -738,7 +759,7 @@ celluloid_main_window_save_state(CelluloidMainWindow *wnd)
 					"playlist-width",
 					priv->playlist_width );
 	}
-
+	
 	g_clear_object(&settings);
 }
 
@@ -758,22 +779,21 @@ celluloid_main_window_load_state(CelluloidMainWindow *wnd)
 
 		priv->playlist_width
 			= g_settings_get_int(settings, "playlist-width");
-		priv->playlist_width = 300; // fix playlist width
+		priv->playlist_width = PLAYLIST_DEFAULT_WIDTH; 
 		priv->playlist_visible
 			= g_settings_get_boolean(settings, "show-playlist");
-		priv->playlist_visible = FALSE; // Always hide playlist onload
+		priv->playlist_visible = TRUE; // Always show playlist onload
 		controls_visible
 			= g_settings_get_boolean(settings, "show-controls");
 		volume = g_settings_get_double(settings, "volume");
-		handle_pos = width-(priv->playlist_visible?priv->playlist_width:0);
+		//handle_pos = width-(priv->playlist_visible?priv->playlist_width:0);
 
 		g_object_set(priv->control_box, "volume", volume, NULL);
 
-		gtk_widget_set_visible(priv->control_box, controls_visible);
+		//gtk_widget_set_visible(priv->control_box, controls_visible);
 		gtk_widget_set_visible(priv->playlist, priv->playlist_visible);
 		gtk_window_set_default_size(GTK_WINDOW(wnd), width, height);
-		gtk_paned_set_position
-			(GTK_PANED(priv->video_area_paned), handle_pos);
+		//gtk_paned_set_position(GTK_PANED(priv->video_area_paned), handle_pos);
 
 		if(maximized)
 		{
@@ -911,56 +931,16 @@ celluloid_main_window_set_playlist_visible(	CelluloidMainWindow *wnd,
 						gboolean visible )
 {
 	CelluloidMainWindowPrivate *priv = get_private(wnd);
-
-	if(	visible != priv->playlist_visible &&
-		!gtk_window_is_fullscreen(GTK_WINDOW(wnd)))
-	{
-		gboolean resize;
-		gint handle_pos;
-		gint width;
-		gint height;
-
-		resize = gtk_window_get_resizable(GTK_WINDOW(wnd));
-		handle_pos =	gtk_paned_get_position
-				(GTK_PANED(priv->video_area_paned));
-
-		gtk_window_get_default_size(GTK_WINDOW(wnd), &width, &height);
-
-		if(priv->playlist_first_toggle && visible)
-		{
-			gint new_pos = width - (resize ? 0 : priv->playlist_width);
-
-			gtk_paned_set_position
-				(GTK_PANED(priv->video_area_paned), new_pos);
-		}
-		else if(!visible)
-		{
-			priv->playlist_width = width - handle_pos;
-		}
-
-		priv->playlist_visible = visible;
-		gtk_widget_set_visible(priv->playlist, visible);
-
-		if(resize)
-		{
-			gint new_width;
-
-			new_width =	visible?
-					width + priv->playlist_width:
-					handle_pos;
-
-			gtk_window_set_default_size
-				(GTK_WINDOW(wnd), new_width, height);
-		}
-
-		priv->playlist_first_toggle = FALSE;
-	}
+	
+	adw_overlay_split_view_set_show_sidebar
+		(ADW_OVERLAY_SPLIT_VIEW(priv->video_split_view), visible);
 }
 
 gboolean
 celluloid_main_window_get_playlist_visible(CelluloidMainWindow *wnd)
 {
-	return gtk_widget_get_visible(GTK_WIDGET(get_private(wnd)->playlist));
+	return	adw_overlay_split_view_get_show_sidebar
+		(ADW_OVERLAY_SPLIT_VIEW(get_private(wnd)->video_split_view));
 }
 
 void

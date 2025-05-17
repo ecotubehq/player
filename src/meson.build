@@ -48,7 +48,7 @@ sources += custom_target('authors',
   ]
 )
 
-libgtk = dependency('gtk4', version: '>=4.6.1')
+libgtk = dependency('gtk4', version: '>=4.16.0')
 localedir = join_paths(get_option('prefix'), get_option('localedir'))
 cflags = [
   '-DG_SETTINGS_ENABLE_BACKEND',
@@ -129,7 +129,7 @@ executable('ecotube', sources,
     libgio,
     meson.get_compiler('c').find_library('m', required: false),
     dependency('mpv', version: '>= 1.107'),
-    dependency('libadwaita-1', version: '>= 1.2.0'),
+    dependency('libadwaita-1', version: '>= 1.6.0'),
     dependency('epoxy')
   ],
   link_with: extra_libs,

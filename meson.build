@@ -1,5 +1,5 @@
 project('ecotube', 'c',
-  version: '0.26',
+  version: '25.4.1',
   meson_version: '>= 0.49.0',
   default_options: [
     'warning_level=2',

@@ -323,7 +323,7 @@ set_property(	GObject *object,
 		break;
 
 		case PROP_DARK_THEME_ENABLE:
-		self->dark_theme_enable = g_value_get_boolean(value);
+		self->dark_theme_enable = TRUE;// Always enable dark theme
 		set_dark_theme_enable(self, self->dark_theme_enable);
 		break;
 
@@ -537,12 +537,11 @@ file_open_handler(	CelluloidView *view,
 		set_video_area_status
 			(controller, CELLULOID_VIDEO_AREA_STATUS_LOADING);
 	}
-
 	for(guint i = 0; i < files_count; i++)
 	{
 		GFile *file = g_list_model_get_item(files, i);
 		gchar *uri = g_file_get_path(file) ?: g_file_get_uri(file);
-
+		
 		celluloid_model_load_file(model, uri, append || i > 0);
 
 		g_free(uri);
@@ -550,10 +549,13 @@ file_open_handler(	CelluloidView *view,
 	// resized based on the selected resolution
 	GSettings *settings =		g_settings_new(CONFIG_ROOT);
 	int video_resolution_index = g_settings_get_int(settings, "youtube-video-quality");
-	if(video_resolution_index > 0){
-		celluloid_view_resize_video_area(controller->view, 1278, 720);
+	if(video_resolution_index == 0){
+		celluloid_view_resize_video_area(controller->view, 640, 360);
+	}
+	else if(video_resolution_index == 1){
+		celluloid_view_resize_video_area(controller->view, 853, 480);
 	}else{
-		celluloid_view_resize_video_area(controller->view, 768, 432);
+		celluloid_view_resize_video_area(controller->view, 1278, 720);
 	}
 }
 
@@ -564,11 +566,15 @@ is_active_handler(GObject *gobject, GParamSpec *pspec, gpointer data)
 	CelluloidView *view = CELLULOID_VIEW(gobject);
 	gboolean is_active = TRUE;
 
-	g_object_get(view, "is-active", &is_active, NULL);
-
-	if(!is_active)
+	// As of GTK 4.17.4 controller->model may be NULL on window close.
+	if(controller->model)
 	{
-		celluloid_model_reset_keys(controller->model);
+		g_object_get(view, "is-active", &is_active, NULL);
+
+		if(!is_active)
+		{
+			celluloid_model_reset_keys(controller->model);
+		}
 	}
 }
 
@@ -1413,7 +1419,7 @@ celluloid_controller_class_init(CelluloidControllerClass *klass)
 		(	"dark-theme-enable",
 			"Enable dark theme",
 			"Whether or not to enable dark theme",
-			FALSE,
+			TRUE,
 			G_PARAM_READWRITE );
 	g_object_class_install_property(obj_class, PROP_DARK_THEME_ENABLE, pspec);
 

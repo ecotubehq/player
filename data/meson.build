@@ -44,9 +44,9 @@ install_data('FSR.glsl',
   install_dir: join_paths(get_option('datadir'), 'sako')
 )
 
-#install_data('start.mp4',
-#  install_dir: join_paths(get_option('datadir'), 'sako')
-#)
+install_data('player-info.pdf',
+  install_dir: join_paths(get_option('datadir'), 'ecotube')
+)
 
 #run_command('gsettings', 'reset', 'io.github.celluloid-player.Celluloid', 'startup-request', check: true)
 

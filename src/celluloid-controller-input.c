@@ -86,6 +86,16 @@ scroll_handler(	GtkEventControllerScroll *scroll_controller,
 		gdouble dy,
 		gpointer data );
 
+typedef struct {
+    CelluloidVideoArea *video_area;
+    gchar *uri;
+    gchar *title;
+} TDownloader;
+static gpointer ecotube_downloand_video(gpointer user_data);
+static gpointer ecotube_downloand_audio(gpointer user_data);
+static gboolean ecotube_downloand_done(gpointer user_data);
+
+
 static gchar *
 keyval_to_keystr(guint keyval)
 {
@@ -187,7 +197,6 @@ key_pressed_handler(	GtkEventControllerKey *key_controller,
 	GSettings *settings =		g_settings_new(CONFIG_ROOT);
 	gboolean theater_mode = FALSE; //g_settings_get_boolean(settings, "youtube-theater-mode");
 	if((state & GDK_CONTROL_MASK) && g_strcmp0(ckeystr, "t")==0){
-		//printf("key pressed Ctrl: %d->%s\n", keyval, keyval_to_keystr(keyval));
 		GSettings *settings = g_settings_new(CONFIG_ROOT);
 		gboolean is_floating = FALSE;//g_settings_get_boolean(settings, "always-use-floating-header-bar");
 		g_settings_set_boolean(settings, "always-use-floating-header-bar", !is_floating);
@@ -211,13 +220,50 @@ key_pressed_handler(	GtkEventControllerKey *key_controller,
 		g_object_unref(settings);
 	}
 	if(theater_mode && g_strcmp0(ckeystr, "ESC")==0){
-		printf("DIsable - key pressed Ctrl: %d->%s\n", keyval, keyval_to_keystr(keyval));
 		//g_settings_set_boolean(settings, "always-use-floating-header-bar", FALSE);
 		//g_settings_set_boolean(settings, "always-use-floating-controls", FALSE);
 		//gtk_window_set_resizable(controller->view, TRUE);		
 		int width = 854;
 		int height = 480;
 		celluloid_view_resize_video_area(controller->view, width, height);	
+	}
+	if((state & GDK_CONTROL_MASK) && g_strcmp0(ckeystr, "a")==0){
+
+		CelluloidView *view = celluloid_controller_get_view(controller);
+		CelluloidMainWindow *window = CELLULOID_MAIN_WINDOW(view);
+		CelluloidPlaylistWidget *playlist = celluloid_main_window_get_playlist(window);
+		GPtrArray *contents = celluloid_playlist_widget_get_contents(playlist);
+		g_assert(contents->len > 0);
+		CelluloidPlaylistEntry *entry = g_ptr_array_index(contents, 0);
+		CelluloidVideoArea *video_area = celluloid_main_window_get_video_area(window);
+				
+		TDownloader *nloader = g_new(TDownloader, 1);
+		nloader->video_area = video_area;		
+		nloader->title = "placeholder";
+		nloader->uri = entry->filename;
+		
+		celluloid_video_area_show_toast_message(video_area, "Downloading the video ...");
+		g_thread_new("worker", ecotube_downloand_video, nloader);
+
+	}
+	if((state & GDK_CONTROL_MASK) && g_strcmp0(ckeystr, "d")==0){
+
+		CelluloidView *view = celluloid_controller_get_view(controller);
+		CelluloidMainWindow *window = CELLULOID_MAIN_WINDOW(view);
+		CelluloidPlaylistWidget *playlist = celluloid_main_window_get_playlist(window);
+		GPtrArray *contents = celluloid_playlist_widget_get_contents(playlist);
+		g_assert(contents->len > 0);
+		CelluloidPlaylistEntry *entry = g_ptr_array_index(contents, 0);
+		CelluloidVideoArea *video_area = celluloid_main_window_get_video_area(window);
+				
+		TDownloader *nloader = g_new(TDownloader, 1);
+		nloader->video_area = video_area;		
+		nloader->title = "placeholder";
+		nloader->uri = entry->filename;
+		
+		celluloid_video_area_show_toast_message(video_area, "Downloading the audio ...");
+		g_thread_new("worker", ecotube_downloand_audio, nloader);
+
 	}
 	return FALSE;
 }
@@ -231,11 +277,10 @@ key_released_handler(	GtkEventControllerKey *key_controller,
 {
 	CelluloidController *controller = data;
 	gchar *keystr = get_full_keystr(keyval, state);
-	gboolean searching = FALSE;
 
-	g_object_get(controller->view, "searching", &searching, NULL);
-
-	if(keystr && !searching)
+	const gboolean playlist_visible =
+		celluloid_view_get_playlist_visible(controller->view);
+	if(keystr && !playlist_visible)
 	{
 		celluloid_model_key_up(controller->model, keystr);
 		g_free(keystr);
@@ -396,10 +441,13 @@ celluloid_controller_input_connect_signals(CelluloidController *controller)
 				"released",
 				G_CALLBACK(button_released_handler),
 				controller );
+	// As of GTK 4.17.4, the player crashes on exit when this signals is enabled
+	/*
 	g_signal_connect(	click_gesture,
 				"stopped",
 				G_CALLBACK(button_stopped_handler),
 				controller );
+	*/
 
 	GtkEventController *motion_controller =
 		gtk_event_controller_motion_new();
@@ -421,4 +469,28 @@ celluloid_controller_input_connect_signals(CelluloidController *controller)
 				"scroll",
 				G_CALLBACK(scroll_handler),
 				controller );
+}
+static gpointer ecotube_downloand_video(gpointer user_data){
+	TDownloader *data = user_data;
+	gchar *command = g_strdup_printf("yt-dlp -f worst %s -o \"%%(title)s.%%(ext)s\" -P ~/  > /dev/null", data->uri);
+	system(command);
+	g_idle_add(ecotube_downloand_done, data);
+	
+	g_free(command);
+	return NULL;
+}
+static gpointer ecotube_downloand_audio(gpointer user_data){
+	TDownloader *data = user_data;
+	gchar *command = g_strdup_printf("yt-dlp -f bestaudio %s -o \"%%(title)s.%%(ext)s\" -P ~/  > /dev/null", data->uri);
+	system(command);
+	g_idle_add(ecotube_downloand_done, data);
+	
+	g_free(command);
+	return NULL;
+}
+static gboolean ecotube_downloand_done(gpointer user_data){
+	TDownloader *data = user_data;
+	celluloid_video_area_show_toast_message(data->video_area, "Download complete!");
+	g_free(data);
+	return G_SOURCE_REMOVE;
 }

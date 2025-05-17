@@ -23,7 +23,7 @@
 #include <glib.h>
 #include <glib-object.h>
 #include <gtk/gtk.h>
-
+#include <adwaita.h>
 #include "celluloid-control-box.h"
 #include "celluloid-header-bar.h"
 

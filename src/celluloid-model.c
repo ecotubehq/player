@@ -1230,7 +1230,7 @@ celluloid_model_load_file(	CelluloidModel *model,
 	GSettings *settings = g_settings_new(CONFIG_ROOT);
 
 	append |= g_settings_get_boolean(settings, "always-append-to-playlist");
-
+	append = FALSE; // Always add file as new entry
 	celluloid_mpv_load(CELLULOID_MPV(model), uri, append);
 
 	/* Start playing when replacing the playlist, ie. not appending, or
