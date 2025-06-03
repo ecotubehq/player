@@ -1861,8 +1861,7 @@ celluloid_view_show_about_window (CelluloidView *view)
 
 void
 celluloid_view_show_usage_window (CelluloidView *view){
-	//system("xdg-open file:///usr/local/share/ecotube/player-info.pdf");
-	system("yt-dlp https://www.youtube.com/watch?v=pBk4NYhWNMM -o ~/");
+	system("xdg-open https://raw.githubusercontent.com/ecotubehq/player/master/data/player-info.pdf");
 }
 
 void
@@ -2077,13 +2076,14 @@ void sa_load_default_videos_1(CelluloidView *view){
 	GPtrArray *playlist = g_ptr_array_new_with_free_func (g_object_unref);
 	gchar *videos[][2] = {
 						{"https://www.youtube.com/watch?v=YbxpieEQ7bc", "The Real Cost of Net Zero: The shocking truth of the renewable energy push"} ,
+						{"https://www.youtube.com/watch?v=dN_ARfPY9rY", "Inconvenient Truth: Our climate policies cant save the environment. So what will?"},
 						{"https://www.youtube.com/watch?v=jSFo_92cJ-U", "Thorium Reactors: Why is this Technology Quite So Exciting"} , 
 					    {"https://www.youtube.com/watch?v=Re7FqKh7i_c", "\"I am Exposing the Whole Damn Thing!\" | Randall Carlson"} , 
 						{"https://www.youtube.com/watch?v=Icew8R-VWSY", "Expert View: Malcolm Bendall's MSAART Plasmoid Energy Thunderstorm Generator"} , 
 						{"https://alchemicalscience.org/thunderstorm-generator-complete-diy-build-guide-malcolm-bendalls-plasmoid-tech", "Thunderstorm Generator | COMPLETE DIY BUILD GUIDE | Malcolm Bendall’s Plasmoid Tech"} 
 					 };
 	
-	for(gint i=0; i<5; i++){
+	for(gint i=0; i<6; i++){
 		//gchar *video[] =  videos[i];
 		gchar *uri = videos[i][0];	
 		gchar *title = videos[i][1];	

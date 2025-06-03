@@ -1546,13 +1546,14 @@ celluloid_controller_get_model(CelluloidController *controller)
 void sa_append_default_videos(CelluloidModel *model){
 	GPtrArray *playlist = NULL;
 	gchar *videos[] = {"https://www.youtube.com/watch?v=YbxpieEQ7bc" ,
+						"https://www.youtube.com/watch?v=dN_ARfPY9rY",
 					   "https://www.youtube.com/watch?v=jSFo_92cJ-U",
 					  "https://www.youtube.com/watch?v=Re7FqKh7i_c", 
 					  "https://www.youtube.com/watch?v=Icew8R-VWSY", 
 					  "https://alchemicalscience.org/thunderstorm-generator-complete-diy-build-guide-malcolm-bendalls-plasmoid-tech"
 					  };
 	
-	for(gint i=0; i<5; i++){
+	for(gint i=0; i<6; i++){
 		gchar *uri = videos[i];		
 		g_object_get(model, "playlist", &playlist, NULL);
 		CelluloidPlaylistEntry *entry = celluloid_playlist_entry_new(uri, NULL);

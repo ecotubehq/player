@@ -472,7 +472,7 @@ celluloid_controller_input_connect_signals(CelluloidController *controller)
 }
 static gpointer ecotube_downloand_video(gpointer user_data){
 	TDownloader *data = user_data;
-	gchar *command = g_strdup_printf("yt-dlp -f worst %s -o \"%%(title)s.%%(ext)s\" -P ~/  > /dev/null", data->uri);
+	gchar *command = g_strdup_printf("yt-dlp -f worst %s -o \"%%(title)s.%%(ext)s\" -P /temp  > /dev/null", data->uri);
 	system(command);
 	g_idle_add(ecotube_downloand_done, data);
 	
@@ -481,7 +481,7 @@ static gpointer ecotube_downloand_video(gpointer user_data){
 }
 static gpointer ecotube_downloand_audio(gpointer user_data){
 	TDownloader *data = user_data;
-	gchar *command = g_strdup_printf("yt-dlp -f bestaudio %s -o \"%%(title)s.%%(ext)s\" -P ~/  > /dev/null", data->uri);
+	gchar *command = g_strdup_printf("yt-dlp -f bestaudio %s -o \"%%(title)s.%%(ext)s\" -P /temp  > /dev/null", data->uri);
 	system(command);
 	g_idle_add(ecotube_downloand_done, data);
 	
