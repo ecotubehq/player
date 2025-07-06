@@ -15,19 +15,40 @@
  <description translatable="no">
 
     <p>
-		EcoTubeHQ is a high quality video player which reduces energy usage by downloading minimal data when playing DRM-free video streaming services [YouTube, Rumble, Bitchute etc]. Hardware acceleration is used where possible to reduce the CPU load.
-  	</p>
+		EcotubeHQ is a hardware accelerated video player which requires minimal data to offer high quality video output from streaming 
+		services such as YouTube, Rumble and Bitchute  	
+	</p>
 	<p>Features:</p>
       <ul>
-        <li>EcoTubeHQ automatically downloads the highest quality / lowest bitrate YouTube video, i.e. av1 codec videos are output by default, if av1 isn't available then vp9 is utilized, and if vp9 isn't available then h.264 is output. Alternatively, EcoTubeHQ can be set to download only vp9 or h.264 video.</li>
-        <li>EcoTubeHQ offers three video upscaling techniques: AMD FidelityFX Super Resolution [BQ Best Quality], Lanczos [HQ High Quality] and Bicubic [LE Low Energy]. Using 720p AMD FSR video upscaling instead of 1080p conventional upscaling gives comparable video quality whilst significantly reducing downloaded data.</li>
+        <li>EcoTubeHQ automatically downloads highest quality / lowest bitrate YouTube videos, i.e. av1 codec videos are output by default, if av1 isn't available then vp9 is utilized, and if vp9 isn't available then h.264 is output.</li>
+        <li>EcoTubeHQ opens low bitrate 144p / 240p YouTube videos in reduced size windows. When these windows are ran ‘always on top’ they can be used for viewing videos which do not need full screen output [e.g. podcasts].</li>
         <li>EcoTubeHQ further minimizes data usage by restricting videos to 30fps.</li>
-        <li>EcoTubeHQ offers two Opus audio bitrates for av1 and vp9 YouTube videos - 70kbps [default] and 160kbps.</li>
-        <li>EcoTubeHQ can also play local video files with AMD FSR, and it offers drag and drop video playlists.</li>
+        <li>EcoTubeHQ offers three video upscaling techniques: AMD FidelityFX Super Resolution [Best Quality], Lanczos [High Quality] and Bicubic [Low Energy]. 720p AMD FSR video quality is comparable to conventional 1080p quality.</li>
+        <li>EcoTubeHQ can minimize video artifacts through debanding.</li>
+        <li>EcoTubeHQ can utilize Vulkan GPU Compute Acceleration to minimize CPU usage during video output.</li>
+        <li>EcoTubeHQ offers drag and drop video playlists.</li>
+        <li>EcoTubeHQ can play local video files with AMD FidelityFX Super Resolution.</li>
+        <li>EcoTubeHQ offers two Opus audio bitrates for av1 and vp9 YouTube videos - 70kbps and 160kbps.</li>
       </ul>
  </description>
  <developer_name>EcoTube Partners</developer_name>
  <releases>
+  <release date="2025-07-06" version="25.7.1">
+   <description translatable="no">
+    <p>
+		Fix video/audio download
+    </p>
+    <p>
+		Improve video loading
+    </p>
+    <p>
+		Add vulkan support
+    </p>
+    <p>
+		Fix format selection
+    </p>
+   </description>
+  </release>
   <release date="2024-09-21" version="25.4.2">
    <description translatable="no">
     <p>

@@ -90,6 +90,7 @@ typedef struct {
     CelluloidVideoArea *video_area;
     gchar *uri;
     gchar *title;
+    gchar *media_path
 } TDownloader;
 static gpointer ecotube_downloand_video(gpointer user_data);
 static gpointer ecotube_downloand_audio(gpointer user_data);
@@ -193,6 +194,7 @@ key_pressed_handler(	GtkEventControllerKey *key_controller,
 		g_free(keystr);
 	}
 	gchar *ckeystr = keyval_to_keystr(keyval);
+	const gchar *data_dir = g_get_user_data_dir();
 	//Added  by Sako
 	GSettings *settings =		g_settings_new(CONFIG_ROOT);
 	gboolean theater_mode = FALSE; //g_settings_get_boolean(settings, "youtube-theater-mode");
@@ -241,8 +243,9 @@ key_pressed_handler(	GtkEventControllerKey *key_controller,
 		nloader->video_area = video_area;		
 		nloader->title = "placeholder";
 		nloader->uri = entry->filename;
+		nloader->media_path = data_dir;
 		
-		celluloid_video_area_show_toast_message(video_area, "Downloading the video ...");
+		celluloid_video_area_show_toast_message(video_area, g_strdup_printf("Downloading the video to %s...", data_dir));
 		g_thread_new("worker", ecotube_downloand_video, nloader);
 
 	}
@@ -260,8 +263,9 @@ key_pressed_handler(	GtkEventControllerKey *key_controller,
 		nloader->video_area = video_area;		
 		nloader->title = "placeholder";
 		nloader->uri = entry->filename;
+		nloader->media_path = data_dir;
 		
-		celluloid_video_area_show_toast_message(video_area, "Downloading the audio ...");
+		celluloid_video_area_show_toast_message(video_area, g_strdup_printf("Downloading the audio to %s...", data_dir));
 		g_thread_new("worker", ecotube_downloand_audio, nloader);
 
 	}
@@ -472,7 +476,8 @@ celluloid_controller_input_connect_signals(CelluloidController *controller)
 }
 static gpointer ecotube_downloand_video(gpointer user_data){
 	TDownloader *data = user_data;
-	gchar *command = g_strdup_printf("yt-dlp -f worst %s -o \"%%(title)s.%%(ext)s\" -P /temp  > /dev/null", data->uri);
+	const gchar *data_dir = g_get_user_data_dir();
+	gchar *command = g_strdup_printf("yt-dlp -f worst %s -o \"%%(title)s.%%(ext)s\" -P %s  > /dev/null", data->uri, data_dir);
 	system(command);
 	g_idle_add(ecotube_downloand_done, data);
 	
@@ -481,7 +486,9 @@ static gpointer ecotube_downloand_video(gpointer user_data){
 }
 static gpointer ecotube_downloand_audio(gpointer user_data){
 	TDownloader *data = user_data;
-	gchar *command = g_strdup_printf("yt-dlp -f bestaudio %s -o \"%%(title)s.%%(ext)s\" -P /temp  > /dev/null", data->uri);
+	const gchar *data_dir = g_get_user_data_dir();
+	
+	gchar *command = g_strdup_printf("yt-dlp -f bestaudio %s -o \"%%(title)s.%%(ext)s\" -P %s  > /dev/null", data->uri, data_dir);
 	system(command);
 	g_idle_add(ecotube_downloand_done, data);
 	
@@ -490,7 +497,7 @@ static gpointer ecotube_downloand_audio(gpointer user_data){
 }
 static gboolean ecotube_downloand_done(gpointer user_data){
 	TDownloader *data = user_data;
-	celluloid_video_area_show_toast_message(data->video_area, "Download complete!");
+	celluloid_video_area_show_toast_message(data->video_area, g_strdup_printf("Download complete! %s", data->media_path));
 	g_free(data);
 	return G_SOURCE_REMOVE;
 }

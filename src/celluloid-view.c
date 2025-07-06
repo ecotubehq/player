@@ -1104,11 +1104,15 @@ mpv_reset_request_handler(AdwPreferencesWindow *dialog, gpointer data)
 	 *  Resize window when user changes the config
 	 * */
 	 int video_resolution_index = g_settings_get_int(settings, "youtube-video-quality");
-	 if(video_resolution_index > 0){
-		celluloid_main_window_resize_video_area(wnd, 1278, 720);
-	 }else{
-		celluloid_main_window_resize_video_area(wnd, 768, 432);
+	 if(video_resolution_index == 0){
+		celluloid_main_window_resize_video_area(wnd, 640, 360);
 	 }
+	 else if(video_resolution_index == 1){
+		celluloid_main_window_resize_video_area(wnd, 853, 480);
+	 }else{
+		celluloid_main_window_resize_video_area(wnd, 1278, 720);
+	 }
+
 
 	gboolean theater_mode = FALSE;
 	if(theater_mode){
@@ -2077,14 +2081,14 @@ void sa_load_default_videos_1(CelluloidView *view){
 	gchar *videos[][2] = {
 						{"https://www.youtube.com/watch?v=YbxpieEQ7bc", "The Real Cost of Net Zero: The shocking truth of the renewable energy push"} ,
 						{"https://www.youtube.com/watch?v=dN_ARfPY9rY", "Inconvenient Truth: Our climate policies cant save the environment. So what will?"},
+						{"https://www.youtube.com/watch?v=3__HO-akNC8", "How AI is Ruining the Electric Grid"},
+						{"https://www.youtube.com/watch?v=cT30UmarO4E", "Scientists Just Copied Fireflies and Transformed LED Tech"},
 						{"https://www.youtube.com/watch?v=jSFo_92cJ-U", "Thorium Reactors: Why is this Technology Quite So Exciting"} , 
 					    {"https://www.youtube.com/watch?v=Re7FqKh7i_c", "\"I am Exposing the Whole Damn Thing!\" | Randall Carlson"} , 
 						{"https://www.youtube.com/watch?v=Icew8R-VWSY", "Expert View: Malcolm Bendall's MSAART Plasmoid Energy Thunderstorm Generator"} , 
-						{"https://alchemicalscience.org/thunderstorm-generator-complete-diy-build-guide-malcolm-bendalls-plasmoid-tech", "Thunderstorm Generator | COMPLETE DIY BUILD GUIDE | Malcolm Bendall’s Plasmoid Tech"} 
 					 };
 	
 	for(gint i=0; i<6; i++){
-		//gchar *video[] =  videos[i];
 		gchar *uri = videos[i][0];	
 		gchar *title = videos[i][1];	
 		CelluloidPlaylistEntry *entry = celluloid_playlist_entry_new(uri, title);	

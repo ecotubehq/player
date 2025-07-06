@@ -1279,15 +1279,6 @@ play_button_handler(GtkButton *button, gpointer data)
 	if(pause)
 	{
 		celluloid_model_play(model);
-		/* Added by Sako*/
-		GSettings *settings =		g_settings_new(CONFIG_ROOT);
-		gboolean has_requested = g_settings_get_boolean(settings, "startup-request");
-		if(!has_requested){
-			gchar *uri = "https://www.youtube.com/watch?v=tbkOZTSvrHs";//"file:///usr/local/share/sako/start.mp4"; //"file:///home/sako/Downloads/celluloid_custom_v18_3/start.mp4";
-			celluloid_model_load_file(model, uri, FALSE);
-			g_settings_set_boolean(settings, "startup-request", TRUE);
-		}
-		
 	}
 	else
 	{
@@ -1547,10 +1538,11 @@ void sa_append_default_videos(CelluloidModel *model){
 	GPtrArray *playlist = NULL;
 	gchar *videos[] = {"https://www.youtube.com/watch?v=YbxpieEQ7bc" ,
 						"https://www.youtube.com/watch?v=dN_ARfPY9rY",
-					   "https://www.youtube.com/watch?v=jSFo_92cJ-U",
-					  "https://www.youtube.com/watch?v=Re7FqKh7i_c", 
-					  "https://www.youtube.com/watch?v=Icew8R-VWSY", 
-					  "https://alchemicalscience.org/thunderstorm-generator-complete-diy-build-guide-malcolm-bendalls-plasmoid-tech"
+					   "https://www.youtube.com/watch?v=3__HO-akNC8",
+					  "https://www.youtube.com/watch?v=cT30UmarO4E", 
+					  "https://www.youtube.com/watch?v=jSFo_92cJ-U", 
+					  "https://www.youtube.com/watch?v=Re7FqKh7i_c",
+					  "https://www.youtube.com/watch?v=Icew8R-VWSY"
 					  };
 	
 	for(gint i=0; i<6; i++){

@@ -43,7 +43,15 @@ configure_file(
 install_data('FSR.glsl',
   install_dir: join_paths(get_option('datadir'), 'sako')
 )
-
+install_data('mpv-fsr.conf',
+  install_dir: join_paths(get_option('datadir'), 'ecotube')
+)
+install_data('mpv-vulkan.conf',
+  install_dir: join_paths(get_option('datadir'), 'ecotube')
+)
+install_data('mpv-fsr-vulkan.conf',
+  install_dir: join_paths(get_option('datadir'), 'ecotube')
+)
 install_data('player-info.pdf',
   install_dir: join_paths(get_option('datadir'), 'ecotube')
 )

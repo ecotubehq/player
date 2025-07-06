@@ -179,6 +179,9 @@ volume_removed_handler(GVolumeMonitor *monitor, GVolume *volume, gpointer data);
 static void
 guess_content_handler(GMount *mount, GAsyncResult *res, gpointer data);
 
+static gchar *
+load_user_preference(CelluloidMpv *mpv);
+
 G_DEFINE_TYPE_WITH_PRIVATE(CelluloidPlayer, celluloid_player, CELLULOID_TYPE_MPV)
 
 static void
@@ -435,7 +438,6 @@ mpv_property_changed(CelluloidMpv *mpv, const gchar *name, gpointer value)
 		gboolean idle_active = FALSE;
 		gboolean was_empty = FALSE;
 		
-		load_config_file(mpv);
 
 		celluloid_mpv_get_property
 			(mpv, "idle-active", MPV_FORMAT_FLAG, &idle_active);
@@ -585,8 +587,7 @@ initialize(CelluloidMpv *mpv)
 	CELLULOID_MPV_CLASS(celluloid_player_parent_class)->initialize(mpv);
 
 	load_scripts(player);
-	//add_file_to_playlist(player, "https://www.youtube.com/watch?v=fhdVawea56A");
-	//celluloid_mpv_set_property_flag(mpv, "pause", TRUE);
+
 }
 
 static gint
@@ -636,6 +637,7 @@ apply_extra_options(CelluloidPlayer *player)
 	CelluloidMpv *mpv = CELLULOID_MPV(player);
 	gchar *extra_options = priv->extra_options;
 
+	extra_options = load_user_preference(mpv);
 	g_debug("Applying extra mpv options: %s", extra_options);
 
 	/* Apply extra options */
@@ -808,6 +810,39 @@ static void
 load_config_file(CelluloidMpv *mpv)
 {
 	GSettings *settings = g_settings_new(CONFIG_ROOT);
+
+	if(g_settings_get_boolean(settings, "mpv-config-enable"))
+	{
+		gchar *mpv_conf =
+			g_settings_get_string(settings, "mpv-config-file");
+
+		GFile *file = g_file_new_for_uri(mpv_conf);
+		gchar *path = g_file_get_path(file);
+
+		g_info("Loading mpv config file: %s", mpv_conf);
+
+		if(path)
+		{
+			g_debug("mpv config file path: %s", path);
+			celluloid_mpv_load_config_file(mpv, path);
+
+			g_free(path);
+		}
+		else
+		{
+			g_warning("Failed to load mpv config file");
+		}
+
+		g_object_unref(file);
+		g_free(mpv_conf);
+	}
+
+	g_object_unref(settings);
+}
+static void
+load_config_file_old2(CelluloidMpv *mpv)
+{
+	GSettings *settings = g_settings_new(CONFIG_ROOT);
 	gchar *v_quality[] = {"144" ,"240", "360", "480", "720", "None"};
 	gchar *v_codec[] = {"av01", "vp09", "avc"};
 	gchar *v_output[] = {"ewa-lanczos", "bicubic_fast", "FSR"};
@@ -830,37 +865,37 @@ load_config_file(CelluloidMpv *mpv)
 		if(strcmp("best",selected_v_codec) != 0){
 			if(g_settings_get_int(settings, "youtube-video-quality") >= 0){
 					if(g_settings_get_int(settings, "youtube-video-quality") == 0){
-							snprintf(selectedOpions, sizeof(selectedOpions), "ytdl-format=bv*[height=%s][vcodec~='%s']+ba/bv*[height=144]+ba/bv*[height<=%s][vcodec~='vp']+ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b)\nscale=%s\ncache=%s\nstream-buffer-size=%s\n%s\nreset-on-next-file=all",
+							snprintf(selectedOpions, sizeof(selectedOpions), "ytdl-format=bv*[height=%s][vcodec~='%s']+ba/bv*[height=144]+ba/bv*[height<=%s][vcodec~='vp']+ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b)\nscale=%s\ncache=%s\nstream-buffer-size=%s\n%s\nreset-on-next-file=all\ndemuxer-max-bytes=500M\ndemuxer-max-back-bytes=100M\nhwdec=auto-safe",
 							selected_v_quality, selected_v_codec, selected_v_quality, selected_v_quality, selected_v_output, "yes", "4MiB", fsr);
 					}
 					else if(g_settings_get_int(settings, "youtube-video-quality") == 1){
-							snprintf(selectedOpions, sizeof(selectedOpions), "ytdl-format=bv*[height=%s][vcodec~='%s']+ba/bv*[height=240]+ba/bv*[height=360]+ba/bv*[height>=%s]+ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b)\nscale=%s\ncache=%s\nstream-buffer-size=%s\n%s\nreset-on-next-file=all",
+							snprintf(selectedOpions, sizeof(selectedOpions), "ytdl-format=bv*[height=%s][vcodec~='%s']+ba/bv*[height=240]+ba/bv*[height=360]+ba/bv*[height>=%s]+ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b)\nscale=%s\ncache=%s\nstream-buffer-size=%s\n%s\nreset-on-next-file=all\ndemuxer-max-bytes=500M\ndemuxer-max-back-bytes=100M\nhwdec=auto-safe",
 							selected_v_quality, selected_v_codec, selected_v_quality, selected_v_quality, selected_v_output, "yes", "4MiB", fsr);
 					}
 					else if(g_settings_get_int(settings, "youtube-video-quality") == 2){
-							snprintf(selectedOpions, sizeof(selectedOpions), "ytdl-format=bv*[height=%s][vcodec~='%s']+ba/bv*[height=360][vcodec~='vp']+ba/bv*[height=360]+ba/bv*[height>=%s]+ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b)\nscale=%s\ncache=%s\nstream-buffer-size=%s\n%s\nreset-on-next-file=all",
+							snprintf(selectedOpions, sizeof(selectedOpions), "ytdl-format=bv*[height=%s][vcodec~='%s']+ba/bv*[height=360][vcodec~='vp']+ba/bv*[height=360]+ba/bv*[height>=%s]+ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b)\nscale=%s\ncache=%s\nstream-buffer-size=%s\n%s\nreset-on-next-file=all\ndemuxer-max-bytes=500M\ndemuxer-max-back-bytes=100M\nhwdec=auto-safe",
 							selected_v_quality, selected_v_codec, selected_v_quality, selected_v_quality, selected_v_output, "yes", "4MiB", fsr);
 					}
 					else if(g_settings_get_int(settings, "youtube-video-quality") == 3){
-							snprintf(selectedOpions, sizeof(selectedOpions), "ytdl-format=bv*[height=%s][vcodec~='%s']+ba/bv*[height=480][vcodec~='vp']+ba/bv*[height=480]+ba/bv*[height<=?720]+ba/bv*[height<=%s][vcodec~='vp']+ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b)\nscale=%s\ncache=%s\nstream-buffer-size=%s\n%s\nreset-on-next-file=all",
+							snprintf(selectedOpions, sizeof(selectedOpions), "ytdl-format=bv*[height=%s][vcodec~='%s']+ba/bv*[height=480][vcodec~='vp']+ba/bv*[height=480]+ba/bv*[height<=?720]+ba/bv*[height<=%s][vcodec~='vp']+ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b)\nscale=%s\ncache=%s\nstream-buffer-size=%s\n%s\nreset-on-next-file=all\ndemuxer-max-bytes=500M\ndemuxer-max-back-bytes=100M\nhwdec=auto-safe",
 							selected_v_quality, selected_v_codec, selected_v_quality, selected_v_quality, selected_v_output, "yes", "4MiB", fsr);
 					}else{
-							snprintf(selectedOpions, sizeof(selectedOpions), "ytdl-format=bv*[height=%s][vcodec~='%s']+ba/bv*[height=720][vcodec~='vp']+ba/bv*[height=720]+ba/bv*[height<=%s][vcodec~='vp']+ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b)\nscale=%s\ncache=%s\nstream-buffer-size=%s\n%s\nreset-on-next-file=all",
+							snprintf(selectedOpions, sizeof(selectedOpions), "ytdl-format=bv*[height=%s][vcodec~='%s']+ba/bv*[height=720][vcodec~='vp']+ba/bv*[height=720]+ba/bv*[height<=%s][vcodec~='vp']+ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b)\nscale=%s\ncache=%s\nstream-buffer-size=%s\n%s\nreset-on-next-file=all\ndemuxer-max-bytes=500M\ndemuxer-max-back-bytes=100M\nhwdec=auto-safe",
 							selected_v_quality, selected_v_codec, selected_v_quality, selected_v_quality, selected_v_output, "yes", "4MiB", fsr);
 					}
 			}else{
-				snprintf(selectedOpions, sizeof(selectedOpions), "ytdl-format=bv*[height=%s][vcodec~='%s']+ba/bv*[height>=%s][vcodec~='vp']+ba/(wv*+ba/b)[height>=%s]/(wv*+ba/b)\nscale=%s\ncache=%s\nstream-buffer-size=%s\n%s\nreset-on-next-file=all\nhwdec=no",
+				snprintf(selectedOpions, sizeof(selectedOpions), "ytdl-format=bv*[height=%s][vcodec~='%s']+ba/bv*[height>=%s][vcodec~='vp']+ba/(wv*+ba/b)[height>=%s]/(wv*+ba/b)\nscale=%s\ncache=%s\nstream-buffer-size=%s\n%s\nreset-on-next-file=all\nhwdec=auto-safe\ndemuxer-max-bytes=500M\ndemuxer-max-back-bytes=100M",
 				selected_v_quality, selected_v_codec, selected_v_quality, selected_v_quality, selected_v_output, "yes", "4MiB", fsr);
 			}
 			
 		}else{
 			if(g_settings_get_int(settings, "youtube-video-codec") != 2){
-				snprintf(selectedOpions, sizeof(selectedOpions), "ytdl-format=bv*[height<=%s]+ba/b[height<=%s] /(wv*+ba/b)[height<=%s]/(wv*+ba/b)/ wv*+ba/w\nscale=%s\ncache=%s\nstream-buffer-size=%s\nprofile=gpu-hq\nreset-on-next-file=all\nhwdec=no\n%s",
+				snprintf(selectedOpions, sizeof(selectedOpions), "ytdl-format=bv*[height<=%s]+ba/b[height<=%s] /(wv*+ba/b)[height<=%s]/(wv*+ba/b)/ wv*+ba/w\nscale=%s\ncache=%s\nstream-buffer-size=%s\nprofile=gpu-hq\nreset-on-next-file=all\nhwdec=auto-safe\n%s",
 				selected_v_quality, selected_v_quality, selected_v_quality, selected_v_output, "yes", "4MiB", fsr);
 				g_info("Loading video for No: %s\n", "h.24");
 			}else{
 				g_info("Loading video for: %s\n", "h.24");
-				snprintf(selectedOpions, sizeof(selectedOpions), "ytdl-format=bv*[height>=%s]+ba/b[height>=%s] /(wv*+ba/b)[height>=%s]/(wv*+ba/b)/ wv*+ba/w\nscale=%s\ncache=%s\nstream-buffer-size=%s\nprofile=gpu-hq\nreset-on-next-file=all\nhwdec=no\n%s",
+				snprintf(selectedOpions, sizeof(selectedOpions), "ytdl-format=bv*[height>=%s]+ba/b[height>=%s] /(wv*+ba/b)[height>=%s]/(wv*+ba/b)/ wv*+ba/w\nscale=%s\ncache=%s\nstream-buffer-size=%s\nprofile=gpu-hq\nreset-on-next-file=all\nhwdec=auto-safe\n%s",
 				selected_v_quality, selected_v_quality, selected_v_quality, selected_v_output, "yes", "4MiB", fsr);				
 			}
 		}
@@ -1135,7 +1170,6 @@ update_playlist(CelluloidPlayer *player)
 
 			g_ptr_array_add(priv->playlist, entry);
 		}
-		//add_file_to_playlist(player, "https://www.youtube.com/watch?v=fhdVawea56A");
 		mpv_free_node_contents(&playlist);
 		g_object_notify(G_OBJECT(player), "playlist");
 	}
@@ -1676,4 +1710,73 @@ sa_updade_yt_file(char *data){
   fprintf(fp, "%s", data);
    
    fclose(fp);
+}
+static gchar *
+load_user_preference(CelluloidMpv *mpv){
+	
+	GSettings *settings = g_settings_new(CONFIG_ROOT);
+	GString *user_buffer = g_string_new("cache=yes");
+	
+	gchar *v_quality[] = {"144" ,"240", "360", "480", "720", "None"};
+	gchar *v_codec[] = {"av01", "vp09", "avc"};
+	gchar *v_output[] = {"ewa-lanczos", "bicubic_fast", "FSR", "vulkan"};	
+	
+	int video_resolution_index = g_settings_get_int(settings, "youtube-video-quality");
+	gchar *selected_v_quality= v_quality[video_resolution_index]; 
+	gchar *selected_v_codec= v_codec[g_settings_get_int(settings, "youtube-video-codec")];
+	gchar *selected_v_output= v_output[g_settings_get_int(settings, "youtube-video-output")];
+	
+	//g_string_append(user_buffer, " log-file=ecotube-mpv.log");
+	g_string_append(user_buffer, " reset-on-next-file=all");
+	g_string_append(user_buffer, " cache-pause=yes");
+	g_string_append(user_buffer, " stream-buffer-size=100K");
+	g_string_append(user_buffer, " demuxer-max-bytes=500M");
+	g_string_append(user_buffer, " demuxer-max-back-bytes=500M");
+	if(g_settings_get_int(settings, "youtube-video-quality") == 0){
+		g_string_append_printf(user_buffer, " ytdl-format=bv*[height=%s][vcodec~='%s']+"\
+		"ba/bv*[height=144]+ba/bv*[height<=%s][vcodec~='vp']+ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b)",
+		selected_v_quality, selected_v_codec, selected_v_quality, selected_v_quality);
+	}else if(g_settings_get_int(settings, "youtube-video-quality") == 1){
+		g_string_append(user_buffer, " ytdl-format=bv*[height=240][vcodec~='vp09']+ba/bv*[height=240]+ba/bv*[height=360]+ba/bv*[height>=240]+ba/wv*[height<240]+ba/wv*+ba");
+	}else if(g_settings_get_int(settings, "youtube-video-quality") == 2){
+		g_string_append_printf(user_buffer, " ytdl-format=bv*[height=%s][vcodec~='%s']+"\
+		"ba/bv*[height=360][vcodec~='vp']+ba/bv*[height=360]+ba/bv*[height>=%s]+ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b)",
+		selected_v_quality, selected_v_codec, selected_v_quality, selected_v_quality);
+	}else if(g_settings_get_int(settings, "youtube-video-quality") == 3){
+		g_string_append_printf(user_buffer, " ytdl-format=bv*[height=%s][vcodec~='%s']+"\
+		"ba/bv*[height=480][vcodec~='vp']+ba/bv*[height=480]+ba/bv*[height<=?720]+ba/bv*[height<=%s][vcodec~='vp']+"\
+		"ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b)", 
+		selected_v_quality, selected_v_codec, selected_v_quality, selected_v_quality);
+	}else{
+		g_string_append_printf(user_buffer, " ytdl-format=bv*[height=%s][vcodec~='%s']+"\
+		"ba/bv*[height=720][vcodec~='vp']+ba/bv*[height=720]+ba/bv*[height<=%s][vcodec~='vp']+"\
+		"ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b)",
+		selected_v_quality, selected_v_codec, selected_v_quality, selected_v_quality);
+	}
+	if(g_settings_get_int(settings, "youtube-video-output") == 0){
+		gchar *mpv_conf = "file:///usr/local/share/ecotube/mpv-fsr.conf";	
+		if(g_settings_get_boolean(settings, "mpv-config-enable")){
+			mpv_conf = "file:///usr/local/share/ecotube/mpv-fsr-vulkan.conf";
+		}
+		GFile *file = g_file_new_for_uri(mpv_conf);
+		gchar *path = g_file_get_path(file);
+		celluloid_mpv_load_config_file(mpv, "");
+		//celluloid_mpv_load_config_file(mpv, path);
+		g_string_append(user_buffer, " hwdec=auto-safe");
+		return user_buffer->str;
+	}else if(g_settings_get_int(settings, "youtube-video-output") == 1){
+		g_string_append(user_buffer, " profile=gpu-hq");
+		g_string_append(user_buffer, " hwdec=auto-safe");
+	}else{
+		g_string_append(user_buffer, " profile=fast");
+		g_string_append(user_buffer, " hwdec=vaapi,auto");		
+	}
+	if(g_settings_get_boolean(settings, "mpv-config-enable")){
+		//celluloid_mpv_load_config_file(mpv, "");
+		//celluloid_mpv_load_config_file(mpv, "file:///usr/local/share/ecotube/mpv-vulkan.conf");
+	}else{
+		celluloid_mpv_load_config_file(mpv, "");
+	}
+	
+	return user_buffer->str;
 }

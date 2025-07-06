@@ -69,6 +69,7 @@ enum PreferencesDialogItemType
 	ITEM_4K_SWITCH,
 	ITEM_PLAYER_DEFAULT_SIZE,
 	ITEM_DEBAND_MODE,
+	ITEM_VULKAN_MODE,
 	ITEM_INFO_CLOSE_BOX
 };
 
@@ -217,6 +218,9 @@ constructed(GObject *object)
 			"youtube-display-deband",
 			ITEM_DEBAND_MODE},
 			{NULL,
+			"mpv-use-vulkan",
+			ITEM_VULKAN_MODE},
+			{NULL,
 			"close-info-pref",
 			ITEM_INFO_CLOSE_BOX},
 			{NULL, NULL, ITEM_TYPE_INVALID} };
@@ -288,6 +292,7 @@ handle_changed(GSettings *settings, const gchar *key, gpointer data)
 	dlg->needs_mpv_reset |= g_strcmp0(key, "youtube-audio-quality") == 0;
 	dlg->needs_mpv_reset |= g_strcmp0(key, "youtube-video-codec") == 0;
 	dlg->needs_mpv_reset |= g_strcmp0(key, "youtube-video-output") == 0;
+	dlg->needs_mpv_reset |= g_strcmp0(key, "mpv-use-vulkan") == 0;
 }
 
 static void
@@ -725,6 +730,29 @@ build_page(	const PreferencesDialogItem *items,
 			g_settings_bind(	settings,
 						key,
 						switch_theather_mode,
+						"active",
+						G_SETTINGS_BIND_DEFAULT );
+			
+		}
+		if(type == ITEM_VULKAN_MODE)
+		{
+			GtkWidget *switch_vulkan_mode;
+
+			widget = adw_action_row_new();
+			adw_preferences_row_set_title
+				(ADW_PREFERENCES_ROW(widget), label);
+
+			switch_vulkan_mode = gtk_switch_new();
+			gtk_widget_set_valign
+				(switch_vulkan_mode, GTK_ALIGN_CENTER);
+			adw_action_row_add_suffix
+				(ADW_ACTION_ROW(widget), switch_vulkan_mode);
+			adw_action_row_set_activatable_widget
+				(ADW_ACTION_ROW(widget), switch_vulkan_mode);
+
+			g_settings_bind(	settings,
+						key,
+						switch_vulkan_mode,
 						"active",
 						G_SETTINGS_BIND_DEFAULT );
 			

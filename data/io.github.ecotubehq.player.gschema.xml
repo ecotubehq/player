@@ -217,6 +217,13 @@
 				Deband on / off
 			</description>
 		</key>
+		<key name="mpv-use-vulkan" type="b">
+			<default>false</default>
+			<summary>Use Vulkan</summary>
+			<description>
+				Vulkan on / off
+			</description>
+		</key>
 		<key name="startup-request" type="b">
 			<default>false</default>
 			<summary>Has requested startup video</summary>
