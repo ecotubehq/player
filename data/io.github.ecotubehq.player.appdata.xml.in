@@ -33,8 +33,11 @@
  </description>
  <developer_name>EcoTube Partners</developer_name>
  <releases>
-  <release date="2025-07-06" version="25.7.1">
+  <release date="2025-07-09" version="25.7.2">
    <description translatable="no">
+	<p>
+		Force mpv to avoid HLS - temporarily  - 
+	</p>
     <p>
 		Fix video/audio download
     </p>

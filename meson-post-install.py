@@ -16,4 +16,5 @@ if 'DESTDIR' not in os.environ:
 
 	print('Updating desktop database...')
 	subprocess.call(['update-desktop-database', '-q', os.path.join(datadir, 'applications')])
-
+	#print('Updating theme icon...')
+	#subprocess.call(['gsettings', 'set', 'org.gnome.desktop.interface', 'icon-theme', 'Adwaita'])

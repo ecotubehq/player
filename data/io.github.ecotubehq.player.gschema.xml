@@ -188,7 +188,7 @@
 		</key>
 		<key name="youtube-video-output" type="i">
 			<default>0</default>
-			<summary>Video ouput</summary>
+			<summary>Video output</summary>
 			<description>
 			</description>
 		</key>
