@@ -639,7 +639,6 @@ apply_extra_options(CelluloidPlayer *player)
 
 	extra_options = load_user_preference(mpv);
 	g_debug("Applying extra mpv options: %s", extra_options);
-
 	/* Apply extra options */
 	if(extra_options && apply_options_array_string(mpv, extra_options) < 0)
 	{
@@ -1734,17 +1733,21 @@ load_user_preference(CelluloidMpv *mpv){
 	g_string_append(user_buffer, " demuxer-max-back-bytes=500M");
 	if(g_settings_get_int(settings, "youtube-video-quality") == 0){
 		g_string_append_printf(user_buffer, " ytdl-format=(bv*[height=%s][vcodec~='%s']+"\
-		"ba/bv*[height=144]+ba/bv*[height<=%s][vcodec~='vp']+ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b))[protocol^=http]",
+		"ba/bv*[height>=100][height<200]+ba/bv*[height<=%s][vcodec~='vp']+ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b))[protocol^=http]",
 		selected_v_quality, selected_v_codec, selected_v_quality, selected_v_quality);
 	}else if(g_settings_get_int(settings, "youtube-video-quality") == 1){
-		g_string_append(user_buffer, " ytdl-format=(bv*[height=240][vcodec~='vp09']+ba/bv*[height=240]+ba/bv*[height=360]+ba/bv*[height>=240]+ba/wv*[height<240]+ba/wv*+ba)[protocol^=http]");
+		g_string_append_printf(user_buffer, " ytdl-format=(bv*[height=%s][vcodec~='%s']/"\
+									   "bestvideo*[height>=200][height<300]+ba/bv*[height=360]+ba/bv*[height>=300][height>=350]+ba/"\
+									   "wv*[height<%s]+ba/wv*+ba)[protocol^=http]",
+									   selected_v_quality, selected_v_codec,
+									   selected_v_quality);
 	}else if(g_settings_get_int(settings, "youtube-video-quality") == 2){
 		g_string_append_printf(user_buffer, " ytdl-format=(bv*[height=%s][vcodec~='%s']+"\
-		"ba/bv*[height=360][vcodec~='vp']+ba/bv*[height=360]+ba/bv*[height>=%s]+ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b))[protocol^=http]",
+		"ba/bv*[height=360][vcodec~='vp']+ba/bv*[height>=300][height<400]+ba/bv*[height>=%s]+ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b))[protocol^=http]",
 		selected_v_quality, selected_v_codec, selected_v_quality, selected_v_quality);
 	}else if(g_settings_get_int(settings, "youtube-video-quality") == 3){
 		g_string_append_printf(user_buffer, " ytdl-format=(bv*[height=%s][vcodec~='%s']+"\
-		"ba/bv*[height=480][vcodec~='vp']+ba/bv*[height=480]+ba/bv*[height<=?720]+ba/bv*[height<=%s][vcodec~='vp']+"\
+		"ba/bv*[height=480][vcodec~='vp']+ba/bv*[height>=400][height<700]+ba/bv*[height<=?720]+ba/bv*[height<=%s][vcodec~='vp']+"\
 		"ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b))[protocol^=http]", 
 		selected_v_quality, selected_v_codec, selected_v_quality, selected_v_quality);
 	}else{
@@ -1777,6 +1780,5 @@ load_user_preference(CelluloidMpv *mpv){
 	}else{
 		celluloid_mpv_load_config_file(mpv, "");
 	}
-	
 	return user_buffer->str;
 }
