@@ -63,6 +63,7 @@ struct _CelluloidVideoArea
 	gboolean fullscreened;
 	gboolean fs_control_hover;
 	gboolean use_floating_header_bar;
+	GtkWidget *progressbar;
 };
 
 struct _CelluloidVideoAreaClass
@@ -118,6 +119,9 @@ enter_handler(	GtkEventControllerMotion *controller,
 
 static void
 leave_handler(GtkEventControllerMotion *controller, gpointer data);
+
+static void 
+	ecotube_setup_css(void);
 
 G_DEFINE_TYPE(CelluloidVideoArea, celluloid_video_area, GTK_TYPE_BOX)
 
@@ -516,6 +520,7 @@ celluloid_video_area_init(CelluloidVideoArea *area)
 	area->fullscreened = FALSE;
 	area->fs_control_hover = FALSE;
 	area->use_floating_header_bar = FALSE;
+	area->progressbar = gtk_spinner_new();
 
 	gtk_widget_set_valign(area->control_box_revealer, GTK_ALIGN_END);
 	gtk_revealer_set_transition_type
@@ -629,8 +634,19 @@ celluloid_video_area_init(CelluloidVideoArea *area)
 		(	ADW_STATUS_PAGE(area->initial_page),
 			"io.github.ecotubehq.player" );
 
+	ecotube_setup_css();
+	gtk_widget_add_css_class(GTK_WIDGET(area->initial_page), "adw-status-page");
+	
+	gtk_widget_set_size_request(area->progressbar, 50, 50);
+	gtk_widget_set_halign(area->progressbar, GTK_ALIGN_CENTER);
+	gtk_widget_set_valign(area->progressbar, GTK_ALIGN_CENTER);
+	gtk_widget_add_css_class(area->progressbar, "spinner");
+	gtk_widget_set_visible(area->progressbar, FALSE);	
+	adw_status_page_set_child(ADW_STATUS_PAGE(area->initial_page), area->progressbar);
+	
 	gtk_stack_add_child(GTK_STACK(area->stack), area->gl_area);
 	gtk_stack_add_child(GTK_STACK(area->stack), area->initial_page);
+	
 
 	celluloid_video_area_set_status
 		(area, CELLULOID_VIDEO_AREA_STATUS_LOADING);
@@ -735,6 +751,8 @@ celluloid_video_area_set_status(	CelluloidVideoArea *area,
 				NULL );
 		gtk_stack_set_visible_child
 			(GTK_STACK(area->stack), area->initial_page);
+		gtk_widget_set_visible(area->progressbar, TRUE);	
+		gtk_spinner_start(GTK_SPINNER(area->progressbar));
 		break;
 
 		case CELLULOID_VIDEO_AREA_STATUS_IDLE:
@@ -746,11 +764,15 @@ celluloid_video_area_set_status(	CelluloidVideoArea *area,
 				_("Press ＋ or drag your video file here.") );
 		gtk_stack_set_visible_child
 			(GTK_STACK(area->stack), area->initial_page);
+		gtk_widget_set_visible(area->progressbar, FALSE);	
+		gtk_spinner_stop(GTK_SPINNER(area->progressbar));
 		break;
 
 		case CELLULOID_VIDEO_AREA_STATUS_PLAYING:
 		gtk_stack_set_visible_child
 			(GTK_STACK(area->stack), area->gl_area);
+		gtk_widget_set_visible(area->progressbar, FALSE);	
+		gtk_spinner_stop(GTK_SPINNER(area->progressbar));
 		break;
 	}
 
@@ -826,4 +848,39 @@ celluloid_video_area_get_xid(CelluloidVideoArea *area)
 #endif
 
 	return -1;
+}
+static void 
+	ecotube_setup_css(void)
+{
+   GtkCssProvider *provider = gtk_css_provider_new();
+    const char *css = 
+        ".adw-status-page {"
+        "   border-radius: 18px;"
+        "   padding: 24px;"
+        "   margin: 48px;"
+        "   box-shadow: 0 6px 12px rgba(0,0,0,0.3);"
+        "}"
+        ".adw-status-page > .title {"
+        "   font-size: 1.4em;"
+        "   font-weight: 800;"
+        "   color: #ffffff;"
+        "   text-shadow: 0 1px 2px rgba(0,0,0,0.5);"
+        "}"
+        ".adw-status-page > .description {"
+        "   font-size: 1.1em;"
+        "   color: #e0e0e0;"
+        "   margin-bottom: 24px;"
+        "}"
+        ".adw-status-page .spinner {"
+        "   -gtk-icon-size: 48px;"
+        "   color: #355E3B;"
+        "}";
+    
+    gtk_css_provider_load_from_data(provider, css, -1);
+    gtk_style_context_add_provider_for_display(
+        gdk_display_get_default(),
+        GTK_STYLE_PROVIDER(provider),
+        GTK_STYLE_PROVIDER_PRIORITY_APPLICATION
+    );	
+	
 }
