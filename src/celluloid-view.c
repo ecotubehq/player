@@ -606,6 +606,7 @@ get_property(	GObject *object,
 		case PROP_MEDIA_HEIGHT:
 		g_value_set_static_string(value, self->media_height);
 		break;
+		
 		/*End Added by Sako*/
 		default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
@@ -1478,6 +1479,8 @@ celluloid_view_class_init(CelluloidViewClass *klass)
 			NULL,
 			G_PARAM_READWRITE );
 	g_object_class_install_property(object_class, PROP_MEDIA_HEIGHT, pspec);
+
+	
 	/* End Added by Sako */
 	
 	g_signal_new(	"video-area-resize",

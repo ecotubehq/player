@@ -165,6 +165,9 @@ static void
 metadata_cache_update_handler(CelluloidModel *model, gint64 pos, gpointer data);
 
 static void
+model_loaded_handler(GObject *object, GParamSpec *pspec, gpointer data);
+
+static void
 window_resize_handler(	CelluloidModel *model,
 			gint64 width,
 			gint64 height,
@@ -927,6 +930,10 @@ connect_signals(CelluloidController *controller)
 				"stream-src",
 				G_CALLBACK(stream_src_handler),
 				controller );
+	g_signal_connect(	controller->model,
+				"loaded",
+				G_CALLBACK(model_loaded_handler),
+				controller );
 }
 
 static gboolean
@@ -1272,9 +1279,13 @@ static void
 play_button_handler(GtkButton *button, gpointer data)
 {
 	CelluloidModel *model = CELLULOID_CONTROLLER(data)->model;
+	
 	gboolean pause = TRUE;
+	gboolean is_resume = FALSE;
+	gdouble time_position = celluloid_model_get_time_position(model);
 
 	g_object_get(model, "pause", &pause, NULL);
+	g_object_get(model, "is_resume", &is_resume, NULL);
 
 	if(pause)
 	{
@@ -1282,7 +1293,13 @@ play_button_handler(GtkButton *button, gpointer data)
 	}
 	else
 	{
-		celluloid_model_pause(model);
+		if(time_position > 0){
+			g_object_set(model, "is_resume", TRUE, NULL);
+			g_object_set(model, "last_time_pos", time_position, NULL);
+			celluloid_model_stop(model);
+		}else{
+			celluloid_model_pause(model);
+		}
 	}
 }
 
@@ -1290,6 +1307,7 @@ static void
 stop_button_handler(GtkButton *button, gpointer data)
 {
 	celluloid_model_stop(CELLULOID_CONTROLLER(data)->model);
+	g_object_set(CELLULOID_CONTROLLER(data)->model, "is_resume", FALSE, NULL);
 }
 
 static void
@@ -1559,13 +1577,21 @@ stream_src_handler(	CelluloidView *view,
 	CelluloidController *controller = CELLULOID_CONTROLLER(data);
 	celluloid_model_update_mpv_options(controller->model);
 	
-	/*
-	CelluloidController *controller = CELLULOID_CONTROLLER(data);
-	CelluloidModel *model = controller->model;
-	gchar *options = "hwdec=yes cache-secs=10 demuxer-hysteresis-secs=5";
 
+}
+static void
+model_loaded_handler(GObject *object, GParamSpec *pspec, gpointer data)
+{
 
-	g_object_set(model, "extra-options", options, NULL);
-	*/
-
+	CelluloidModel *model = data; 
+	gboolean is_resume = FALSE;
+	gdouble resume_position = 0.0;
+	
+	g_object_get(model, "is_resume", &is_resume, NULL);
+	//printf("is_resume:%d\n", is_resume);
+	if(is_resume){
+		g_object_get(model, "last_time_pos", &resume_position, NULL);
+		celluloid_model_seek(model, resume_position);
+		g_object_set(model, "is_resume", FALSE, NULL);
+	}
 }
