@@ -70,7 +70,8 @@ enum PreferencesDialogItemType
 	ITEM_PLAYER_DEFAULT_SIZE,
 	ITEM_DEBAND_MODE,
 	ITEM_VULKAN_MODE,
-	ITEM_INFO_CLOSE_BOX
+	ITEM_INFO_CLOSE_BOX,
+	ITEM_COMPUTER_TYPE
 };
 
 struct PreferencesDialogItem
@@ -200,6 +201,12 @@ constructed(GObject *object)
 			"youtube-info-link",
 			ITEM_INFO_LABEL_BOX},
 			{NULL,
+			"ecotube-computer-type",
+			ITEM_COMPUTER_TYPE},
+			{NULL,
+			"mpv-use-vulkan",
+			ITEM_VULKAN_MODE},
+			{NULL,
 			"youtube-video-output",
 			ITEM_TYPE_COMBO_OUTPUTV},
 			{NULL,
@@ -217,9 +224,6 @@ constructed(GObject *object)
 			{NULL,
 			"youtube-display-deband",
 			ITEM_DEBAND_MODE},
-			{NULL,
-			"mpv-use-vulkan",
-			ITEM_VULKAN_MODE},
 			{NULL,
 			"close-info-pref",
 			ITEM_INFO_CLOSE_BOX},
@@ -757,6 +761,55 @@ build_page(	const PreferencesDialogItem *items,
 						G_SETTINGS_BIND_DEFAULT );
 			
 		}
+		if(type == ITEM_COMPUTER_TYPE)
+		{
+			GtkWidget *pref_combo;
+			GtkListStore *liststore;
+			GtkCellRenderer *column;
+
+			widget = adw_action_row_new();
+			adw_preferences_row_set_title
+				(ADW_PREFERENCES_ROW(widget), label);
+
+			liststore = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_STRING);
+			gtk_list_store_insert_with_values(liststore, NULL, -1,
+											  0, NULL,
+											  1, "Powersave",
+											  -1);
+			gtk_list_store_insert_with_values(liststore, NULL, -1,
+											  0, NULL,
+											  1, "Laptop",
+											  -1);	
+			gtk_list_store_insert_with_values(liststore, NULL, -1,
+											  0, NULL,
+											  1, "Desktop",
+											  -1);										  								  
+			pref_combo = gtk_combo_box_new_with_model(GTK_TREE_MODEL(liststore));
+			g_object_unref(liststore);
+			column = gtk_cell_renderer_text_new();
+			gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(pref_combo), column, TRUE);
+			gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(pref_combo), column,
+										   "cell-background", 0,
+										   "text", 1,
+										   NULL);
+
+			gtk_combo_box_set_active(GTK_COMBO_BOX(pref_combo), 0);
+
+			gtk_widget_set_valign
+				(pref_combo, GTK_ALIGN_CENTER);
+			adw_action_row_add_suffix
+				(ADW_ACTION_ROW(widget), pref_combo);
+			adw_action_row_set_activatable_widget
+				(ADW_ACTION_ROW(widget), pref_combo);
+
+			g_settings_bind(	settings,
+						key,
+						pref_combo,
+						"active",
+						G_SETTINGS_BIND_DEFAULT );		
+			/**/
+			
+		}	
 		/* End Added by Sako */
 
 		adw_preferences_group_add

@@ -224,6 +224,19 @@
 				Vulkan on / off
 			</description>
 		</key>
+		<key name="ecotube-close-stream-on-pause" type="b">
+			<default>true</default>
+			<summary>Close stream on pause</summary>
+			<description>
+				 on / off
+			</description>
+		</key>
+		<key name="ecotube-computer-type" type="i">
+			<default>0</default>
+			<summary>Playback Type</summary>
+			<description>
+			</description>
+		</key>
 		<key name="startup-request" type="b">
 			<default>false</default>
 			<summary>Has requested startup video</summary>

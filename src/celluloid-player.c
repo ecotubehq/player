@@ -416,6 +416,7 @@ mpv_property_changed(CelluloidMpv *mpv, const gchar *name, gpointer value)
 {
 	CelluloidPlayer *player = CELLULOID_PLAYER(mpv);
 	CelluloidPlayerPrivate *priv = get_private(mpv);
+	GSettings *settings =		g_settings_new(CONFIG_ROOT);
 
 	if(g_strcmp0(name, "pause") == 0)
 	{
@@ -428,9 +429,14 @@ mpv_property_changed(CelluloidMpv *mpv, const gchar *name, gpointer value)
 		if(idle_active && !pause && !priv->init_vo_config)
 		{
 			load_from_playlist(player);
-			GSettings *settings =		g_settings_new(CONFIG_ROOT);
-			int video_resolution_index = g_settings_get_int(settings, "youtube-video-quality");
-			if(video_resolution_index > 3){
+		}
+		int video_resolution_index = g_settings_get_int(settings, "youtube-video-quality");
+		int playback_type = g_settings_get_int(settings, "ecotube-computer-type");
+		if(video_resolution_index > 3){
+			if(playback_type == 0){
+				g_settings_set_int(settings, "youtube-video-quality", 2);
+			}
+			else if(playback_type == 1){
 				g_settings_set_int(settings, "youtube-video-quality", 3);
 			}
 		}
@@ -1620,16 +1626,16 @@ load_user_preference(CelluloidMpv *mpv){
 	//g_string_append(user_buffer, " log-file=ecotube-mpv.log");
 	g_string_append(user_buffer, " reset-on-next-file=all");
 	g_string_append(user_buffer, " cache-pause=yes");
-	g_string_append(user_buffer, " stream-buffer-size=100K");
+	g_string_append(user_buffer, " stream-buffer-size=100M");
 	g_string_append(user_buffer, " demuxer-max-bytes=500M");
 	g_string_append(user_buffer, " demuxer-max-back-bytes=500M");
-	g_string_append(user_buffer, " demuxer-readahead-secs=0");
+	//g_string_append(user_buffer, " demuxer-readahead-secs=0");
 	if(g_settings_get_int(settings, "youtube-video-quality") == 0){
-		g_string_append_printf(user_buffer, " ytdl-format=(bv*[height=%s][vcodec~='%s']+"\
-		"ba/bv*[height>=100][height<200]+ba/bv*[height<=%s][vcodec~='vp']+ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b))[protocol^=http]",
+		g_string_append_printf(user_buffer, " ytdl-format=(bv*[height=%s][vcodec~='%s'][protocol^=http]+"\
+		"bestaudio[protocol^=http]/bv*[height>=100][height<200]+ba/bv*[height<=%s][vcodec~='vp']+ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b))[protocol^=http]",
 		selected_v_quality, selected_v_codec, selected_v_quality, selected_v_quality);
 	}else if(g_settings_get_int(settings, "youtube-video-quality") == 1){
-		g_string_append_printf(user_buffer, " ytdl-format=(bv*[height=%s][vcodec~='%s']/"\
+		g_string_append_printf(user_buffer, " ytdl-format=(bv*[height=%s][vcodec~='%s'][protocol^=http]+bestaudio[protocol^=http]/"\
 									   "bestvideo*[height>=200][height<300]+ba/bv*[height=360]+ba/bv*[height>=300][height>=350]+ba/"\
 									   "wv*[height<%s]+ba/wv*+ba)[protocol^=http]",
 									   selected_v_quality, selected_v_codec,

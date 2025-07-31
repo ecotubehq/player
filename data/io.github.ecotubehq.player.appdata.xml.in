@@ -33,6 +33,19 @@
  </description>
  <developer_name>EcoTube Partners</developer_name>
  <releases>
+  <release date="2025-07-31" version="25.7.3">
+   <description translatable="no">
+  <p>
+    Force yt-dlp to use MPEG-DASH on some resolutions
+  </p>
+    <p>
+    Close stream when paused
+    </p>
+    <p>
+    Fix resolution dropping
+    </p>
+   </description>
+  </release>
   <release date="2025-07-09" version="25.7.2">
    <description translatable="no">
 	<p>
