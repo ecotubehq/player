@@ -55,9 +55,7 @@ enum
 	PROP_MEDIA_AUDIO_CODEC,
 	PROP_MEDIA_CODEC_NAME,
 	PROP_MEDIA_BITRATE,
-	PROP_MEDIA_HEIGHT,
-	PROP_IS_RESUME,
-	PROP_LAST_TIME_POS
+	PROP_MEDIA_HEIGHT
 };
 
 struct _CelluloidModel
@@ -95,8 +93,6 @@ struct _CelluloidModel
 	gchar *media_codec_name;
 	gchar *media_bitrate;
 	gchar *media_height;
-	gboolean is_resume;
-	gdouble last_time_pos;
 };
 
 struct _CelluloidModelClass
@@ -154,7 +150,7 @@ mpv_prop_change_handler(	CelluloidMpv *mpv,
 				gpointer data );
 
 static gboolean
-sa_get_bat_status(void);
+sa_get_bat_status();
 G_DEFINE_TYPE(CelluloidModel, celluloid_model, CELLULOID_TYPE_PLAYER)
 
 static gboolean
@@ -357,14 +353,6 @@ set_property(	GObject *object,
 		g_free(self->media_height);
 		self->media_height = g_value_dup_string(value);
 		break;
-
-		case PROP_IS_RESUME:
-		self->is_resume = g_value_get_boolean(value);
-		break;
-
-		case PROP_LAST_TIME_POS:
-		self->last_time_pos = g_value_get_double(value);
-		break;
 		/*End Added by sako */
 
 		default:
@@ -501,15 +489,6 @@ get_property(	GObject *object,
 		case PROP_MEDIA_HEIGHT:
 		g_value_set_string(value, self->media_height);
 		break;		
-
-		case PROP_IS_RESUME:
-		g_value_set_boolean(value, self->is_resume);
-		break;	
-
-		case PROP_LAST_TIME_POS:
-		g_value_set_double(value, self->last_time_pos);
-		break;
-				
 		/* End added by Sako */
 		default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
@@ -873,25 +852,7 @@ celluloid_model_class_init(CelluloidModelClass *klass)
 			FALSE,
 			G_PARAM_READWRITE );
 	g_object_class_install_property(obj_class, PROP_SHUFFLE, pspec);
-	
-	pspec = g_param_spec_boolean
-		(	"is_resume",
-			"is_resume",
-			"Whether or not we resume the playback",
-			FALSE,
-			G_PARAM_READWRITE );
-	g_object_class_install_property(obj_class, PROP_IS_RESUME, pspec);
 
-	pspec = g_param_spec_double
-		(	"last_time_pos",
-			"last_time_pos",
-			"time position when clicked on pause",
-			-G_MAXDOUBLE,
-			G_MAXDOUBLE,
-			0.0,
-			G_PARAM_READWRITE );
-	g_object_class_install_property(obj_class, PROP_LAST_TIME_POS, pspec);
-	
 	g_signal_new(	"playlist-replaced",
 			G_TYPE_FROM_CLASS(klass),
 			G_SIGNAL_RUN_FIRST,
@@ -957,8 +918,6 @@ celluloid_model_init(CelluloidModel *model)
 	model->media_codec_name = NULL;
 	model->media_bitrate = NULL;
 	model->media_height = NULL;
-	model->is_resume = FALSE;
-	model->last_time_pos = 0;
 	/* End Added by Sako */
 	
 	
@@ -1346,6 +1305,9 @@ celluloid_model_get_current_path(CelluloidModel *model)
 void
 celluloid_model_update_mpv_options(	CelluloidModel *model){
 	CelluloidMpv *mpv = CELLULOID_MPV(model);
+	celluloid_mpv_set_option_string(mpv, "cache-pause-initial", "yes");
+	celluloid_mpv_set_option_string(mpv, "demuxer-hysteresis-secs", "5");
+	celluloid_mpv_set_option_string(mpv, "cache-secs", "10");
 	gboolean status = sa_get_bat_status();
 	if(status){
 		celluloid_mpv_set_option_string(mpv, "hwdec", "yes");

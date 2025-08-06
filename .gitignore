@@ -60,3 +60,4 @@ src/marshal.*
 src/mpris/mpris_gdbus.*
 
 /build
+ecotube-mpv.log

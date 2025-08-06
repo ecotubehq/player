@@ -63,7 +63,6 @@ struct _CelluloidVideoArea
 	gboolean fullscreened;
 	gboolean fs_control_hover;
 	gboolean use_floating_header_bar;
-	GtkWidget *progressbar;
 };
 
 struct _CelluloidVideoAreaClass
@@ -120,18 +119,6 @@ enter_handler(	GtkEventControllerMotion *controller,
 static void
 leave_handler(GtkEventControllerMotion *controller, gpointer data);
 
-static void 
-	ecotube_setup_css(void);
-
-static GtkWidget  
-	*ecotube_progressbar(void);
-
-static void 
-	start_progress_animation(GtkProgressBar *progress);
-	
-static void 
-	stop_progress_animation(GtkProgressBar *progress);
-	
 G_DEFINE_TYPE(CelluloidVideoArea, celluloid_video_area, GTK_TYPE_BOX)
 
 static void
@@ -529,8 +516,6 @@ celluloid_video_area_init(CelluloidVideoArea *area)
 	area->fullscreened = FALSE;
 	area->fs_control_hover = FALSE;
 	area->use_floating_header_bar = FALSE;
-	area->progressbar = ecotube_progressbar();//gtk_spinner_new();
-	gtk_widget_set_visible(area->progressbar, FALSE);	
 
 	gtk_widget_set_valign(area->control_box_revealer, GTK_ALIGN_END);
 	gtk_revealer_set_transition_type
@@ -644,18 +629,8 @@ celluloid_video_area_init(CelluloidVideoArea *area)
 		(	ADW_STATUS_PAGE(area->initial_page),
 			"io.github.ecotubehq.player" );
 
-	ecotube_setup_css();
-	gtk_widget_add_css_class(GTK_WIDGET(area->initial_page), "adw-status-page");
-	
-	gtk_widget_set_size_request(area->progressbar, 50, 50);
-	gtk_widget_set_halign(area->progressbar, GTK_ALIGN_CENTER);
-	gtk_widget_set_valign(area->progressbar, GTK_ALIGN_CENTER);
-	//gtk_widget_add_css_class(area->progressbar, "spinner");
-	//adw_status_page_set_child(ADW_STATUS_PAGE(area->initial_page), area->progressbar);
-	
 	gtk_stack_add_child(GTK_STACK(area->stack), area->gl_area);
 	gtk_stack_add_child(GTK_STACK(area->stack), area->initial_page);
-	
 
 	celluloid_video_area_set_status
 		(area, CELLULOID_VIDEO_AREA_STATUS_LOADING);
@@ -760,8 +735,6 @@ celluloid_video_area_set_status(	CelluloidVideoArea *area,
 				NULL );
 		gtk_stack_set_visible_child
 			(GTK_STACK(area->stack), area->initial_page);
-		gtk_widget_set_visible(area->progressbar, TRUE);	
-		//gtk_spinner_start(GTK_SPINNER(area->progressbar));
 		break;
 
 		case CELLULOID_VIDEO_AREA_STATUS_IDLE:
@@ -773,15 +746,11 @@ celluloid_video_area_set_status(	CelluloidVideoArea *area,
 				_("Press ＋ or drag your video file here.") );
 		gtk_stack_set_visible_child
 			(GTK_STACK(area->stack), area->initial_page);
-		gtk_widget_set_visible(area->progressbar, FALSE);	
-		//gtk_spinner_stop(GTK_SPINNER(area->progressbar));
 		break;
 
 		case CELLULOID_VIDEO_AREA_STATUS_PLAYING:
 		gtk_stack_set_visible_child
 			(GTK_STACK(area->stack), area->gl_area);
-		gtk_widget_set_visible(area->progressbar, FALSE);	
-		//gtk_spinner_stop(GTK_BOX(area->progressbar));
 		break;
 	}
 
@@ -857,150 +826,4 @@ celluloid_video_area_get_xid(CelluloidVideoArea *area)
 #endif
 
 	return -1;
-}
-static void 
-	ecotube_setup_css(void)
-{
-   GtkCssProvider *provider = gtk_css_provider_new();
-    /*const char *css = 
-        ".adw-status-page {"
-        "   border-radius: 18px;"
-        "   padding: 24px;"
-        "   margin: 48px;"
-        "   box-shadow: 0 6px 12px rgba(0,0,0,0.3);"
-        "}"
-        ".adw-status-page > .title {"
-        "   font-size: 1.4em;"
-        "   font-weight: 800;"
-        "   color: #ffffff;"
-        "   text-shadow: 0 1px 2px rgba(0,0,0,0.5);"
-        "}"
-        ".adw-status-page > .description {"
-        "   font-size: 1.1em;"
-        "   color: #e0e0e0;"
-        "   margin-bottom: 24px;"
-        "}"
-        ".adw-status-page .spinner {"
-        "   -gtk-icon-size: 48px;"
-        "   color: #355E3B;"
-        "}"; */
-    const char *css =
-				".video-progress > trough {"
-				"   background-color: red;"
-				"   border: none;"
-				"   min-height: 4px;"
-				"   padding: 0;"
-				"   animation-name: progress-pulse 2s ease infinite;"
-				"   opacity: 1;" /* Make visible when active */
-				"}"
-				""
-				".video-progress > trough > progress {"
-				"   background-image: linear-gradient("
-				"       to right,"
-				"       #1c71d8 0%,"
-				"       #1c71d8 50%,"
-				"       #3584e4 100%"
-				"   );"
-				"   background-size: 200% 100%;"
-				"   background-position: left bottom;"
-				"   border-radius: 2px;"
-				"   box-shadow: "
-				"       0 1px 3px rgba(0,0,0,0.2),"
-				"       inset 0 1px 0 rgba(255,255,255,0.1);"
-				"   min-height: 4px;"
-				"   animation: progress-pulse 2s ease infinite;"
-				"}"
-				""
-				"/* Buffer level indicator */"
-				".buffer-level {"
-				"   background-image: linear-gradient("
-				"       to right,"
-				"       rgba(156, 156, 161, 0.3) 0%,"
-				"       rgba(186, 186, 192, 0.4) 100%"
-				"   );"
-				"   border-radius: 1px;"
-				"   margin-top: 2px;"
-				"}"
-				""
-				"/* Animation for progress bar */"
-				"@keyframes progress-pulse {"
-				"   0% { background-position: 200% 0; opacity: 0.9; }"
-				"   70% { background-position: -100% 0; opacity: 1; }"
-				"   100% { background-position: -100% 0; opacity: 0.9; }"
-				"}"
-				""
-				"/* Hover effect */"
-				".video-progress:hover > trough > progress {"
-				"   min-height: 6px;"
-				"   background-image: linear-gradient("
-				"       to right,"
-				"       #1a5fb4 0%,"
-				"       #1c71d8 50%,"
-				"       #2d7ee7 100%"
-				"   );"
-				"   transition: all 0.2s ease-out;"
-				"}"
-				""
-				".progress-active > trough > progress {"
-				"   animation: progress-pulse 2s ease infinite;"
-				"   opacity: 1;" /* Make visible when active */
-				"	background-color: yellow;"
-				"}"
-				"/* Different colors for different states */"
-				".video-progress:active > trough > progress {"
-				"   background-image: linear-gradient("
-				"       to right,"
-				"       #e66100 0%,"
-				"       #ff7800 50%,"
-				"       #ff9a00 100%"
-				"   ); /* Seeking color */"
-				"}"
-				""
-				".video-progress.low-buffer > trough > progress {"
-				"   background-image: linear-gradient("
-				"       to right,"
-				"       #c01c28 0%,"
-				"       #e66100 50%,"
-				"       #ff7800 100%"
-				"   ); /* Low buffer warning */"
-				"}";
-    
-    gtk_css_provider_load_from_data(provider, css, -1);
-    gtk_style_context_add_provider_for_display(
-        gdk_display_get_default(),
-        GTK_STYLE_PROVIDER(provider),
-        GTK_STYLE_PROVIDER_PRIORITY_APPLICATION
-    );	
-	
-}
-static GtkWidget
-	*ecotube_progressbar(){
-		
-    GtkWidget *box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
-    gtk_widget_set_hexpand(box, TRUE);
-    gtk_widget_set_valign(box, GTK_ALIGN_START);
-    gtk_widget_set_vexpand(box, FALSE);
-    
-
-    GtkWidget *progress = gtk_progress_bar_new();
-    gtk_widget_set_size_request(progress, -1, 4); // Slim height
-    gtk_widget_add_css_class(progress, "video-progress");
-    gtk_box_append(GTK_BOX(box), progress);
-    //start_progress_animation(GTK_PROGRESS_BAR(progress));
-    
-    GtkWidget *buffer_bar = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-    gtk_widget_set_size_request(buffer_bar, -1, 2);
-    gtk_widget_add_css_class(buffer_bar, "buffer-level");
-    gtk_box_append(GTK_BOX(box), buffer_bar);
-    
-    return box;		
-}
-static void 
-	start_progress_animation(GtkProgressBar *progress) {
-		gtk_widget_add_css_class(GTK_WIDGET(progress), "progress-active");
-}
-
-static void 
-	stop_progress_animation(GtkProgressBar *progress) {
-		gtk_widget_remove_css_class(GTK_WIDGET(progress), "progress-active");
 }

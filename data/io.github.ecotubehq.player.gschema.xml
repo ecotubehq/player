@@ -232,7 +232,7 @@
 			</description>
 		</key>
 		<key name="ecotube-computer-type" type="i">
-			<default>0</default>
+			<default>1</default>
 			<summary>Playback Type</summary>
 			<description>
 			</description>

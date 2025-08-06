@@ -73,6 +73,7 @@ struct _CelluloidMainWindowPrivate
 	GtkWidget *video_area;
 	GtkWidget *control_box;
 	GtkWidget *playlist;
+	GtkWidget *playlist_sidebar;
 };
 
 static void
@@ -138,18 +139,19 @@ constructed(GObject *object)
 				*/
 	gtk_widget_set_visible(priv->playlist, FALSE);
 	
-    GtkWidget *sidebar_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+
+    priv->playlist_sidebar = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
     GtkWidget *header = adw_header_bar_new();
     
     //g_signal_connect(listbox, "row-activated", G_CALLBACK(on_item_activated), data);
 
-    gtk_box_append(GTK_BOX(sidebar_box), header);
-    gtk_box_append(GTK_BOX(sidebar_box), priv->playlist);
+    gtk_box_append(GTK_BOX(priv->playlist_sidebar), header);
+    gtk_box_append(GTK_BOX(priv->playlist_sidebar), priv->playlist);
 
     
 	AdwOverlaySplitView *video_split_view = ADW_OVERLAY_SPLIT_VIEW(priv->video_split_view);
 	adw_overlay_split_view_set_content(video_split_view, priv->video_area);
-	adw_overlay_split_view_set_sidebar(video_split_view, sidebar_box);
+	adw_overlay_split_view_set_sidebar(video_split_view, priv->playlist_sidebar);
 	adw_overlay_split_view_set_sidebar_position(video_split_view, GTK_PACK_END);
 	adw_overlay_split_view_set_show_sidebar(video_split_view, FALSE);
 	adw_overlay_split_view_set_collapsed(video_split_view, TRUE);

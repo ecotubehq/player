@@ -165,9 +165,6 @@ static void
 metadata_cache_update_handler(CelluloidModel *model, gint64 pos, gpointer data);
 
 static void
-model_loaded_handler(GObject *object, GParamSpec *pspec, gpointer data);
-
-static void
 window_resize_handler(	CelluloidModel *model,
 			gint64 width,
 			gint64 height,
@@ -599,6 +596,17 @@ playlist_item_activated_handler(CelluloidView *view, gint pos, gpointer data)
 	if(is_default)
 	{
 		is_default = FALSE;
+		// resized based on the selected resolution
+		GSettings *settings =		g_settings_new(CONFIG_ROOT);
+		int video_resolution_index = g_settings_get_int(settings, "youtube-video-quality");
+		if(video_resolution_index == 0){
+			celluloid_view_resize_video_area(controller->view, 640, 360);
+		}
+		else if(video_resolution_index == 1){
+			celluloid_view_resize_video_area(controller->view, 853, 480);
+		}else{
+			celluloid_view_resize_video_area(controller->view, 1278, 720);
+		}
 		sa_append_default_videos(model);
 		set_video_area_status(controller, CELLULOID_VIDEO_AREA_STATUS_LOADING);
 	}
@@ -606,7 +614,10 @@ playlist_item_activated_handler(CelluloidView *view, gint pos, gpointer data)
 			"idle-active", &idle_active,
 			"playlist-pos", &playlist_pos,
 			NULL );
+
+	
 	celluloid_model_play(model);
+
 
 	if(idle_active)
 	{
@@ -929,10 +940,6 @@ connect_signals(CelluloidController *controller)
 	g_signal_connect(	controller->view,
 				"stream-src",
 				G_CALLBACK(stream_src_handler),
-				controller );
-	g_signal_connect(	controller->model,
-				"loaded",
-				G_CALLBACK(model_loaded_handler),
 				controller );
 }
 
@@ -1279,13 +1286,9 @@ static void
 play_button_handler(GtkButton *button, gpointer data)
 {
 	CelluloidModel *model = CELLULOID_CONTROLLER(data)->model;
-	
 	gboolean pause = TRUE;
-	gboolean is_resume = FALSE;
-	gdouble time_position = celluloid_model_get_time_position(model);
 
 	g_object_get(model, "pause", &pause, NULL);
-	g_object_get(model, "is_resume", &is_resume, NULL);
 
 	if(pause)
 	{
@@ -1293,13 +1296,7 @@ play_button_handler(GtkButton *button, gpointer data)
 	}
 	else
 	{
-		if(time_position > 0){
-			g_object_set(model, "is_resume", TRUE, NULL);
-			g_object_set(model, "last_time_pos", time_position, NULL);
-			celluloid_model_stop(model);
-		}else{
-			celluloid_model_pause(model);
-		}
+		celluloid_model_pause(model);
 	}
 }
 
@@ -1307,7 +1304,6 @@ static void
 stop_button_handler(GtkButton *button, gpointer data)
 {
 	celluloid_model_stop(CELLULOID_CONTROLLER(data)->model);
-	g_object_set(CELLULOID_CONTROLLER(data)->model, "is_resume", FALSE, NULL);
 }
 
 static void
@@ -1554,13 +1550,13 @@ celluloid_controller_get_model(CelluloidController *controller)
 }
 void sa_append_default_videos(CelluloidModel *model){
 	GPtrArray *playlist = NULL;
-	gchar *videos[] = {"https://www.youtube.com/watch?v=YbxpieEQ7bc" ,
-						"https://www.youtube.com/watch?v=dN_ARfPY9rY",
-					   "https://www.youtube.com/watch?v=3__HO-akNC8",
-					  "https://www.youtube.com/watch?v=cT30UmarO4E", 
-					  "https://www.youtube.com/watch?v=jSFo_92cJ-U", 
-					  "https://www.youtube.com/watch?v=Re7FqKh7i_c",
-					  "https://www.youtube.com/watch?v=Icew8R-VWSY"
+	gchar *videos[] = {"https://x.com/therealmrbench/status/1950579819831259161" ,
+						"https://www.youtube.com/watch?v=YbxpieEQ7bc",
+					   "https://www.youtube.com/watch?v=dN_ARfPY9rY",
+					  "https://www.youtube.com/watch?v=XYjuu9wlfyI", 
+					  "https://www.youtube.com/watch?v=3__HO-akNC8", 
+					  "https://www.youtube.com/watch?v=jSFo_92cJ-U",
+					  "https://www.youtube.com/watch?v=Re7FqKh7i_c"
 					  };
 	
 	for(gint i=0; i<6; i++){
@@ -1578,20 +1574,4 @@ stream_src_handler(	CelluloidView *view,
 	celluloid_model_update_mpv_options(controller->model);
 	
 
-}
-static void
-model_loaded_handler(GObject *object, GParamSpec *pspec, gpointer data)
-{
-
-	CelluloidModel *model = data; 
-	gboolean is_resume = FALSE;
-	gdouble resume_position = 0.0;
-	
-	g_object_get(model, "is_resume", &is_resume, NULL);
-	//printf("is_resume:%d\n", is_resume);
-	if(is_resume){
-		g_object_get(model, "last_time_pos", &resume_position, NULL);
-		celluloid_model_seek(model, resume_position);
-		g_object_set(model, "is_resume", FALSE, NULL);
-	}
 }
