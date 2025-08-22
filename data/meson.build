@@ -55,6 +55,9 @@ install_data('mpv-fsr-vulkan.conf',
 install_data('player-info.pdf',
   install_dir: join_paths(get_option('datadir'), 'ecotube')
 )
+install_data('playlist.m3u',
+  install_dir: join_paths(get_option('datadir'), 'ecotube')
+)
 
 #run_command('gsettings', 'reset', 'io.github.celluloid-player.Celluloid', 'startup-request', check: true)
 

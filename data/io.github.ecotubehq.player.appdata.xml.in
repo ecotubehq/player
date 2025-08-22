@@ -33,6 +33,25 @@
  </description>
  <developer_name>EcoTube Partners</developer_name>
  <releases>
+  <release date="2025-08-21" version="25.8.2">
+   <description translatable="no">
+  <p>
+    Add two playback options - Powersave and Quality -
+  </p>
+    <p>
+    remove codec selection
+    </p>
+    <p>
+    Reorganize default playlist
+    </p>
+    <p>
+     Include no https protocol in format selection
+    </p>
+    <p>
+     Reduce network stream usage
+    </p>
+   </description>
+  </release>
   <release date="2025-08-06" version="25.8.1">
    <description translatable="no">
   <p>

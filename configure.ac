@@ -1,7 +1,7 @@
 AC_PREREQ([2.69])
 
 AC_INIT(	[ecotube],
-		[25.8.1],
+		[25.8.2],
 		[https://github.com/ecotubehq/player/issues],
 		[ecotube],
 		[https://github.com/ecotubehq/player] )

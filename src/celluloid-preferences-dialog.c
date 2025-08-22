@@ -216,9 +216,6 @@ constructed(GObject *object)
 			"youtube-separator-line",
 			ITEM_SEPARATOR_LABEL_BOX},
 			{NULL,
-			"youtube-video-codec",
-			ITEM_TYPE_COMBO_CODECV},
-			{NULL,
 			"youtube-video-quality",
 			ITEM_TYPE_COMBO_BOX},
 			{NULL,
@@ -778,11 +775,7 @@ build_page(	const PreferencesDialogItem *items,
 											  -1);
 			gtk_list_store_insert_with_values(liststore, NULL, -1,
 											  0, NULL,
-											  1, "Laptop",
-											  -1);	
-			gtk_list_store_insert_with_values(liststore, NULL, -1,
-											  0, NULL,
-											  1, "Desktop",
+											  1, "Quality",
 											  -1);										  								  
 			pref_combo = gtk_combo_box_new_with_model(GTK_TREE_MODEL(liststore));
 			g_object_unref(liststore);

@@ -33,6 +33,9 @@
 #include "celluloid-player-options.h"
 #include "celluloid-def.h"
 
+#include "ecotube-config.h"
+
+
 static void
 constructed(GObject *object);
 
@@ -240,7 +243,7 @@ update_extra_mpv_options(CelluloidController *controller);
 
 G_DEFINE_TYPE(CelluloidController, celluloid_controller, G_TYPE_OBJECT)
 
-void sa_append_default_videos(CelluloidModel *model);
+
 
 static void
 stream_src_handler(	CelluloidView *view,
@@ -531,6 +534,7 @@ file_open_handler(	CelluloidView *view,
 	CelluloidController *controller = CELLULOID_CONTROLLER(data);
 	CelluloidModel *model = controller->model;
 	guint files_count = g_list_model_get_n_items(files);
+	const gchar *default_playlist_uri = NULL;
 
 	if(files_count > 0 && !append)
 	{
@@ -541,6 +545,11 @@ file_open_handler(	CelluloidView *view,
 	{
 		GFile *file = g_list_model_get_item(files, i);
 		gchar *uri = g_file_get_path(file) ?: g_file_get_uri(file);
+		default_playlist_uri = g_strconcat(DATADIR, "/ecotube", "/playlist.m3u", NULL);
+		if(g_strcmp0(uri, default_playlist_uri) == 0){
+			set_video_area_status
+				(controller, CELLULOID_VIDEO_AREA_STATUS_IDLE);
+		}
 		
 		celluloid_model_load_file(model, uri, append || i > 0);
 
@@ -585,7 +594,6 @@ close_request_handler(CelluloidView *view, gpointer data)
 
 	return TRUE;
 }
-gboolean is_default= TRUE;
 static void
 playlist_item_activated_handler(CelluloidView *view, gint pos, gpointer data)
 {
@@ -593,23 +601,6 @@ playlist_item_activated_handler(CelluloidView *view, gint pos, gpointer data)
 	CelluloidModel *model = controller->model;
 	gboolean idle_active = FALSE;
 	gint64 playlist_pos = -1;
-	if(is_default)
-	{
-		is_default = FALSE;
-		// resized based on the selected resolution
-		GSettings *settings =		g_settings_new(CONFIG_ROOT);
-		int video_resolution_index = g_settings_get_int(settings, "youtube-video-quality");
-		if(video_resolution_index == 0){
-			celluloid_view_resize_video_area(controller->view, 640, 360);
-		}
-		else if(video_resolution_index == 1){
-			celluloid_view_resize_video_area(controller->view, 853, 480);
-		}else{
-			celluloid_view_resize_video_area(controller->view, 1278, 720);
-		}
-		sa_append_default_videos(model);
-		set_video_area_status(controller, CELLULOID_VIDEO_AREA_STATUS_LOADING);
-	}
 	g_object_get(	model,
 			"idle-active", &idle_active,
 			"playlist-pos", &playlist_pos,
@@ -1547,24 +1538,6 @@ CelluloidModel *
 celluloid_controller_get_model(CelluloidController *controller)
 {
 	return controller->model;
-}
-void sa_append_default_videos(CelluloidModel *model){
-	GPtrArray *playlist = NULL;
-	gchar *videos[] = {"https://x.com/therealmrbench/status/1950579819831259161" ,
-						"https://www.youtube.com/watch?v=YbxpieEQ7bc",
-					   "https://www.youtube.com/watch?v=dN_ARfPY9rY",
-					  "https://www.youtube.com/watch?v=XYjuu9wlfyI", 
-					  "https://www.youtube.com/watch?v=3__HO-akNC8", 
-					  "https://www.youtube.com/watch?v=jSFo_92cJ-U",
-					  "https://www.youtube.com/watch?v=Re7FqKh7i_c"
-					  };
-	
-	for(gint i=0; i<6; i++){
-		gchar *uri = videos[i];		
-		g_object_get(model, "playlist", &playlist, NULL);
-		CelluloidPlaylistEntry *entry = celluloid_playlist_entry_new(uri, NULL);
-		g_ptr_array_add(playlist, entry);	  
-	}
 }
 static void
 stream_src_handler(	CelluloidView *view,

@@ -1,5 +1,13 @@
 gnome = import('gnome')
 
+datadir = join_paths(get_option('prefix'), get_option('datadir'))
+conf = configuration_data()
+conf.set_quoted('DATADIR', datadir)
+configure_file(
+  output: 'ecotube-config.h',
+  configuration: conf,
+)
+
 sources = [
   'celluloid-application.c',
   'celluloid-common.c',
@@ -36,7 +44,8 @@ sources = [
   'mpris/celluloid-mpris-module.c',
   'mpris/celluloid-mpris-base.c',
   'mpris/celluloid-mpris-player.c',
-  'mpris/celluloid-mpris-track-list.c'
+  'mpris/celluloid-mpris-track-list.c',
+
 ]
 
 sources += custom_target('authors',

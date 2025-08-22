@@ -35,6 +35,7 @@
 #include "celluloid-mpv.h"
 #include "celluloid-common.h"
 #include "celluloid-def.h"
+#include "ecotube-config.h"
 
 struct _CelluloidApplication
 {
@@ -155,6 +156,8 @@ initialize_gui(CelluloidApplication *app)
 	CelluloidView *view;
 	CelluloidMainWindow *window;
 	GSettings *settings;
+	gboolean *append;
+	const gchar *default_playlist_uri;
 
 	migrate_config();
 
@@ -225,6 +228,19 @@ initialize_gui(CelluloidApplication *app)
 	g_settings_set_boolean(settings, "always-use-floating-header-bar", TRUE);
 	g_settings_set_boolean(settings, "always-use-floating-controls", TRUE);
 	//gtk_window_set_resizable(view, TRUE);
+
+	// Load default playlist
+	default_playlist_uri = g_strconcat(DATADIR, "/ecotube", "/playlist.m3u", NULL);
+	append = g_malloc(sizeof(gboolean));
+	*append = FALSE;
+	GFile *file = g_file_new_for_uri(default_playlist_uri);
+	GListStore *list = g_list_store_new(G_TYPE_OBJECT);
+	g_list_store_append(list, file);
+
+	g_signal_emit_by_name(view, "file-open", list, *append);
+
+	g_object_unref(list);
+	g_free(append);
 		
 	g_object_unref(settings);
 	adw_init();

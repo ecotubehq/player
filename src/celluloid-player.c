@@ -30,12 +30,16 @@
 #include "celluloid-def.h"
 #include "celluloid-controller.h"
 
+#include "ecotube-config.h"
+
 #define get_private(player) \
 	((CelluloidPlayerPrivate *)celluloid_player_get_instance_private(CELLULOID_PLAYER(player)))
 
 typedef struct _CelluloidPlayerPrivate CelluloidPlayerPrivate;
 
 char prevSetting[256];
+gboolean is_default_list = FALSE;
+gint default_playlist_count = 5;
 enum
 {
 	PROP_0,
@@ -662,6 +666,7 @@ load_file(CelluloidMpv *mpv, const gchar *uri, gboolean append)
 	CelluloidPlayerPrivate *priv = get_private(mpv);
 	gboolean ready = FALSE;
 	gboolean idle_active = FALSE;
+	const gchar *default_playlist_uri = NULL;
 
 	g_object_get(mpv, "ready", &ready, NULL);
 
@@ -698,6 +703,14 @@ load_file(CelluloidMpv *mpv, const gchar *uri, gboolean append)
 	if(idle_active)
 	{
 		g_object_notify(G_OBJECT(player), "playlist");
+	}
+
+
+	default_playlist_uri = g_strconcat(DATADIR, "/ecotube", "/playlist.m3u", NULL);
+	if(g_strcmp0(uri, default_playlist_uri)==0){
+		is_default_list = TRUE;
+	}else{
+		is_default_list = FALSE;
 	}
 }
 
@@ -815,131 +828,6 @@ load_input_conf(CelluloidPlayer *player, const gchar *input_conf)
 }
 static void
 load_config_file(CelluloidMpv *mpv)
-{
-	GSettings *settings = g_settings_new(CONFIG_ROOT);
-
-	if(g_settings_get_boolean(settings, "mpv-config-enable"))
-	{
-		gchar *mpv_conf =
-			g_settings_get_string(settings, "mpv-config-file");
-
-		GFile *file = g_file_new_for_uri(mpv_conf);
-		gchar *path = g_file_get_path(file);
-
-		g_info("Loading mpv config file: %s", mpv_conf);
-
-		if(path)
-		{
-			g_debug("mpv config file path: %s", path);
-			celluloid_mpv_load_config_file(mpv, path);
-
-			g_free(path);
-		}
-		else
-		{
-			g_warning("Failed to load mpv config file");
-		}
-
-		g_object_unref(file);
-		g_free(mpv_conf);
-	}
-
-	g_object_unref(settings);
-}
-static void
-load_config_file_old2(CelluloidMpv *mpv)
-{
-	GSettings *settings = g_settings_new(CONFIG_ROOT);
-	gchar *v_quality[] = {"144" ,"240", "360", "480", "720", "None"};
-	gchar *v_codec[] = {"av01", "vp09", "avc"};
-	gchar *v_output[] = {"ewa-lanczos", "bicubic_fast", "FSR"};
-
-
-	int video_resolution_index = g_settings_get_int(settings, "youtube-video-quality");
-
-	gchar *selected_v_quality= v_quality[video_resolution_index]; //v_quality[g_settings_get_int(settings, "youtube-video-quality")];
-	gchar *selected_v_codec= v_codec[g_settings_get_int(settings, "youtube-video-codec")];
-	gchar *selected_v_output= v_output[g_settings_get_int(settings, "youtube-video-output")];
-
-	gchar *fsr;
-	if(g_settings_get_int(settings, "youtube-video-output") == 0){
-		fsr = "profile=gpu-hq\nglsl-shader=\"/usr/local/share/sako/FSR.glsl\"\nprofile-cond=math.min(display_width / width, display_height / height) < 2.0";
-	}else{
-		fsr = "";
-	}
-	char selectedOpions[2024];
-	if(strcmp("None",selected_v_quality) != 0){
-		if(strcmp("best",selected_v_codec) != 0){
-			if(g_settings_get_int(settings, "youtube-video-quality") >= 0){
-					if(g_settings_get_int(settings, "youtube-video-quality") == 0){
-							snprintf(selectedOpions, sizeof(selectedOpions), "ytdl-format=bv*[height=%s][vcodec~='%s']+ba/bv*[height=144]+ba/bv*[height<=%s][vcodec~='vp']+ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b)\nscale=%s\ncache=%s\nstream-buffer-size=%s\n%s\nreset-on-next-file=all\ndemuxer-max-bytes=500M\ndemuxer-max-back-bytes=100M\nhwdec=auto-safe",
-							selected_v_quality, selected_v_codec, selected_v_quality, selected_v_quality, selected_v_output, "yes", "4MiB", fsr);
-					}
-					else if(g_settings_get_int(settings, "youtube-video-quality") == 1){
-							snprintf(selectedOpions, sizeof(selectedOpions), "ytdl-format=bv*[height=%s][vcodec~='%s']+ba/bv*[height=240]+ba/bv*[height=360]+ba/bv*[height>=%s]+ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b)\nscale=%s\ncache=%s\nstream-buffer-size=%s\n%s\nreset-on-next-file=all\ndemuxer-max-bytes=500M\ndemuxer-max-back-bytes=100M\nhwdec=auto-safe",
-							selected_v_quality, selected_v_codec, selected_v_quality, selected_v_quality, selected_v_output, "yes", "4MiB", fsr);
-					}
-					else if(g_settings_get_int(settings, "youtube-video-quality") == 2){
-							snprintf(selectedOpions, sizeof(selectedOpions), "ytdl-format=bv*[height=%s][vcodec~='%s']+ba/bv*[height=360][vcodec~='vp']+ba/bv*[height=360]+ba/bv*[height>=%s]+ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b)\nscale=%s\ncache=%s\nstream-buffer-size=%s\n%s\nreset-on-next-file=all\ndemuxer-max-bytes=500M\ndemuxer-max-back-bytes=100M\nhwdec=auto-safe",
-							selected_v_quality, selected_v_codec, selected_v_quality, selected_v_quality, selected_v_output, "yes", "4MiB", fsr);
-					}
-					else if(g_settings_get_int(settings, "youtube-video-quality") == 3){
-							snprintf(selectedOpions, sizeof(selectedOpions), "ytdl-format=bv*[height=%s][vcodec~='%s']+ba/bv*[height=480][vcodec~='vp']+ba/bv*[height=480]+ba/bv*[height<=?720]+ba/bv*[height<=%s][vcodec~='vp']+ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b)\nscale=%s\ncache=%s\nstream-buffer-size=%s\n%s\nreset-on-next-file=all\ndemuxer-max-bytes=500M\ndemuxer-max-back-bytes=100M\nhwdec=auto-safe",
-							selected_v_quality, selected_v_codec, selected_v_quality, selected_v_quality, selected_v_output, "yes", "4MiB", fsr);
-					}else{
-							snprintf(selectedOpions, sizeof(selectedOpions), "ytdl-format=bv*[height=%s][vcodec~='%s']+ba/bv*[height=720][vcodec~='vp']+ba/bv*[height=720]+ba/bv*[height<=%s][vcodec~='vp']+ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b)\nscale=%s\ncache=%s\nstream-buffer-size=%s\n%s\nreset-on-next-file=all\ndemuxer-max-bytes=500M\ndemuxer-max-back-bytes=100M\nhwdec=auto-safe",
-							selected_v_quality, selected_v_codec, selected_v_quality, selected_v_quality, selected_v_output, "yes", "4MiB", fsr);
-					}
-			}else{
-				snprintf(selectedOpions, sizeof(selectedOpions), "ytdl-format=bv*[height=%s][vcodec~='%s']+ba/bv*[height>=%s][vcodec~='vp']+ba/(wv*+ba/b)[height>=%s]/(wv*+ba/b)\nscale=%s\ncache=%s\nstream-buffer-size=%s\n%s\nreset-on-next-file=all\nhwdec=auto-safe\ndemuxer-max-bytes=500M\ndemuxer-max-back-bytes=100M",
-				selected_v_quality, selected_v_codec, selected_v_quality, selected_v_quality, selected_v_output, "yes", "4MiB", fsr);
-			}
-			
-		}else{
-			if(g_settings_get_int(settings, "youtube-video-codec") != 2){
-				snprintf(selectedOpions, sizeof(selectedOpions), "ytdl-format=bv*[height<=%s]+ba/b[height<=%s] /(wv*+ba/b)[height<=%s]/(wv*+ba/b)/ wv*+ba/w\nscale=%s\ncache=%s\nstream-buffer-size=%s\nprofile=gpu-hq\nreset-on-next-file=all\nhwdec=auto-safe\n%s",
-				selected_v_quality, selected_v_quality, selected_v_quality, selected_v_output, "yes", "4MiB", fsr);
-				g_info("Loading video for No: %s\n", "h.24");
-			}else{
-				g_info("Loading video for: %s\n", "h.24");
-				snprintf(selectedOpions, sizeof(selectedOpions), "ytdl-format=bv*[height>=%s]+ba/b[height>=%s] /(wv*+ba/b)[height>=%s]/(wv*+ba/b)/ wv*+ba/w\nscale=%s\ncache=%s\nstream-buffer-size=%s\nprofile=gpu-hq\nreset-on-next-file=all\nhwdec=auto-safe\n%s",
-				selected_v_quality, selected_v_quality, selected_v_quality, selected_v_output, "yes", "4MiB", fsr);				
-			}
-		}
-	}else{
-			snprintf(selectedOpions, sizeof(selectedOpions), "ytdl-format=bestaudio\nscale=%s\nreset-on-next-file=all\nprofile=gpu-hq\nglsl-shader=\"/usr/local/share/sako/FSR.glsl\"\nprofile-cond=math.min(display_width / width, display_height / height) < 2.0",
-		 	selected_v_output);
-
-	}
-	if(strcmp(prevSetting, selectedOpions) == 0){
-		g_info("No change was made: %s\n", prevSetting);
-		return ;
-	}
-
-	memcpy(prevSetting, selectedOpions, sizeof prevSetting); //prevSetting = selectedOpions;
-	sa_updade_yt_file(selectedOpions);
-	
-
-	gchar *mpv_conf = "file:///tmp/sa-yt.config";	
-		
-	GFile *file = g_file_new_for_uri(mpv_conf);
-	gchar *path = g_file_get_path(file);
-		
-	//g_info("Loading config file: %s", path);
-	celluloid_mpv_load_config_file(mpv, path);
-	g_free(path);
-	g_object_unref(file);
-	/*
-	if(video_resolution_index < 3){
-		g_settings_set_int(settings, "youtube-video-quality", 3);
-	}*/
-
-	
-	g_object_unref(settings);
-}
-
-static void
-load_config_file_old(CelluloidMpv *mpv)
 {
 	GSettings *settings = g_settings_new(CONFIG_ROOT);
 
@@ -1160,6 +1048,7 @@ update_playlist(CelluloidPlayer *player)
 
 	if(playlist.format == MPV_FORMAT_NODE_ARRAY)
 	{
+		gint playlist_counter = 0;
 		for(gint i = 0; i < org_list->num; i++)
 		{
 			CelluloidPlaylistEntry *entry;
@@ -1176,9 +1065,20 @@ update_playlist(CelluloidPlayer *player)
 			}
 
 			g_ptr_array_add(priv->playlist, entry);
+
+			playlist_counter = i;
 		}
 		mpv_free_node_contents(&playlist);
 		g_object_notify(G_OBJECT(player), "playlist");
+
+		if(playlist_counter >= default_playlist_count && is_default_list){
+			CelluloidMpv *mpv = CELLULOID_MPV(player);
+			const gchar *cmd2[] = {"stop", NULL};
+			celluloid_mpv_command_async(mpv, cmd2);
+
+			is_default_list = FALSE;
+		}
+
 	}
 
 
@@ -1732,6 +1632,13 @@ load_user_preference(CelluloidMpv *mpv){
 	gchar *selected_v_quality= v_quality[video_resolution_index]; 
 	gchar *selected_v_codec= v_codec[g_settings_get_int(settings, "youtube-video-codec")];
 	gchar *selected_v_output= v_output[g_settings_get_int(settings, "youtube-video-output")];
+	gint playback_type = g_settings_get_int(settings, "ecotube-computer-type");
+	gchar *first_codec = "vp09";
+	gchar *second_codec = "av01";
+	if(playback_type == 1){
+		first_codec = "av01";
+		second_codec = "vp09";		
+	}
 	
 	//g_string_append(user_buffer, " log-file=ecotube-mpv.log");
 	g_string_append(user_buffer, " reset-on-next-file=all");
@@ -1741,24 +1648,26 @@ load_user_preference(CelluloidMpv *mpv){
 	g_string_append(user_buffer, " demuxer-max-back-bytes=500M");
 	if(g_settings_get_int(settings, "youtube-video-quality") == 0){
 		g_string_append_printf(user_buffer, " ytdl-format=(bv*[height=%s][vcodec~='%s']+"\
-		"ba/bv*[height=144]+ba/bv*[height<=%s][vcodec~='vp']+ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b))[protocol^=http]",
-		selected_v_quality, selected_v_codec, selected_v_quality, selected_v_quality);
+		"ba/bv*[height=144][vcodec~='%s']+ba/bv*[height=144]+ba/bv*[height<=%s][vcodec~='vp']+ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b))",
+		selected_v_quality, first_codec, second_codec, selected_v_quality, selected_v_quality);
 	}else if(g_settings_get_int(settings, "youtube-video-quality") == 1){
-		g_string_append(user_buffer, " ytdl-format=(bv*[height=240][vcodec~='vp09']+ba/bv*[height=240]+ba/bv*[height=360]+ba/bv*[height>=240]+ba/wv*[height<240]+ba/wv*+ba)[protocol^=http]");
+		g_string_append_printf(user_buffer, " ytdl-format=(bv*[height=240][vcodec~='%s']+ba/[height=240][vcodec~='%s']+ba/"\
+			"bv*[height=240]+ba/bv*[height=360]+ba/bv*[height>=240]+ba/wv*[height<240]+ba/wv*+ba)",
+			first_codec, second_codec);
 	}else if(g_settings_get_int(settings, "youtube-video-quality") == 2){
 		g_string_append_printf(user_buffer, " ytdl-format=(bv*[height=%s][vcodec~='%s']+"\
-		"ba/bv*[height=360][vcodec~='vp']+ba/bv*[height=360]+ba/bv*[height>=%s]+ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b))[protocol^=http]",
-		selected_v_quality, selected_v_codec, selected_v_quality, selected_v_quality);
+		"ba/bv*[height=360][vcodec~=%s]+ba/bv*[height=360]+ba/bv*[height>=%s]+ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b))",
+		selected_v_quality, first_codec, second_codec, selected_v_quality, selected_v_quality);
 	}else if(g_settings_get_int(settings, "youtube-video-quality") == 3){
 		g_string_append_printf(user_buffer, " ytdl-format=(bv*[height=%s][vcodec~='%s']+"\
-		"ba/bv*[height=480][vcodec~='vp']+ba/bv*[height=480]+ba/bv*[height<=?720]+ba/bv*[height<=%s][vcodec~='vp']+"\
+		"ba/bv*[height=480][vcodec~=%s]+ba/bv*[height=480]+ba/bv*[height<=?720]+ba/bv*[height<=%s][vcodec~='vp']+"\
 		"ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b))[protocol^=http][format_id!*=hdr]", 
-		selected_v_quality, selected_v_codec, selected_v_quality, selected_v_quality);
+		selected_v_quality, first_codec, second_codec, selected_v_quality, selected_v_quality);
 	}else{
 		g_string_append_printf(user_buffer, " ytdl-format=(bv*[height=%s][vcodec~='%s']+"\
-		"ba/bv*[height=720][vcodec~='vp']+ba/bv*[height=720]+ba/bv*[height<=%s][vcodec~='vp']+"\
+		"ba/bv*[height=720][vcodec~='%s']+ba/bv*[height=720]+ba/bv*[height<=%s][vcodec~='vp']+"\
 		"ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b))[protocol^=http][format_id!*=hdr]",
-		selected_v_quality, selected_v_codec, selected_v_quality, selected_v_quality);
+		selected_v_quality, first_codec, second_codec, selected_v_quality, selected_v_quality);
 	}
 	if(g_settings_get_int(settings, "youtube-video-output") == 0){
 		gchar *mpv_conf = "file:///usr/local/share/ecotube/mpv-fsr.conf";	
@@ -1768,7 +1677,7 @@ load_user_preference(CelluloidMpv *mpv){
 		GFile *file = g_file_new_for_uri(mpv_conf);
 		gchar *path = g_file_get_path(file);
 		celluloid_mpv_load_config_file(mpv, "");
-		//celluloid_mpv_load_config_file(mpv, path);
+		celluloid_mpv_load_config_file(mpv, path);
 		g_string_append(user_buffer, " hwdec=auto-safe");
 		return user_buffer->str;
 	}else if(g_settings_get_int(settings, "youtube-video-output") == 1){

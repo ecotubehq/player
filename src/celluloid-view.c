@@ -218,7 +218,6 @@ playlist_row_reordered_handler(	CelluloidPlaylistWidget *widget,
 				gint src,
 				gint dest,
 				gpointer data );
-void sa_load_default_videos_1(CelluloidView *view);
 static void
 constructed(GObject *object)
 {
@@ -1683,7 +1682,6 @@ celluloid_view_new(CelluloidApplication *app, gboolean always_floating)
 
 	g_object_unref(settings);
 	
-	sa_load_default_videos_1(view);
 
 	return view;
 }
@@ -2075,24 +2073,4 @@ celluloid_view_get_main_menu_visible(CelluloidView *view)
 	}
 
 	return result;
-}
-void sa_load_default_videos_1(CelluloidView *view){
-	GPtrArray *playlist = g_ptr_array_new_with_free_func (g_object_unref);
-	gchar *videos[][2] = {
-						{"https://x.com/therealmrbench/status/1950579819831259161", "When satire from 2013 becomes reality in 2025"},
-						{"https://www.youtube.com/watch?v=YbxpieEQ7bc", "The Real Cost of Net Zero: The shocking truth of the renewable energy push"} ,
-						{"https://www.youtube.com/watch?v=dN_ARfPY9rY", "Inconvenient Truth: Our climate policies cant save the environment. So what will?"},
-						{"https://www.youtube.com/watch?v=XYjuu9wlfyI", "The Real Energy Cost of AI, Explained "},
-						{"https://www.youtube.com/watch?v=3__HO-akNC8", "How AI is Ruining the Electric Grid"},
-						{"https://www.youtube.com/watch?v=jSFo_92cJ-U", "Thorium Reactors: Why is this Technology Quite So Exciting"} , 
-					    {"https://www.youtube.com/watch?v=Re7FqKh7i_c", "\"I am Exposing the Whole Damn Thing!\" | Randall Carlson"} 
-					 };
-	
-	for(gint i=0; i<6; i++){
-		gchar *uri = videos[i][0];	
-		gchar *title = videos[i][1];	
-		CelluloidPlaylistEntry *entry = celluloid_playlist_entry_new(uri, title);	
-		g_ptr_array_add(playlist, entry);	  
-	}
-	celluloid_view_update_playlist(view, playlist);
 }
