@@ -16,4 +16,4 @@ More details...
 
 [A look at EcoTube and how to use it](https://raw.githubusercontent.com/ecotubehq/player/master/data/player-info.pdf)
 
-[![Download from Flathub](https://raw.githubusercontent.com/ecotubehq/player/master/data/flathub-badge-en.png)](https://flathub.org/apps/io.github.ecotubehq.player)
+[![Download from Flathub](https://raw.githubusercontent.com/ecotubehq/player/refs/heads/master/flathub-badge-en.png)](https://flathub.org/apps/io.github.ecotubehq.player)
