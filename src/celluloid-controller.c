@@ -250,6 +250,9 @@ stream_src_handler(	CelluloidView *view,
 			gchar uri,
 			gpointer data );
 			
+void 
+ecotube_set_default_videos(CelluloidController *controller);
+
 static void
 constructed(GObject *object)
 {
@@ -594,6 +597,7 @@ close_request_handler(CelluloidView *view, gpointer data)
 
 	return TRUE;
 }
+gboolean is_default = TRUE;
 static void
 playlist_item_activated_handler(CelluloidView *view, gint pos, gpointer data)
 {
@@ -606,7 +610,12 @@ playlist_item_activated_handler(CelluloidView *view, gint pos, gpointer data)
 			"playlist-pos", &playlist_pos,
 			NULL );
 
-	
+	if(is_default)
+	{
+		is_default = FALSE;
+		ecotube_set_default_videos(controller);
+		set_video_area_status(controller, CELLULOID_VIDEO_AREA_STATUS_LOADING);
+	}
 	celluloid_model_play(model);
 
 
@@ -1546,5 +1555,29 @@ stream_src_handler(	CelluloidView *view,
 	CelluloidController *controller = CELLULOID_CONTROLLER(data);
 	celluloid_model_update_mpv_options(controller->model);
 	
+
+}
+void 
+ecotube_set_default_videos(CelluloidController *controller){
+	CelluloidModel *model = controller->model;
+
+	GVariant *playlist = g_settings_get_value(controller->settings, "default-playlist-with-metadata");
+	GPtrArray *playlist_data = NULL;
+	gsize n_entries = g_variant_n_children(playlist);
+	for (gsize i = 0; i < n_entries; i++) {
+	  GVariant *entry = g_variant_get_child_value(playlist, i);
+	  const gchar **metadata = g_variant_get_strv(entry, NULL);
+	  if (metadata[0] && metadata[1]){
+	  		gchar *uri = g_strdup(metadata[0]);
+	  		g_object_get(model, "playlist", &playlist_data, NULL);
+	  		CelluloidPlaylistEntry *p_entry = celluloid_playlist_entry_new(uri, NULL);
+	  		g_ptr_array_add(playlist_data, p_entry);
+
+	  		g_free(uri);
+	   }
+	  g_free(metadata);
+	  g_variant_unref(entry);
+	}
+	g_variant_unref(playlist);
 
 }

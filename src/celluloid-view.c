@@ -218,6 +218,10 @@ playlist_row_reordered_handler(	CelluloidPlaylistWidget *widget,
 				gint src,
 				gint dest,
 				gpointer data );
+
+void 
+ecotube_load_default_videos(CelluloidView *view);
+
 static void
 constructed(GObject *object)
 {
@@ -1682,6 +1686,7 @@ celluloid_view_new(CelluloidApplication *app, gboolean always_floating)
 
 	g_object_unref(settings);
 	
+	ecotube_load_default_videos(view);
 
 	return view;
 }
@@ -2073,4 +2078,29 @@ celluloid_view_get_main_menu_visible(CelluloidView *view)
 	}
 
 	return result;
+}
+void 
+ecotube_load_default_videos(CelluloidView *view){
+	GSettings *settings = g_settings_new(CONFIG_ROOT);
+
+	GVariant *playlist = g_settings_get_value(settings, "default-playlist-with-metadata");
+	gsize n_entries = g_variant_n_children(playlist);
+	GPtrArray *playlist_data = g_ptr_array_new_with_free_func (g_object_unref);
+	for (gsize i = 0; i < n_entries; i++) {
+	  GVariant *entry = g_variant_get_child_value(playlist, i);
+	  const gchar **metadata = g_variant_get_strv(entry, NULL);
+	  if (metadata[0] && metadata[1]){
+	  		gchar *uri = g_strdup(metadata[0]);
+	  		gchar *title = g_strdup(metadata[1]);
+	  		CelluloidPlaylistEntry *p_entry = celluloid_playlist_entry_new(uri, title);
+	  		g_ptr_array_add(playlist_data, p_entry);
+
+	  		g_free(uri);
+			g_free(title);
+	   }
+	  g_free(metadata);
+	  g_variant_unref(entry);
+	}
+	celluloid_view_update_playlist(view, playlist_data);
+	g_variant_unref(playlist);
 }

@@ -156,8 +156,6 @@ initialize_gui(CelluloidApplication *app)
 	CelluloidView *view;
 	CelluloidMainWindow *window;
 	GSettings *settings;
-	gboolean *append;
-	const gchar *default_playlist_uri;
 
 	migrate_config();
 
@@ -229,7 +227,10 @@ initialize_gui(CelluloidApplication *app)
 	g_settings_set_boolean(settings, "always-use-floating-controls", TRUE);
 	//gtk_window_set_resizable(view, TRUE);
 
+	/*
 	// Load default playlist
+	gboolean *append;
+	const gchar *default_playlist_uri;
 	default_playlist_uri = g_strconcat(DATADIR, "/ecotube", "/playlist.m3u", NULL);
 	append = g_malloc(sizeof(gboolean));
 	*append = FALSE;
@@ -241,6 +242,7 @@ initialize_gui(CelluloidApplication *app)
 
 	g_object_unref(list);
 	g_free(append);
+	*/
 		
 	g_object_unref(settings);
 	adw_init();

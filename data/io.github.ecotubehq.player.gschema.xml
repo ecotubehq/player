@@ -232,9 +232,30 @@
 			</description>
 		</key>
 		<key name="ecotube-computer-type" type="i">
-			<default>0</default>
+			<default>1</default>
 			<summary>Playback Type</summary>
 			<description>
+			</description>
+		</key>
+	    <key name="default-playlist-with-metadata" type="aas">
+	      <default>
+	        [
+	          ['https://x.com/therealmrbench/status/1950579819831259161', 'When satire from 2013 becomes reality in 2025'],
+	          ['https://www.youtube.com/watch?v=9qVm5m8FZkE', 'Amazon rainforest trees cut down to build road for COP30'],
+	          ['https://www.youtube.com/watch?v=YbxpieEQ7bc', 'The real cost of net zero'],
+	          ['https://www.youtube.com/watch?v=dN_ARfPY9rY', 'Inconvenient Truth: Our climate policies cant save the environment. So what will?'],
+	          ['https://www.youtube.com/watch?v=hJ2tqs_vksc', 'The Real Reason Your Power Bill Doubled'],
+	          ['https://www.youtube.com/watch?v=jSFo_92cJ-U', 'Thorium Reactors: Why is this Technology Quite So Exciting']
+	        ]
+	      </default>
+	      <summary>Default Playlist with Metadata</summary>
+	      <description>Each entry is a list of [URI, title].</description>
+	    </key>
+		<key name="youtube-allow-hdr" type="b">
+			<default>false</default>
+			<summary>HDR</summary>
+			<description>
+				HDR on / off
 			</description>
 		</key>
 		<key name="startup-request" type="b">

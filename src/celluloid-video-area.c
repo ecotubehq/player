@@ -29,6 +29,7 @@
 #include <glib/gi18n.h>
 #include <glib-object.h>
 #include <math.h>
+#include "ecotube-config.h"
 
 #ifdef GDK_WINDOWING_X11
 #include <gdk/x11/gdkx.h>
@@ -631,6 +632,14 @@ celluloid_video_area_init(CelluloidVideoArea *area)
 
 	gtk_stack_add_child(GTK_STACK(area->stack), area->gl_area);
 	gtk_stack_add_child(GTK_STACK(area->stack), area->initial_page);
+
+	// Create image from file path
+	const gchar *qmd_logo = g_strconcat(DATADIR, "/ecotube", "/fidelityfx-super-resolution-logo-white.png", NULL);
+	GtkWidget *image = gtk_image_new_from_file(qmd_logo);
+	// Optionally set the image size
+	gtk_image_set_pixel_size(GTK_IMAGE(image), 64);
+	// Set the image as the child of the status page
+	adw_status_page_set_child(ADW_STATUS_PAGE(area->initial_page), image);
 
 	celluloid_video_area_set_status
 		(area, CELLULOID_VIDEO_AREA_STATUS_LOADING);
