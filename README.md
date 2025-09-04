@@ -15,3 +15,5 @@ EcoTubeHQ Video Player offers high quality video playback for many DRM-free stre
 More details...
 
 [A look at EcoTube and how to use it](https://raw.githubusercontent.com/ecotubehq/player/master/data/player-info.pdf)
+
+[![Download from Flathub](https://raw.githubusercontent.com/ecotubehq/player/master/data/flathub-badge-en.png)](https://flathub.org/apps/io.github.ecotubehq.player)
