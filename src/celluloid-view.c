@@ -718,9 +718,9 @@ save_playlist(CelluloidView *view, GFile *file, GError **error)
 static void
 update_title(CelluloidView *view)
 {
-        char title_buff[256];
-        char *eptr;
-        double bitrate_double;
+    char title_buff[256];
+    char *eptr;
+    double bitrate_double;
 	const gboolean use_media_title =
 		view->media_title &&
 		!view->idle_active &&
@@ -741,26 +741,25 @@ update_title(CelluloidView *view)
 	gchar *v_quality[] = {"144" ,"240", "360", "480", "720", "None"};
 	int video_resolution_index = g_settings_get_int(settings, "youtube-video-quality");
 	int audio_quality_index = g_settings_get_int(settings, "youtube-audio-quality");
+	int playback_type = g_settings_get_int(settings, "ecotube-computer-type");
 	gchar *selected_v_quality= v_quality[video_resolution_index];
-	if(use_media_title){
-		//printf("Use media title: %s \n", "Yes"); 
+
+	if(audio_quality_index == 0){
+		media_bitrate = "70kbps";
+	}else if(media_format && strcmp("h.264", media_format) == 0 ||
+		 media_format && strcmp("h264", media_format) == 0){
+		media_bitrate = "";
 	}else{
-		//printf("Use media title: %s \n", "No");
+		media_bitrate = "160kbps";
 	}
-		if(audio_quality_index == 0){
-			media_bitrate = "70kbps";
-		}else if(media_format && strcmp("h.264", media_format) == 0 ||
-				 media_format && strcmp("h264", media_format) == 0){
-			media_bitrate = "";
-		}else{
-			media_bitrate = "160kbps";
-		}
-        if(strcmp("None",selected_v_quality) == 0 || !use_media_title || !view->media_title || view->media_title == NULL){     
-        	snprintf(title_buff, sizeof(title_buff), "%s", title);
-        }else{
-        	snprintf(title_buff, sizeof(title_buff), "%s - %sp - %s - %s -%s", media_format, media_height, media_codec_name, media_bitrate, title);
-        	//printf("title_buff: %s\n", title_buff);
-        }
+	if(playback_type == 1){
+		media_codec_name = g_strconcat("FSR - ", media_codec_name, NULL);
+	}
+    if(strcmp("None",selected_v_quality) == 0 || !use_media_title || !view->media_title || view->media_title == NULL){     
+        snprintf(title_buff, sizeof(title_buff), "%s", title);
+    }else{
+        snprintf(title_buff, sizeof(title_buff), "%s - %sp - %s - %s -%s", media_format, media_height, media_codec_name, media_bitrate, title);
+    }
 
 	gtk_window_set_title(GTK_WINDOW(view), title_buff);//title);
 	g_free(title);

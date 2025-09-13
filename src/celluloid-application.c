@@ -210,10 +210,11 @@ initialize_gui(CelluloidApplication *app)
 				"dark-theme-enable",
 				G_SETTINGS_BIND_GET );
 	// Added by Sako
+	/*
 	gint current_resolution = g_settings_get_int(settings, "youtube-video-quality");
 	if(current_resolution > 3)
 		g_settings_set_int(settings, "youtube-video-quality", 3);
-	//celluloid_view_resize_video_area(view, 768, 432);
+	*/
 	int video_resolution_index = g_settings_get_int(settings, "youtube-video-quality");
 	if(video_resolution_index == 0){
 		celluloid_view_resize_video_area(view, 640, 360);

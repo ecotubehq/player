@@ -432,6 +432,7 @@ mpv_property_changed(CelluloidMpv *mpv, const gchar *name, gpointer value)
 		}
 		int video_resolution_index = g_settings_get_int(settings, "youtube-video-quality");
 		int playback_type = g_settings_get_int(settings, "ecotube-computer-type");
+		/* disable auto change of the resolution
 		if(video_resolution_index > 3){
 			if(playback_type == 0){
 				g_settings_set_int(settings, "youtube-video-quality", 2);
@@ -440,7 +441,7 @@ mpv_property_changed(CelluloidMpv *mpv, const gchar *name, gpointer value)
 				g_settings_set_int(settings, "youtube-video-quality", 3);
 			}
 			//g_signal_emit_by_name(mpv, "window-resize", "640", "360");
-		}
+		}*/
 	}
 	else if(g_strcmp0(name, "playlist") == 0)
 	{
@@ -1607,7 +1608,7 @@ load_user_preference(CelluloidMpv *mpv){
 	GString *user_buffer = g_string_new("cache=yes");
 	
 	gchar *v_quality[] = {"144" ,"240", "360", "480", "720", "None"};
-	gchar *v_codec[] = {"av01", "vp09", "avc"};
+	gchar *v_codec[] = {"av01", "vp9", "avc"};
 	gchar *v_output[] = {"ewa-lanczos", "bicubic_fast", "FSR", "vulkan"};	
 	
 	int video_resolution_index = g_settings_get_int(settings, "youtube-video-quality");
@@ -1616,11 +1617,11 @@ load_user_preference(CelluloidMpv *mpv){
 	gchar *selected_v_output= v_output[g_settings_get_int(settings, "youtube-video-output")];
 	gint playback_type = g_settings_get_int(settings, "ecotube-computer-type");
 	gboolean allow_hdr = g_settings_get_boolean(settings, "youtube-allow-hdr");
-	gchar *first_codec = "vp09";
+	gchar *first_codec = "vp9";
 	gchar *second_codec = "av01";
 	if(playback_type == 1){
 		first_codec = "av01";
-		second_codec = "vp09";		
+		second_codec = "vp9";		
 	}
 	
 	//g_string_append(user_buffer, " log-file=ecotube-mpv.log");
@@ -1654,10 +1655,10 @@ load_user_preference(CelluloidMpv *mpv){
 		selected_v_quality, first_codec, second_codec, selected_v_quality, selected_v_quality,
 		allow_hdr ?"":"[format_id!*=hdr]");
 	}
-	if(g_settings_get_int(settings, "youtube-video-output") == 0){
-		gchar *mpv_conf = "file:///usr/local/share/ecotube/mpv-fsr.conf";	
+	if(playback_type == 1){
+		gchar *mpv_conf = g_strconcat("file:/", DATADIR, "/ecotube", "/mpv-fsr.conf", NULL);
 		if(g_settings_get_boolean(settings, "mpv-config-enable")){
-			mpv_conf = "file:///usr/local/share/ecotube/mpv-fsr-vulkan.conf";
+			mpv_conf = g_strconcat("file:/", DATADIR, "/mpv-fsr-vulkan.conf", NULL);
 		}
 		GFile *file = g_file_new_for_uri(mpv_conf);
 		gchar *path = g_file_get_path(file);
@@ -1665,9 +1666,18 @@ load_user_preference(CelluloidMpv *mpv){
 		celluloid_mpv_load_config_file(mpv, path);
 		g_string_append(user_buffer, " hwdec=auto-safe");
 		return user_buffer->str;
-	}else if(g_settings_get_int(settings, "youtube-video-output") == 1){
+	}else if(g_settings_get_int(settings, "youtube-video-output") == 0){
 		g_string_append(user_buffer, " profile=gpu-hq");
 		g_string_append(user_buffer, " hwdec=auto-safe");
+		g_string_append(user_buffer, " scale=bicubic");
+		g_string_append(user_buffer, " dscale=bicubic");
+		if(g_settings_get_boolean(settings, "mpv-config-enable")){
+			gchar *mpv_conf = g_strconcat("file:/", DATADIR, "/data", "/mpv-fsr-vulkan.conf", NULL);
+			GFile *file = g_file_new_for_uri(mpv_conf);
+			gchar *path = g_file_get_path(file);
+			celluloid_mpv_load_config_file(mpv, "");
+			celluloid_mpv_load_config_file(mpv, path);
+		}
 	}else{
 		g_string_append(user_buffer, " profile=fast");
 		g_string_append(user_buffer, " hwdec=vaapi,auto");		
