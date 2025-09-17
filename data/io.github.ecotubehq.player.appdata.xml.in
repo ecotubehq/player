@@ -31,6 +31,19 @@
  </description>
  <developer_name>EcoTube Partners</developer_name>
  <releases>
+  <release date="2025-09-17" version="25.9.3">
+   <description translatable="no">
+    <p>
+      Fix drag and drop
+    </p>
+    <p>
+       version notification
+    </p>
+    <p>
+       Update playlist
+    </p>
+   </description>
+  </release>
   <release date="2025-09-13" version="25.9.2">
    <description translatable="no">
   <p>

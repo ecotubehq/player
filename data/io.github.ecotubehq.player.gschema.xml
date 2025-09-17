@@ -240,7 +240,6 @@
 	    <key name="default-playlist-with-metadata" type="aas">
 	      <default>
 	        [
-	          ['https://www.youtube.com/watch?v=TlBIa8z_Mts', 'Genesis - Land Of Confusion'],
 	          ['https://x.com/therealmrbench/status/1950579819831259161', 'When satire from 2013 becomes reality in 2025'],
 	          ['https://www.youtube.com/watch?v=9qVm5m8FZkE', 'Amazon rainforest trees cut down to build road for COP30'],
 	          ['https://www.youtube.com/watch?v=YbxpieEQ7bc', 'The real cost of net zero'],
@@ -257,6 +256,12 @@
 			<summary>HDR</summary>
 			<description>
 				HDR on / off
+			</description>
+		</key>
+		<key name="startup-version-notif-25-9-3" type="b">
+			<default>false</default>
+			<summary></summary>
+			<description>
 			</description>
 		</key>
 		<key name="startup-request" type="b">

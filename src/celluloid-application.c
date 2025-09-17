@@ -226,6 +226,14 @@ initialize_gui(CelluloidApplication *app)
 	}
 	g_settings_set_boolean(settings, "always-use-floating-header-bar", TRUE);
 	g_settings_set_boolean(settings, "always-use-floating-controls", TRUE);
+
+	gboolean notif = g_settings_get_boolean(settings, "startup-version-notif-25-9-3");
+	if(!notif){
+		celluloid_view_show_message_toast(view, "Ecotube updated - See 'How To Use' for details");
+		g_settings_set_boolean(settings, "startup-version-notif-25-9-3", TRUE);
+	}
+	
+
 	//gtk_window_set_resizable(view, TRUE);
 
 	/*
