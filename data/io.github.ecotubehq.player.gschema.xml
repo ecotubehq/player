@@ -258,7 +258,7 @@
 				HDR on / off
 			</description>
 		</key>
-		<key name="startup-version-notif-25-9-3" type="b">
+		<key name="startup-version-notif-25-9-4" type="b">
 			<default>false</default>
 			<summary></summary>
 			<description>

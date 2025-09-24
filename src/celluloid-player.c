@@ -1666,7 +1666,11 @@ load_user_preference(CelluloidMpv *mpv){
 		celluloid_mpv_load_config_file(mpv, path);
 		g_string_append(user_buffer, " hwdec=auto-safe");
 		return user_buffer->str;
-	}else if(g_settings_get_int(settings, "youtube-video-output") == 0){
+	}else{
+		g_string_append(user_buffer, " scale=bilinear");
+		g_string_append(user_buffer, " dscale=bilinear");
+	}
+	if(g_settings_get_int(settings, "youtube-video-output") == 0){
 		g_string_append(user_buffer, " profile=gpu-hq");
 		g_string_append(user_buffer, " hwdec=auto-safe");
 		g_string_append(user_buffer, " scale=bicubic");
