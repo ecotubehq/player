@@ -132,6 +132,9 @@ build_page(	const PreferencesDialogItem *items,
 		const char *title,
 		const char *icon_name );
 
+static gboolean
+is_laptop(void);
+
 static void
 finalize(GObject *object);
 
@@ -787,12 +790,16 @@ build_page(	const PreferencesDialogItem *items,
 			widget = adw_action_row_new();
 			adw_preferences_row_set_title
 				(ADW_PREFERENCES_ROW(widget), label);
-										  								  
-			combo_pair->pref_combo = gtk_drop_down_new(G_LIST_MODEL(gtk_string_list_new((const char *[]){
+			
+			GtkStringList *playback_modes = gtk_string_list_new((const char *[]){
 				"Powersave",
 				"Quality",
 				NULL
-			})), NULL);
+			});				  								  
+			combo_pair->pref_combo = gtk_drop_down_new(G_LIST_MODEL(playback_modes), NULL);
+			if(is_laptop()){
+				 gtk_string_list_append (playback_modes, "Auto");
+			}
 
 			
 			gtk_drop_down_set_selected(GTK_DROP_DOWN(combo_pair->pref_combo), 0);
@@ -908,4 +915,28 @@ void
 celluloid_preferences_dialog_present(CelluloidPreferencesDialog *self)
 {
 	adw_dialog_present(ADW_DIALOG(self), GTK_WIDGET(self->parent));
+}
+
+
+static gboolean
+is_laptop(void){
+    FILE *file = fopen("/sys/class/dmi/id/chassis_type", "r");
+    if (!file) {
+        file = fopen("/sys/devices/virtual/dmi/id/chassis_type", "r");
+        if (!file) return FALSE; 
+    }
+    
+    char type[16];
+    if (fgets(type, sizeof(type), file)) {
+        int chassis_type = atoi(type);
+        fclose(file);
+        
+        if (chassis_type >= 8 && chassis_type <= 15 && chassis_type != 13) {
+            return TRUE;
+        }
+        return 0;
+    }
+    
+    fclose(file);
+    return FALSE;
 }

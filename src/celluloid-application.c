@@ -104,6 +104,9 @@ celluloid_application_class_init(CelluloidApplicationClass *klass);
 static void
 celluloid_application_init(CelluloidApplication *app);
 
+static gboolean 
+is_plugged(void);
+
 G_DEFINE_TYPE(CelluloidApplication, celluloid_application, GTK_TYPE_APPLICATION)
 
 static void
@@ -227,12 +230,11 @@ initialize_gui(CelluloidApplication *app)
 	g_settings_set_boolean(settings, "always-use-floating-header-bar", TRUE);
 	g_settings_set_boolean(settings, "always-use-floating-controls", TRUE);
 
-	gboolean notif = g_settings_get_boolean(settings, "startup-version-notif-25-9-4-1");
+	gboolean notif = g_settings_get_boolean(settings, "startup-version-notif-25-10-1");
 	if(!notif){
 		celluloid_view_show_message_toast(view, "Ecotube updated - See 'How To Use' for details");
-		g_settings_set_boolean(settings, "startup-version-notif-25-9-4-1", TRUE);
+		g_settings_set_boolean(settings, "startup-version-notif-25-10-1", TRUE);
 	}
-	
 
 	//gtk_window_set_resizable(view, TRUE);
 
@@ -576,6 +578,32 @@ static void
 celluloid_application_class_init(CelluloidApplicationClass *klass)
 {
 	G_APPLICATION_CLASS(klass)->local_command_line = local_command_line;
+}
+static gboolean 
+is_plugged(void){
+    FILE *file = fopen("/sys/class/power_supply/AC/online", "r");
+    if (!file) {
+        g_debug("Unable to check power status");
+        return FALSE;
+    }
+    int status;
+    if (fscanf(file, "%d", &status) == 1) {
+        if (status == 1) {
+            g_debug("Laptop is plugged in.\n");
+            return TRUE;
+        } else if (status == 0) {
+            g_debug("Laptop is on battery.\n");
+            return FALSE;
+        } else {
+            g_debug("Unknown power status: %d\n", status);
+            return FALSE;
+        }
+    } else {
+        g_debug("Failed to read power status.\n");
+        return FALSE;
+    }
+
+    fclose(file);
 }
 
 static void

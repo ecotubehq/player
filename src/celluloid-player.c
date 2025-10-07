@@ -184,6 +184,9 @@ guess_content_handler(GMount *mount, GAsyncResult *res, gpointer data);
 static gchar *
 load_user_preference(CelluloidMpv *mpv);
 
+static gboolean 
+is_plugged(void);
+
 G_DEFINE_TYPE_WITH_PRIVATE(CelluloidPlayer, celluloid_player, CELLULOID_TYPE_MPV)
 
 static void
@@ -1616,6 +1619,10 @@ load_user_preference(CelluloidMpv *mpv){
 	gchar *selected_v_codec= v_codec[g_settings_get_int(settings, "youtube-video-codec")];
 	gchar *selected_v_output= v_output[g_settings_get_int(settings, "youtube-video-output")];
 	gint playback_type = g_settings_get_int(settings, "ecotube-computer-type");
+	if(playback_type == 2 && is_plugged()){
+		playback_type = 1;
+	}
+
 	gboolean allow_hdr = g_settings_get_boolean(settings, "youtube-allow-hdr");
 	gchar *first_codec = "vp9";
 	gchar *second_codec = "av01";
@@ -1694,4 +1701,30 @@ load_user_preference(CelluloidMpv *mpv){
 	}
 	
 	return user_buffer->str;
+}
+static gboolean 
+is_plugged(void){
+    FILE *file = fopen("/sys/class/power_supply/AC/online", "r");
+    if (!file) {
+        g_debug("Unable to check power status");
+        return FALSE;
+    }
+    int status;
+    if (fscanf(file, "%d", &status) == 1) {
+        if (status == 1) {
+            g_debug("Laptop is plugged in.\n");
+            return TRUE;
+        } else if (status == 0) {
+            g_debug("Laptop is on battery.\n");
+            return FALSE;
+        } else {
+            g_debug("Unknown power status: %d\n", status);
+            return FALSE;
+        }
+    } else {
+        g_debug("Failed to read power status.\n");
+        return FALSE;
+    }
+
+    fclose(file);
 }
