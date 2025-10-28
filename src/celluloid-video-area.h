@@ -89,4 +89,6 @@ celluloid_video_area_get_control_box(CelluloidVideoArea *area);
 gint64
 celluloid_video_area_get_xid(CelluloidVideoArea *area);
 
+void update_fsr_icon(CelluloidVideoArea *area, int playback_type);
+
 #endif

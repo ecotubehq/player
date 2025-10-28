@@ -45,6 +45,8 @@ struct _CelluloidHeaderBar
 	gboolean fullscreened;
 	gboolean open_popover_visible;
 	gboolean menu_popover_visible;
+
+	GtkWidget *playlist_button;
 };
 
 struct _CelluloidHeaderBarClass
@@ -226,6 +228,7 @@ celluloid_header_bar_init(CelluloidHeaderBar *hdr)
 	hdr->fullscreened = FALSE;
 	hdr->open_popover_visible = FALSE;
 	hdr->menu_popover_visible = FALSE;
+	hdr->playlist_button = gtk_button_new_from_icon_name("sidebar-show-right-symbolic");
 
 	ghdr = GTK_HEADER_BAR(hdr->header_bar);
 
@@ -249,19 +252,28 @@ celluloid_header_bar_init(CelluloidHeaderBar *hdr)
 	gtk_actionable_set_action_name
 		(GTK_ACTIONABLE(hdr->fullscreen_btn), "win.toggle-fullscreen");
 
+	gtk_actionable_set_action_name
+		(GTK_ACTIONABLE(hdr->playlist_button), "win.toggle-playlist");
+
 	gtk_widget_set_can_focus(hdr->open_btn, FALSE);
 	gtk_widget_set_can_focus(hdr->fullscreen_btn, FALSE);
 	gtk_widget_set_can_focus(hdr->menu_btn, FALSE);
+	gtk_widget_set_can_focus(hdr->playlist_button, FALSE);
+
+	gtk_widget_set_tooltip_text
+		(hdr->playlist_button, _("Playlist"));
 
 	gtk_widget_set_hexpand(GTK_WIDGET(ghdr), TRUE);
 
 	gtk_header_bar_pack_start(ghdr, hdr->open_btn);
 	gtk_header_bar_pack_end(ghdr, hdr->menu_btn);
 	gtk_header_bar_pack_end(ghdr, hdr->fullscreen_btn);
+	gtk_header_bar_pack_end(ghdr, hdr->playlist_button);
 
 	gtk_box_prepend(GTK_BOX(hdr), hdr->header_bar);
 	gtk_header_bar_set_show_title_buttons(ghdr, TRUE);
 	gtk_widget_set_visible(hdr->fullscreen_btn, csd);
+	gtk_widget_set_visible(hdr->playlist_button, csd);
 
 	gtk_menu_button_set_create_popup_func
 		(GTK_MENU_BUTTON(hdr->open_btn), create_popup, hdr, NULL);
@@ -279,6 +291,12 @@ celluloid_header_bar_init(CelluloidHeaderBar *hdr)
 			GTK_STYLE_PROVIDER(css),
 			GTK_STYLE_PROVIDER_PRIORITY_USER );
 
+
+	/*g_signal_connect(	hdr->playlist_button,
+				"clicked",
+				G_CALLBACK(playlist_signal_handler),
+				hdr );
+	*/
 	g_object_unref(settings);
 }
 

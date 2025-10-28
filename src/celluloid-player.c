@@ -187,6 +187,8 @@ load_user_preference(CelluloidMpv *mpv);
 static gboolean 
 is_plugged(void);
 
+gchar* ecotube_get_user_yt_dlp_path(void);
+
 G_DEFINE_TYPE_WITH_PRIVATE(CelluloidPlayer, celluloid_player, CELLULOID_TYPE_MPV)
 
 static void
@@ -581,6 +583,8 @@ apply_default_options(CelluloidMpv *mpv)
 		celluloid_mpv_set_option_string
 			(mpv, options[i].name, options[i].value);
 	}
+	// Check if user can access custom yt-dlp path
+
 
 	g_free(config_dir);
 	g_free(watch_dir);
@@ -880,7 +884,7 @@ load_scripts(CelluloidPlayer *player)
 {
 	gchar *path = get_scripts_dir_path();
 	GDir *dir = g_dir_open(path, 0, NULL);
-
+	
 	if(dir)
 	{
 		const gchar *name;
@@ -1630,7 +1634,12 @@ load_user_preference(CelluloidMpv *mpv){
 		first_codec = "av01";
 		second_codec = "vp9";		
 	}
-	
+	gchar *user_yt_dlp = ecotube_get_user_yt_dlp_path();
+	if(access(user_yt_dlp, F_OK)==0){
+		GString *dlp_path = g_string_new("");
+		g_string_append_printf(dlp_path, "ytdl_hook-ytdl_path=%s", user_yt_dlp);
+		celluloid_mpv_set_option_string(mpv, "script-opts", dlp_path->str);
+	}
 	//g_string_append(user_buffer, " log-file=ecotube-mpv.log");
 	g_string_append(user_buffer, " reset-on-next-file=all");
 	g_string_append(user_buffer, " cache-pause=yes");
@@ -1699,7 +1708,7 @@ load_user_preference(CelluloidMpv *mpv){
 	}else{
 		celluloid_mpv_load_config_file(mpv, "");
 	}
-	
+	g_string_append_printf(user_buffer, " ytdl-raw-options=throttled-rate=1");
 	return user_buffer->str;
 }
 static gboolean 
@@ -1727,4 +1736,17 @@ is_plugged(void){
     }
 
     fclose(file);
+}
+
+gchar* ecotube_get_user_yt_dlp_path() {
+     GString *user_path = g_string_new("");
+    
+    const gchar *data_dir = g_get_user_data_dir();
+    if (!data_dir) {
+        return NULL;
+    }
+    
+    g_string_printf(user_path, "%s/ecotube/yt-dlp", data_dir);
+    
+    return user_path->str;
 }

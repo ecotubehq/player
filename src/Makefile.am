@@ -67,6 +67,8 @@ celluloid_SOURCES =	celluloid-main.c celluloid-def.h \
 			celluloid-time-label.c celluloid-time-label.h \
 			celluloid-video-area.c celluloid-video-area.h \
 			celluloid-view.c celluloid-view.h \
+			ecotube\utils.c ecotube\utils.h \
+			ecotube\ecotube-yt-dlp-updater.c ecotube\ecotube-yt-dlp-updater.h \
 			$(mpris_files) $(marshal_files) $(authors_files)
 
 celluloid_CFLAGS =	$(DEPS_CFLAGS) \

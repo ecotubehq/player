@@ -36,6 +36,8 @@
 #include "celluloid-common.h"
 #include "celluloid-def.h"
 #include "ecotube-config.h"
+#include "ecotube/ecotube-yt-dlp-updater.h"
+#include "ecotube/utils.h"
 
 struct _CelluloidApplication
 {
@@ -104,8 +106,8 @@ celluloid_application_class_init(CelluloidApplicationClass *klass);
 static void
 celluloid_application_init(CelluloidApplication *app);
 
-static gboolean 
-is_plugged(void);
+void async_check_updates(CelluloidMainWindow *window);
+
 
 G_DEFINE_TYPE(CelluloidApplication, celluloid_application, GTK_TYPE_APPLICATION)
 
@@ -230,31 +232,23 @@ initialize_gui(CelluloidApplication *app)
 	g_settings_set_boolean(settings, "always-use-floating-header-bar", TRUE);
 	g_settings_set_boolean(settings, "always-use-floating-controls", TRUE);
 
-	gboolean notif = g_settings_get_boolean(settings, "startup-version-notif-25-10-1");
+	gboolean notif = g_settings_get_boolean(settings, "startup-version-notif-25-10-2");
 	if(!notif){
 		celluloid_view_show_message_toast(view, "Ecotube updated - See 'How To Use' for details");
-		g_settings_set_boolean(settings, "startup-version-notif-25-10-1", TRUE);
+		load_default_scripts();
+		g_settings_set_boolean(settings, "startup-version-notif-25-10-2", TRUE);
+	}
+	if(is_modern_osd()){
+		celluloid_main_window_set_use_floating_controls(window, FALSE);
 	}
 
 	//gtk_window_set_resizable(view, TRUE);
 
-	/*
-	// Load default playlist
-	gboolean *append;
-	const gchar *default_playlist_uri;
-	default_playlist_uri = g_strconcat(DATADIR, "/ecotube", "/playlist.m3u", NULL);
-	append = g_malloc(sizeof(gboolean));
-	*append = FALSE;
-	GFile *file = g_file_new_for_uri(default_playlist_uri);
-	GListStore *list = g_list_store_new(G_TYPE_OBJECT);
-	g_list_store_append(list, file);
 
-	g_signal_emit_by_name(view, "file-open", list, *append);
 
-	g_object_unref(list);
-	g_free(append);
-	*/
-		
+
+	async_check_updates(window);
+	
 	g_object_unref(settings);
 	adw_init();
 }
@@ -579,32 +573,7 @@ celluloid_application_class_init(CelluloidApplicationClass *klass)
 {
 	G_APPLICATION_CLASS(klass)->local_command_line = local_command_line;
 }
-static gboolean 
-is_plugged(void){
-    FILE *file = fopen("/sys/class/power_supply/AC/online", "r");
-    if (!file) {
-        g_debug("Unable to check power status");
-        return FALSE;
-    }
-    int status;
-    if (fscanf(file, "%d", &status) == 1) {
-        if (status == 1) {
-            g_debug("Laptop is plugged in.\n");
-            return TRUE;
-        } else if (status == 0) {
-            g_debug("Laptop is on battery.\n");
-            return FALSE;
-        } else {
-            g_debug("Unknown power status: %d\n", status);
-            return FALSE;
-        }
-    } else {
-        g_debug("Failed to read power status.\n");
-        return FALSE;
-    }
 
-    fclose(file);
-}
 
 static void
 celluloid_application_init(CelluloidApplication *app)
@@ -716,4 +685,10 @@ const gchar *
 celluloid_application_get_mpv_options(CelluloidApplication *app)
 {
 	return app->mpv_options;
+}
+
+void async_check_updates(CelluloidMainWindow *window){
+	pthread_t update_thread;
+	pthread_create(&update_thread, NULL, (void*)update_yt_dlp_with_builtin, window);
+	pthread_detach(update_thread);
 }

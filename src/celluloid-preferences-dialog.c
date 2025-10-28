@@ -353,7 +353,8 @@ save_and_close_settings(GtkWidget *button, gpointer *data)
 }
 
 static void
-on_playbak_t_changed(GtkComboBox *playback_type, gpointer user_data){
+on_playbak_t_changed(GtkComboBox *playback_type, gpointer data){
+	CelluloidPreferencesDialog *dlg = data;
 	gint selected_item = gtk_drop_down_get_selected(GTK_DROP_DOWN(combo_pair->pref_combo));
 	gint current_resolution = gtk_drop_down_get_selected(GTK_DROP_DOWN(combo_pair->pref_resolution));
 	guint p_save_size = g_list_model_get_n_items (G_LIST_MODEL (combo_pair->powersave_resolutions));
@@ -817,7 +818,7 @@ build_page(	const PreferencesDialogItem *items,
 						"selected",
 						G_SETTINGS_BIND_DEFAULT );
 
-			g_signal_connect(combo_pair->pref_combo, "notify::selected", G_CALLBACK(on_playbak_t_changed), NULL);
+			g_signal_connect(combo_pair->pref_combo, "notify::selected", G_CALLBACK(on_playbak_t_changed), dlg);
 			/**/
 			
 			

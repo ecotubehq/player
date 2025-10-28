@@ -944,7 +944,6 @@ celluloid_model_initialize(CelluloidModel *model)
 {
 	CelluloidMpv *mpv = CELLULOID_MPV(model);
 	GSettings *win_settings = g_settings_new(CONFIG_WIN_STATE);
-
 	celluloid_mpv_initialize
 		(mpv);
 	celluloid_mpv_set_render_update_callback

@@ -536,9 +536,37 @@ file_open_handler(	CelluloidView *view,
 {
 	CelluloidController *controller = CELLULOID_CONTROLLER(data);
 	CelluloidModel *model = controller->model;
+	const gchar *subtitle_exts[] = SUBTITLE_EXTS;
+	gboolean has_media_file = FALSE;
 	guint files_count = g_list_model_get_n_items(files);
-	const gchar *default_playlist_uri = NULL;
 
+	if(files_count > 0 && !append)
+	{
+		set_video_area_status
+			(controller, CELLULOID_VIDEO_AREA_STATUS_LOADING);
+	}
+
+	for(guint i = 0; i < files_count; i++)
+	{
+		GFile *file = g_list_model_get_item(files, i);
+		gchar *uri = g_file_get_path(file) ?: g_file_get_uri(file);
+
+		has_media_file |= !extension_matches(uri, subtitle_exts);
+		celluloid_model_load_file(model, uri, append || i > 0);
+
+		g_free(uri);
+	}
+
+	if(!has_media_file)
+	{
+		set_video_area_status
+			(controller, CELLULOID_VIDEO_AREA_STATUS_PLAYING);
+	}
+	/*CelluloidController *controller = CELLULOID_CONTROLLER(data);
+	CelluloidModel *model = controller->model;
+	guint files_count = g_list_model_get_n_items(files);
+
+	printf("here: %s\n", "file_open_handler");
 	if(files_count > 0 && !append)
 	{
 		set_video_area_status
@@ -548,11 +576,7 @@ file_open_handler(	CelluloidView *view,
 	{
 		GFile *file = g_list_model_get_item(files, i);
 		gchar *uri = g_file_get_path(file) ?: g_file_get_uri(file);
-		default_playlist_uri = g_strconcat(DATADIR, "/ecotube", "/playlist.m3u", NULL);
-		if(g_strcmp0(uri, default_playlist_uri) == 0){
-			set_video_area_status
-				(controller, CELLULOID_VIDEO_AREA_STATUS_IDLE);
-		}
+		printf("uri: %s\n", uri);
 		
 		celluloid_model_load_file(model, uri, append || i > 0);
 
@@ -569,6 +593,7 @@ file_open_handler(	CelluloidView *view,
 	}else{
 		celluloid_view_resize_video_area(controller->view, 1278, 720);
 	}
+	*/
 }
 
 static void

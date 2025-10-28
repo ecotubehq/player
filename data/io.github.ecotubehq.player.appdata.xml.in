@@ -5,7 +5,7 @@
  <metadata_license>CC-BY-SA-4.0</metadata_license>
  <project_license>GPL-3.0+</project_license>
  <name>EcoTubeHQ</name>
- <summary>Energy Efficient Video Player</summary>
+ <summary>Minimal Resource HQ Video Player</summary>
  <launchable type="desktop-id">io.github.ecotubehq.player.desktop</launchable>
  <translation type="gettext">ecotube</translation>
  <content_rating type="oars-1.1" />
@@ -13,24 +13,43 @@
   <id>io.github.ecotubehq.player.desktop</id>
  </provides>
  <description translatable="no">
-
-    <p>
-		EcoTubeHQ automatically plays highest quality / lowest bitrate YouTube videos, i.e. av1 codec videos are output by default, if av1 isn't available then vp9 is utilized, and if vp9 isn't available then h.264 is output. 	
-	</p>
 	<p>Features:</p>
       <ul>
-        <li>EcoTubeHQ offers two video upscaling methods: 'Quality' and 'Powersave'. 'Quality' video output @720p is comparable to 1080p YouTube video quality.</li>
-        <li>EcoTubeHQ can minimize CPU usage by utilizing Vulkan GPU Compute Acceleration during video output.</li>
-        <li>EcoTubeHQ automatically opens low resolution YouTube videos [144p / 240p] in a small window. This can be used as a low bitrate miniplayer.</li>
-        <li>EcoTubeHQ offers debanding to minimize video artifacts.</li>
-        <li>EcoTubeHQ restricts 720p videos to 30fps.</li>
+        <li>EcotubeHQ can output hardware accelerated h.264, h.265, vp9 and av1 codecs.</li>
+        <li>EcoTubeHQ offers two video upscaling methods: 'Quality' and 'Powersave'. 'Quality' uses
+AMD FidelityFX Super Resolution to enhance video quality, ‘Powersave’ is aimed at increasing
+the battery life of laptops.</li>
+        <li>EcoTubeHQ restricts 720p videos to 30fps to minimize data requirements.</li>
+        <li>EcoTubeHQ offers debanding to enhance video quality.</li>
+        <li>EcoTubeHQ automatically opens low resolution YouTube videos [144p / 240p] in a small
+window which can be used as a low bitrate miniplayer.</li>
         <li>EcoTubeHQ offers drag and drop video playlists.</li>
         <li>EcoTubeHQ can play local video files with AMD FidelityFX Super Resolution.</li>
-        <li>EcoTubeHQ offers two Opus audio bitrates for av1 and vp9 YouTube videos - 70kbps and 160kbps.</li>
+        <li>EcoTubeHQ offers two Opus audio bitrates for av1 and vp9 YouTube videos - 70kbps and
+160kbps.</li>
       </ul>
  </description>
  <developer_name>EcoTube Partners</developer_name>
  <releases>
+  <release date="2025-10-28" version="25.10.2">
+   <description translatable="no">
+    <p>
+      Auto update yt-dlp when new release is available
+    </p>
+    <p>
+      New and modern OSC
+    </p>
+    <p>
+      thumbnails on the seekbar
+    </p>
+    <p>
+      Download the video
+    </p>
+    <p>
+       Enhance UI
+    </p>
+   </description>
+  </release>
   <release date="2025-10-07" version="25.10.1">
    <description translatable="no">
     <p>

@@ -64,9 +64,6 @@ struct _CelluloidVideoArea
 	gboolean fullscreened;
 	gboolean fs_control_hover;
 	gboolean use_floating_header_bar;
-
-	GtkWidget *initial_title;
-	GtkWidget *initial_desc; 
 };
 
 struct _CelluloidVideoAreaClass
@@ -521,9 +518,6 @@ celluloid_video_area_init(CelluloidVideoArea *area)
 	area->fs_control_hover = FALSE;
 	area->use_floating_header_bar = FALSE;
 
-	area->initial_title = gtk_label_new(_("Welcome"));
-	area->initial_desc  = gtk_label_new(_("Press ＋ or drag your video file here."));
-
 	gtk_widget_set_valign(area->control_box_revealer, GTK_ALIGN_END);
 	gtk_revealer_set_transition_type
 		(GTK_REVEALER(area->control_box_revealer),
@@ -632,46 +626,33 @@ celluloid_video_area_init(CelluloidVideoArea *area)
 				G_CALLBACK(reveal_notify_handler),
 				area );
 
+	adw_status_page_set_icon_name
+		(	ADW_STATUS_PAGE(area->initial_page),
+			"io.github.ecotubehq.player" );
 
-	GtkWidget *box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);
+	gtk_stack_add_child(GTK_STACK(area->stack), area->gl_area);
+	gtk_stack_add_child(GTK_STACK(area->stack), area->initial_page);
 
+	
 	// Add fidelityfx
 	GSettings *settings = g_settings_new(CONFIG_ROOT);
 	int playback_type = g_settings_get_int(settings, "ecotube-computer-type");
 	int video_resolution_index = g_settings_get_int(settings, "youtube-video-quality");
 	if(playback_type == 1 && video_resolution_index > 0){
-		const gchar *qmd_logo = g_strconcat(DATADIR, "/ecotube", "/fidelityfx-super-resolution-logo-white.png", NULL);
+		/*const gchar *qmd_logo = g_strconcat(DATADIR, "/ecotube", "/ecotube-fidelityfx-super-resolution-logo.png", NULL);
 		GtkWidget *image = gtk_image_new_from_file(qmd_logo);
+		// Optionally set the image size
 		gtk_image_set_pixel_size(GTK_IMAGE(image), 128);
-		gtk_box_append(GTK_BOX(box), image);
+		// Set the image as the child of the status page
+		adw_status_page_set_child(ADW_STATUS_PAGE(area->initial_page), image);
+		*/
+		adw_status_page_set_icon_name
+		(	ADW_STATUS_PAGE(area->initial_page),
+			"ecotube-fidelityfx-super-resolution-logo" );
+		/**/
 
 	}
 	
-
-	GtkWidget *icon = gtk_image_new_from_icon_name("io.github.ecotubehq.player");
-	gtk_image_set_pixel_size(GTK_IMAGE(icon), 128); // adjust size
-	gtk_box_append(GTK_BOX(box), icon);
-
-
-	// Title
-	gtk_widget_add_css_class(area->initial_title, "title-1");
-	gtk_box_append(GTK_BOX(box), area->initial_title);
-
-
-	// Description
-	gtk_label_set_wrap(GTK_LABEL(area->initial_desc), TRUE);
-	gtk_widget_add_css_class(area->initial_desc, "body");
-	gtk_box_append(GTK_BOX(box), area->initial_desc);
-
-
-	adw_status_page_set_child(ADW_STATUS_PAGE(area->initial_page), box);
-	/*
-	adw_status_page_set_icon_name
-		(	ADW_STATUS_PAGE(area->initial_page),
-			"io.github.ecotubehq.player" );
-	*/
-	gtk_stack_add_child(GTK_STACK(area->stack), area->gl_area);
-	gtk_stack_add_child(GTK_STACK(area->stack), area->initial_page);
 
 	celluloid_video_area_set_status
 		(area, CELLULOID_VIDEO_AREA_STATUS_LOADING);
@@ -758,6 +739,14 @@ void
 celluloid_video_area_set_control_box_visible(	CelluloidVideoArea *area,
 						gboolean visible )
 {
+	/*gchar *scripts_dir = get_scripts_dir_path();
+	gchar *modernx_osd = "modernx.lua";
+	gchar *dest_path = g_build_filename(scripts_dir, modernx_osd, NULL );
+	if (access(dest_path, F_OK) == 0) {
+		visible = FALSE;
+	}else{
+		visible = TRUE;
+	}*/
 	gtk_widget_set_visible(area->control_box_revealer, visible);
 }
 
@@ -768,34 +757,23 @@ celluloid_video_area_set_status(	CelluloidVideoArea *area,
 	switch(status)
 	{
 		case CELLULOID_VIDEO_AREA_STATUS_LOADING:
-		/*adw_status_page_set_title
+		adw_status_page_set_title
 			(	ADW_STATUS_PAGE(area->initial_page),
 				_("Loading…") );
 		adw_status_page_set_description
 			(	ADW_STATUS_PAGE(area->initial_page),
 				NULL );
-			*/
-		gtk_label_set_text(GTK_LABEL(area->initial_title),
-					_("Loading…") );
-		gtk_label_set_text(GTK_LABEL(area->initial_desc),
-					NULL );
 		gtk_stack_set_visible_child
 			(GTK_STACK(area->stack), area->initial_page);
 		break;
 
 		case CELLULOID_VIDEO_AREA_STATUS_IDLE:
-		/*
 		adw_status_page_set_title
 			(	ADW_STATUS_PAGE(area->initial_page),
 				_("Welcome") );
 		adw_status_page_set_description
 			(	ADW_STATUS_PAGE(area->initial_page),
 				_("Press ＋ or drag your video file here.") );
-		*/
-		gtk_label_set_text(GTK_LABEL(area->initial_title),
-					_("Welcome") );
-		gtk_label_set_text(GTK_LABEL(area->initial_desc),
-					_("Press ＋ or drag your video file here.") );
 		gtk_stack_set_visible_child
 			(GTK_STACK(area->stack), area->initial_page);
 		break;
@@ -878,4 +856,12 @@ celluloid_video_area_get_xid(CelluloidVideoArea *area)
 #endif
 
 	return -1;
+}
+
+void update_fsr_icon(CelluloidVideoArea *area, int playback_type){
+
+adw_status_page_set_icon_name
+		(	ADW_STATUS_PAGE(area->initial_page),
+			playback_type?"ecotube-fidelityfx-super-resolution-logo":
+			"io.github.ecotubehq.player" );
 }

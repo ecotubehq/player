@@ -46,6 +46,9 @@ sources = [
   'mpris/celluloid-mpris-player.c',
   'mpris/celluloid-mpris-track-list.c',
 
+  'ecotube/utils.c',
+  'ecotube/ecotube-yt-dlp-updater.c'
+
 ]
 
 sources += custom_target('authors',
