@@ -739,14 +739,7 @@ void
 celluloid_video_area_set_control_box_visible(	CelluloidVideoArea *area,
 						gboolean visible )
 {
-	/*gchar *scripts_dir = get_scripts_dir_path();
-	gchar *modernx_osd = "modernx.lua";
-	gchar *dest_path = g_build_filename(scripts_dir, modernx_osd, NULL );
-	if (access(dest_path, F_OK) == 0) {
-		visible = FALSE;
-	}else{
-		visible = TRUE;
-	}*/
+	visible = FALSE; // hide it temporarily
 	gtk_widget_set_visible(area->control_box_revealer, visible);
 }
 

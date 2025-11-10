@@ -31,6 +31,22 @@ window which can be used as a low bitrate miniplayer.</li>
  </description>
  <developer_name>EcoTube Partners</developer_name>
  <releases>
+  <release date="2025-11-10" version="25.11.01">
+   <description translatable="no">
+    <p>
+      Enhance interface
+    </p>
+    <p>
+      Modern OSC with screenshot and download
+    </p>
+    <p>
+      fix fsr when plugged
+    </p>
+    <p>
+      Add auto mode in desktop instance
+    </p>
+   </description>
+  </release>
   <release date="2025-10-28" version="25.10.2">
    <description translatable="no">
     <p>

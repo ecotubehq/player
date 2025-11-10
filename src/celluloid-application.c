@@ -232,11 +232,11 @@ initialize_gui(CelluloidApplication *app)
 	g_settings_set_boolean(settings, "always-use-floating-header-bar", TRUE);
 	g_settings_set_boolean(settings, "always-use-floating-controls", TRUE);
 
-	gboolean notif = g_settings_get_boolean(settings, "startup-version-notif-25-10-2");
+	gboolean notif = g_settings_get_boolean(settings, "startup-version-notif-25-11-01");
 	if(!notif){
 		celluloid_view_show_message_toast(view, "Ecotube updated - See 'How To Use' for details");
 		load_default_scripts();
-		g_settings_set_boolean(settings, "startup-version-notif-25-10-2", TRUE);
+		g_settings_set_boolean(settings, "startup-version-notif-25-11-01", TRUE);
 	}
 	if(is_modern_osd()){
 		celluloid_main_window_set_use_floating_controls(window, FALSE);
@@ -244,10 +244,8 @@ initialize_gui(CelluloidApplication *app)
 
 	//gtk_window_set_resizable(view, TRUE);
 
-
-
-
 	async_check_updates(window);
+
 	
 	g_object_unref(settings);
 	adw_init();
@@ -259,14 +257,20 @@ create_dirs()
 	gchar *config_dir = get_config_dir_path();
 	gchar *scripts_dir = get_scripts_dir_path();
 	gchar *watch_dir = get_watch_dir_path();
+	gchar *script_opts_dir = get_script_opts_dir_path();
+	gchar *script_font_dir = get_script_fonts_dir_path();
 
 	g_mkdir_with_parents(config_dir, 0755);
 	g_mkdir_with_parents(scripts_dir, 0755);
 	g_mkdir_with_parents(watch_dir, 0755);
+	g_mkdir_with_parents(script_opts_dir, 0755);
+	g_mkdir_with_parents(script_font_dir, 0755);
 
 	g_free(config_dir);
 	g_free(scripts_dir);
 	g_free(watch_dir);
+	g_free(script_opts_dir);
+	g_free(script_font_dir);
 }
 
 static gboolean

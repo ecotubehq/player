@@ -64,10 +64,19 @@ install_data('fidelityfx-super-resolution-logo-white.png',
 install_data('ecotube-fidelityfx-super-resolution-logo.png',
   install_dir: join_paths(icondir, 'scalable/apps')
 )
-install_data('modernx.lua',
+install_data('modernz.lua',
   install_dir: join_paths(get_option('datadir'), 'ecotube')
 )
 install_data('thumbfast.lua',
+  install_dir: join_paths(get_option('datadir'), 'ecotube')
+)
+install_data('modernz.conf',
+  install_dir: join_paths(get_option('datadir'), 'ecotube')
+)
+install_data('fluent-system-icons.ttf',
+  install_dir: join_paths(get_option('datadir'), 'ecotube')
+)
+install_data('material-design-icons.ttf',
   install_dir: join_paths(get_option('datadir'), 'ecotube')
 )
 #run_command('gsettings', 'reset', 'io.github.celluloid-player.Celluloid', 'startup-request', check: true)

@@ -30,6 +30,8 @@
 #include "celluloid-main-window.h"
 #include "celluloid-def.h"
 
+#include "ecotube/utils.h"
+
 typedef struct PreferencesDialogItem PreferencesDialogItem;
 typedef enum PreferencesDialogItemType PreferencesDialogItemType;
 
@@ -132,8 +134,7 @@ build_page(	const PreferencesDialogItem *items,
 		const char *title,
 		const char *icon_name );
 
-static gboolean
-is_laptop(void);
+
 
 static void
 finalize(GObject *object);
@@ -795,15 +796,19 @@ build_page(	const PreferencesDialogItem *items,
 			GtkStringList *playback_modes = gtk_string_list_new((const char *[]){
 				"Powersave",
 				"Quality",
+				"Auto",
 				NULL
 			});				  								  
 			combo_pair->pref_combo = gtk_drop_down_new(G_LIST_MODEL(playback_modes), NULL);
 			if(is_laptop()){
-				 gtk_string_list_append (playback_modes, "Auto");
+				 //gtk_string_list_append (playback_modes, "Auto");
+				 gtk_drop_down_set_selected(GTK_DROP_DOWN(combo_pair->pref_combo), 2);
+			}else{
+				gtk_drop_down_set_selected(GTK_DROP_DOWN(combo_pair->pref_combo), 0);
 			}
 
 			
-			gtk_drop_down_set_selected(GTK_DROP_DOWN(combo_pair->pref_combo), 0);
+			
 
 			gtk_widget_set_valign
 				(combo_pair->pref_combo, GTK_ALIGN_CENTER);
@@ -916,28 +921,4 @@ void
 celluloid_preferences_dialog_present(CelluloidPreferencesDialog *self)
 {
 	adw_dialog_present(ADW_DIALOG(self), GTK_WIDGET(self->parent));
-}
-
-
-static gboolean
-is_laptop(void){
-    FILE *file = fopen("/sys/class/dmi/id/chassis_type", "r");
-    if (!file) {
-        file = fopen("/sys/devices/virtual/dmi/id/chassis_type", "r");
-        if (!file) return FALSE; 
-    }
-    
-    char type[16];
-    if (fgets(type, sizeof(type), file)) {
-        int chassis_type = atoi(type);
-        fclose(file);
-        
-        if (chassis_type >= 8 && chassis_type <= 15 && chassis_type != 13) {
-            return TRUE;
-        }
-        return 0;
-    }
-    
-    fclose(file);
-    return FALSE;
 }

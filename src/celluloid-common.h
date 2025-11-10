@@ -142,6 +142,12 @@ format_time(gint seconds, gboolean show_hour);
 void
 activate_action_string(GActionMap *map, const gchar *str);
 
+gchar *
+get_script_opts_dir_path(void);
+
+gchar *
+get_script_fonts_dir_path(void);
+
 
 G_END_DECLS
 

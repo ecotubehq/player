@@ -163,6 +163,23 @@ get_watch_dir_path(void)
 }
 
 gchar *
+get_script_opts_dir_path(void)
+{
+	return g_build_filename(	g_get_user_config_dir(),
+					CONFIG_DIR,
+					"script-opts",
+					NULL );
+}
+
+gchar *
+get_script_fonts_dir_path(void)
+{
+	return g_build_filename(	g_get_user_config_dir(),
+					CONFIG_DIR,
+					"fonts",
+					NULL );
+}
+gchar *
 get_path_from_uri(const gchar *uri)
 {
 	GFile *file = g_vfs_get_file_for_uri(g_vfs_get_default(), uri);

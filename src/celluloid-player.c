@@ -31,6 +31,7 @@
 #include "celluloid-controller.h"
 
 #include "ecotube-config.h"
+#include "ecotube/utils.h"
 
 #define get_private(player) \
 	((CelluloidPlayerPrivate *)celluloid_player_get_instance_private(CELLULOID_PLAYER(player)))
@@ -184,8 +185,6 @@ guess_content_handler(GMount *mount, GAsyncResult *res, gpointer data);
 static gchar *
 load_user_preference(CelluloidMpv *mpv);
 
-static gboolean 
-is_plugged(void);
 
 gchar* ecotube_get_user_yt_dlp_path(void);
 
@@ -1640,6 +1639,9 @@ load_user_preference(CelluloidMpv *mpv){
 		g_string_append_printf(dlp_path, "ytdl_hook-ytdl_path=%s", user_yt_dlp);
 		celluloid_mpv_set_option_string(mpv, "script-opts", dlp_path->str);
 	}
+	gchar *script_font_dir = get_script_fonts_dir_path();
+	celluloid_mpv_set_option_string(mpv, "osd-fonts-dir", script_font_dir);
+
 	//g_string_append(user_buffer, " log-file=ecotube-mpv.log");
 	g_string_append(user_buffer, " reset-on-next-file=all");
 	g_string_append(user_buffer, " cache-pause=yes");
@@ -1710,32 +1712,6 @@ load_user_preference(CelluloidMpv *mpv){
 	}
 	g_string_append_printf(user_buffer, " ytdl-raw-options=throttled-rate=1");
 	return user_buffer->str;
-}
-static gboolean 
-is_plugged(void){
-    FILE *file = fopen("/sys/class/power_supply/AC/online", "r");
-    if (!file) {
-        g_debug("Unable to check power status");
-        return FALSE;
-    }
-    int status;
-    if (fscanf(file, "%d", &status) == 1) {
-        if (status == 1) {
-            g_debug("Laptop is plugged in.\n");
-            return TRUE;
-        } else if (status == 0) {
-            g_debug("Laptop is on battery.\n");
-            return FALSE;
-        } else {
-            g_debug("Unknown power status: %d\n", status);
-            return FALSE;
-        }
-    } else {
-        g_debug("Failed to read power status.\n");
-        return FALSE;
-    }
-
-    fclose(file);
 }
 
 gchar* ecotube_get_user_yt_dlp_path() {

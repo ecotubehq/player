@@ -16,3 +16,9 @@ load_default_scripts(void);
 
 gboolean
 is_modern_osd(void);
+
+gboolean 
+is_plugged(void);
+
+gboolean
+is_laptop(void);

@@ -37,6 +37,8 @@
 #include "celluloid-def.h"
 #include <stdlib.h> 
 
+#include "ecotube/utils.h"
+
 enum
 {
 	PROP_0,
@@ -752,7 +754,7 @@ update_title(CelluloidView *view)
 	}else{
 		media_bitrate = "160kbps";
 	}
-	if(playback_type == 1){
+	if(playback_type == 1 || is_plugged()){
 		media_codec_name = g_strconcat("FSR - ", media_codec_name, NULL);
 	}
     if(strcmp("None",selected_v_quality) == 0 || !use_media_title || !view->media_title || view->media_title == NULL){     
