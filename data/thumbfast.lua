@@ -15,7 +15,7 @@ local options = {
     socket = "",
 
     -- Thumbnail path (leave empty for auto)
-    thumbnail = "",
+    thumbnail = os.getenv("HOME") .. "/.var/app/io.github.ecotubehq.player/data/" ,
 
     -- Maximum thumbnail generation size in pixels (scaled down to fit)
     -- Values are scaled when hidpi is enabled

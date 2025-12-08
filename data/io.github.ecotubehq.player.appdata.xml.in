@@ -13,24 +13,39 @@
   <id>io.github.ecotubehq.player.desktop</id>
  </provides>
  <description translatable="no">
+
+  <p>EcotubeHQ is a streaming video player which uses AMD FidelityFX Super Resolution to play YouTube videos with enhanced quality and offers hardware acceleration to improve performance and extend the battery life of laptops.</p>
 	<p>Features:</p>
       <ul>
         <li>EcotubeHQ can output hardware accelerated h.264, h.265, vp9 and av1 codecs.</li>
-        <li>EcoTubeHQ offers two video upscaling methods: 'Quality' and 'Powersave'. 'Quality' uses
-AMD FidelityFX Super Resolution to enhance video quality, ‘Powersave’ is aimed at increasing
-the battery life of laptops.</li>
+        <li>EcoTubeHQ offers two video output methods: 'Quality' and 'Powersave'.</li>
         <li>EcoTubeHQ restricts 720p videos to 30fps to minimize data requirements.</li>
         <li>EcoTubeHQ offers debanding to enhance video quality.</li>
-        <li>EcoTubeHQ automatically opens low resolution YouTube videos [144p / 240p] in a small
-window which can be used as a low bitrate miniplayer.</li>
+        <li>EcoTubeHQ opens low resolution YouTube videos [144p / 240p] in a low bitrate miniplayer.</li>
         <li>EcoTubeHQ offers drag and drop video playlists.</li>
-        <li>EcoTubeHQ can play local video files with AMD FidelityFX Super Resolution.</li>
-        <li>EcoTubeHQ offers two Opus audio bitrates for av1 and vp9 YouTube videos - 70kbps and
-160kbps.</li>
+        <li>EcoTubeHQ can play local video files with AMD FSR upscaling.</li>
+        <li>EcoTubeHQ automatically updates yt-dlp to minimize player issues.</li>
+        <li>EcoTubeHQ offers two Opus audio bitrates for av1 and vp9 YouTube videos - 70kbps and 160kbps.</li>
       </ul>
  </description>
  <developer_name>EcoTube Partners</developer_name>
  <releases>
+  <release date="2025-12-08" version="25.12.01">
+   <description translatable="no">
+    <p>
+      Fix thumbnail on sandbox
+    </p>
+    <p>
+      Disable video download
+    </p>
+    <p>
+      Enhance interface
+    </p>
+    <p>
+      Reorganize Auto mode
+    </p>
+   </description>
+  </release>
   <release date="2025-11-10" version="25.11.01">
    <description translatable="no">
     <p>

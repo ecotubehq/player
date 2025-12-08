@@ -166,6 +166,7 @@ set_fullscreen_state(CelluloidHeaderBar *hdr, gboolean fullscreen)
 	gtk_header_bar_set_show_title_buttons
 		(GTK_HEADER_BAR(hdr->header_bar), show_title_buttons);
 
+
 	g_object_unref(settings);
 }
 
@@ -272,7 +273,7 @@ celluloid_header_bar_init(CelluloidHeaderBar *hdr)
 
 	gtk_box_prepend(GTK_BOX(hdr), hdr->header_bar);
 	gtk_header_bar_set_show_title_buttons(ghdr, TRUE);
-	gtk_widget_set_visible(hdr->fullscreen_btn, csd);
+	gtk_widget_set_visible(hdr->fullscreen_btn, FALSE);
 	gtk_widget_set_visible(hdr->playlist_button, csd);
 
 	gtk_menu_button_set_create_popup_func

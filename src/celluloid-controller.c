@@ -253,6 +253,11 @@ stream_src_handler(	CelluloidView *view,
 void 
 ecotube_set_default_videos(CelluloidController *controller);
 
+static void open_dropped_file_via_portal(CelluloidController *controller, GFile *file);
+static void on_portal_file_response(GtkNativeDialog *native,
+                                   gint response,
+                                   gpointer user_data);
+
 static void
 constructed(GObject *object)
 {
@@ -546,54 +551,45 @@ file_open_handler(	CelluloidView *view,
 			(controller, CELLULOID_VIDEO_AREA_STATUS_LOADING);
 	}
 
+
 	for(guint i = 0; i < files_count; i++)
 	{
-		GFile *file = g_list_model_get_item(files, i);
-		gchar *uri = g_file_get_path(file) ?: g_file_get_uri(file);
+	    GFile *file = g_list_model_get_item(files, i);
+	    gchar *uri = g_file_get_uri(file);
+	    
+	    g_debug("Dropped file - URI: %s\n", uri);
+	    
+	    // Try direct access first
+	    GError *error = NULL;
+	    GFileInputStream *stream = g_file_read(file, NULL, &error);
+	    
+	    if(stream)
+	    {
+	        g_debug("Direct file access successful\n");
+	        g_input_stream_close(G_INPUT_STREAM(stream), NULL, NULL);
+	        has_media_file |= !extension_matches(uri, subtitle_exts);
+	        celluloid_model_load_file(model, uri, append || i > 0);
+	    }
+	    else
+	    {
+	        g_debug("Direct access failed: %s\n", error->message);
+	        g_error_free(error);
+	        
+	        // Fall back to portal-based access
+	        g_debug("Falling back to portal-based file access\n");
+	        open_dropped_file_via_portal(controller, file);
 
-		has_media_file |= !extension_matches(uri, subtitle_exts);
-		celluloid_model_load_file(model, uri, append || i > 0);
-
-		g_free(uri);
+	    }
+	    has_media_file |= !extension_matches(uri, subtitle_exts);
+	    g_free(uri);
+	    g_object_unref(file);
 	}
-
 	if(!has_media_file)
 	{
 		set_video_area_status
 			(controller, CELLULOID_VIDEO_AREA_STATUS_PLAYING);
 	}
-	/*CelluloidController *controller = CELLULOID_CONTROLLER(data);
-	CelluloidModel *model = controller->model;
-	guint files_count = g_list_model_get_n_items(files);
 
-	printf("here: %s\n", "file_open_handler");
-	if(files_count > 0 && !append)
-	{
-		set_video_area_status
-			(controller, CELLULOID_VIDEO_AREA_STATUS_LOADING);
-	}
-	for(guint i = 0; i < files_count; i++)
-	{
-		GFile *file = g_list_model_get_item(files, i);
-		gchar *uri = g_file_get_path(file) ?: g_file_get_uri(file);
-		printf("uri: %s\n", uri);
-		
-		celluloid_model_load_file(model, uri, append || i > 0);
-
-		g_free(uri);
-	}
-	// resized based on the selected resolution
-	GSettings *settings =		g_settings_new(CONFIG_ROOT);
-	int video_resolution_index = g_settings_get_int(settings, "youtube-video-quality");
-	if(video_resolution_index == 0){
-		celluloid_view_resize_video_area(controller->view, 640, 360);
-	}
-	else if(video_resolution_index == 1){
-		celluloid_view_resize_video_area(controller->view, 853, 480);
-	}else{
-		celluloid_view_resize_video_area(controller->view, 1278, 720);
-	}
-	*/
 }
 
 static void
@@ -1605,4 +1601,50 @@ ecotube_set_default_videos(CelluloidController *controller){
 	}
 	g_variant_unref(playlist);
 
+}
+
+
+static void open_dropped_file_via_portal(CelluloidController *controller, GFile *file)
+{
+    GtkWindow *window = GTK_WINDOW(controller->view);
+    
+    GtkFileChooserNative *native = gtk_file_chooser_native_new(
+        "Open File", window, GTK_FILE_CHOOSER_ACTION_OPEN, "_Open", "_Cancel");
+    
+    GFile *parent = g_file_get_parent(file);
+    if(parent)
+    {
+        gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(native), parent, NULL);
+        g_object_unref(parent);
+    }
+    
+    g_signal_connect_data(native, "response",
+                         G_CALLBACK(on_portal_file_response),
+                         g_object_ref(controller),
+                         (GClosureNotify)g_object_unref, 0);
+    
+    gtk_native_dialog_show(GTK_NATIVE_DIALOG(native));
+}
+
+static void on_portal_file_response(GtkNativeDialog *native,
+                                   gint response,
+                                   gpointer user_data)
+{
+    CelluloidController *controller = CELLULOID_CONTROLLER(user_data);
+    
+    if(response == GTK_RESPONSE_ACCEPT)
+    {
+        GtkFileChooser *chooser = GTK_FILE_CHOOSER(native);
+        GFile *file = gtk_file_chooser_get_file(chooser);
+        gchar *uri = g_file_get_uri(file);
+        
+        g_print("Portal provided accessible URI: %s\n", uri);
+        
+        celluloid_model_load_file(controller->model, uri, FALSE);
+        
+        g_free(uri);
+        g_object_unref(file);
+    }
+    
+    g_object_unref(native);
 }

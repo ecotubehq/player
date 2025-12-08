@@ -103,7 +103,7 @@ local user_opts = {
     screenshot_flag = "subtitles",         -- flag for screenshot button: "subtitles", "video", "window", "each-frame"
                                            -- https://mpv.io/manual/master/#command-interface-screenshot-%3Cflags%3E
 
-    download_button = true,                -- show download button on web videos (requires yt-dlp and ffmpeg)
+    download_button = false,                -- show download button on web videos (requires yt-dlp and ffmpeg)
     download_path = os.getenv("HOME") .. "/.var/app/io.github.ecotubehq.player/data",       -- default download directory for videos (https://mpv.io/manual/master/#paths)
 
     loop_button = false,                   -- show loop button

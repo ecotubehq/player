@@ -47,7 +47,9 @@ sources = [
   'mpris/celluloid-mpris-track-list.c',
 
   'ecotube/utils.c',
-  'ecotube/ecotube-yt-dlp-updater.c'
+  'ecotube/ecotube-yt-dlp-updater.c',
+  'ecotube/ecotube-thumbnail.c',
+  'ecotube/thumbnailer.c'
 
 ]
 

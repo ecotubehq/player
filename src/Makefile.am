@@ -69,6 +69,8 @@ celluloid_SOURCES =	celluloid-main.c celluloid-def.h \
 			celluloid-view.c celluloid-view.h \
 			ecotube\utils.c ecotube\utils.h \
 			ecotube\ecotube-yt-dlp-updater.c ecotube\ecotube-yt-dlp-updater.h \
+			ecotube\ecotube-thumbnail.c ecotube\ecotube-thumbnail.h \
+			ecotube\thumbnailer.c ecotube\thumbnailer.h \
 			$(mpris_files) $(marshal_files) $(authors_files)
 
 celluloid_CFLAGS =	$(DEPS_CFLAGS) \

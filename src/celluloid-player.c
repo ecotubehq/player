@@ -185,6 +185,9 @@ guess_content_handler(GMount *mount, GAsyncResult *res, gpointer data);
 static gchar *
 load_user_preference(CelluloidMpv *mpv);
 
+static gchar *
+get_ytdlp_format(CelluloidMpv *mpv, gboolean is_plugged);
+
 
 gchar* ecotube_get_user_yt_dlp_path(void);
 
@@ -672,7 +675,9 @@ load_file(CelluloidMpv *mpv, const gchar *uri, gboolean append)
 	gboolean ready = FALSE;
 	gboolean idle_active = FALSE;
 
-	g_object_get(mpv, "ready", &ready, NULL);
+
+
+	g_object_get(mpv, "ready", &ready, NULL);	
 
 	celluloid_mpv_get_property
 		(mpv, "idle-active", MPV_FORMAT_FLAG, &idle_active);
@@ -1602,16 +1607,76 @@ static void
 sa_updade_yt_file(char *data){
    FILE * fp;
 
+   g_strdelimit(data, " \t", '\n');
+
    fp = fopen ("/tmp/sa-yt.config", "w+");
   fprintf(fp, "%s", data);
    
    fclose(fp);
 }
 static gchar *
+get_ytdlp_format(CelluloidMpv *mpv, gboolean is_plugged){
+
+	GSettings *settings = g_settings_new(CONFIG_ROOT);
+
+
+	gchar *v_quality[] = {"144" ,"240", "360", "480", "720", "None"};
+	gchar *v_codec[] = {"av01", "vp9", "avc"};
+	gchar *v_output[] = {"ewa-lanczos", "bicubic_fast", "FSR", "vulkan"};	
+	
+	int video_resolution_index = g_settings_get_int(settings, "youtube-video-quality");
+	gchar *selected_v_quality= v_quality[video_resolution_index]; 
+	gchar *selected_v_codec= v_codec[g_settings_get_int(settings, "youtube-video-codec")];
+	gchar *selected_v_output= v_output[g_settings_get_int(settings, "youtube-video-output")];
+	gint playback_type = g_settings_get_int(settings, "ecotube-computer-type");
+
+	if(playback_type == 2 && is_plugged){
+		playback_type = 1;
+	}
+
+	gboolean allow_hdr = g_settings_get_boolean(settings, "youtube-allow-hdr");
+	gchar *first_codec = "vp9";
+	gchar *second_codec = "av01";
+	if(playback_type == 1 || (playback_type == 2 && is_plugged)) {
+		first_codec = "av01";
+		second_codec = "vp9";		
+	}
+
+	if(g_settings_get_int(settings, "youtube-video-quality") == 0){
+		return g_strdup_printf("(bv*[height=%s][vcodec~='%s']+"\
+		"ba/bv*[height=144][vcodec~='%s']+ba/bv*[height=144]+ba/bv*[height<=%s][vcodec~='vp']+"\
+		"ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b))[protocol^=http]",
+		selected_v_quality, first_codec, second_codec, selected_v_quality, selected_v_quality
+		);
+	}else if(g_settings_get_int(settings, "youtube-video-quality") == 1){
+		return g_strdup_printf("(bv*[height=240][vcodec~='%s']+ba/[height=240][vcodec~='%s']+ba/"\
+			"bv*[height=240]+ba/bv*[height=360]+ba/bv*[height>=240]+ba/wv*[height<240]+ba/wv*+ba)[protocol^=http]",
+			first_codec, second_codec);
+	}else if(g_settings_get_int(settings, "youtube-video-quality") == 2){
+		return g_strdup_printf("(bv*[height=%s][vcodec~='%s']+"\
+		"ba/bv*[height=360][vcodec~=%s]+ba/bv*[height=360]+ba/bv*[height>=%s]+ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b))[protocol^=http]",
+		selected_v_quality, first_codec, second_codec, selected_v_quality, selected_v_quality);
+	}else if(g_settings_get_int(settings, "youtube-video-quality") == 3){
+		return g_strdup_printf("(bv*[height=%s][vcodec~='%s']+"\
+		"ba/bv*[height=480][vcodec~=%s]+ba/bv*[height=480]+ba/bv*[height<=?720]+ba/bv*[height<=%s][vcodec~='vp']+"\
+		"ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b))[protocol^=http]%s", 
+		selected_v_quality, first_codec, second_codec, selected_v_quality, selected_v_quality,
+		allow_hdr ?"":"[format_id!*=hdr]");
+	}else{
+		return g_strdup_printf("(bv*[height=%s][vcodec~='%s']+"\
+		"ba/bv*[height=720][vcodec~='%s']+ba/bv*[height=720]+ba/bv*[height<=%s][vcodec~='vp']+"\
+		"ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b))[protocol^=http]%s",
+		selected_v_quality, first_codec, second_codec, selected_v_quality, selected_v_quality,
+		allow_hdr ?"":"[format_id!*=hdr]");
+	}
+}
+
+static gchar *
 load_user_preference(CelluloidMpv *mpv){
 	
 	GSettings *settings = g_settings_new(CONFIG_ROOT);
 	GString *user_buffer = g_string_new("cache=yes");
+	gboolean plugged = is_plugged();
 	
 	gchar *v_quality[] = {"144" ,"240", "360", "480", "720", "None"};
 	gchar *v_codec[] = {"av01", "vp9", "avc"};
@@ -1622,17 +1687,19 @@ load_user_preference(CelluloidMpv *mpv){
 	gchar *selected_v_codec= v_codec[g_settings_get_int(settings, "youtube-video-codec")];
 	gchar *selected_v_output= v_output[g_settings_get_int(settings, "youtube-video-output")];
 	gint playback_type = g_settings_get_int(settings, "ecotube-computer-type");
-	if(playback_type == 2 && is_plugged()){
+
+	if(playback_type == 2 && plugged){
 		playback_type = 1;
 	}
 
 	gboolean allow_hdr = g_settings_get_boolean(settings, "youtube-allow-hdr");
 	gchar *first_codec = "vp9";
 	gchar *second_codec = "av01";
-	if(playback_type == 1){
+	if(playback_type == 1 || (playback_type == 2 && plugged)){
 		first_codec = "av01";
 		second_codec = "vp9";		
 	}
+
 	gchar *user_yt_dlp = ecotube_get_user_yt_dlp_path();
 	if(access(user_yt_dlp, F_OK)==0){
 		GString *dlp_path = g_string_new("");
@@ -1683,6 +1750,9 @@ load_user_preference(CelluloidMpv *mpv){
 		celluloid_mpv_load_config_file(mpv, "");
 		celluloid_mpv_load_config_file(mpv, path);
 		g_string_append(user_buffer, " hwdec=auto-safe");
+
+		sa_updade_yt_file(user_buffer->str);
+		celluloid_mpv_load_config_file(mpv, "file:///tmp/sa-yt.config");
 		return user_buffer->str;
 	}else{
 		g_string_append(user_buffer, " scale=bilinear");
