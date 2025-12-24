@@ -61,7 +61,7 @@ install_data('playlist.m3u',
 install_data('fidelityfx-super-resolution-logo-white.png',
   install_dir: join_paths(get_option('datadir'), 'ecotube')
 )
-install_data('ecotube-fidelityfx-super-resolution-logo.png',
+install_data('ecotube-fidelityfx-super-resolution-logo.svg',
   install_dir: join_paths(icondir, 'scalable/apps')
 )
 install_data('modernz.lua',
