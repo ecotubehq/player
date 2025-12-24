@@ -245,7 +245,7 @@ initialize_gui(CelluloidApplication *app)
 	//gtk_window_set_resizable(view, TRUE);
 
 	async_check_updates(window);
-	load_default_scripts();
+	
 	
 	g_object_unref(settings);
 	adw_init();
