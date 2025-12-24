@@ -30,6 +30,22 @@
  </description>
  <developer_name>EcoTube Partners</developer_name>
  <releases>
+  <release date="2025-12-24" version="25.12.02">
+   <description translatable="no">
+    <p>
+      Add option to set many seconds of audio/video to prefetch
+    </p>
+    <p>
+      Add mpv reload script
+    </p>
+    <p>
+      Update ecotube fidelityfx super resolution logo
+    </p>
+    <p>
+      Auto update ffmpeg
+    </p>
+   </description>
+  </release>
   <release date="2025-12-08" version="25.12.01">
    <description translatable="no">
     <p>
@@ -223,15 +239,39 @@
  </releases>
  <screenshots>
   <screenshot type="default">
-   <image>https://raw.githubusercontent.com/ecotubehq/player/master/08-ecotube-screenshot.png</image>
-   <caption>EcoTubeHQ video playback</caption>
+   <image>https://raw.githubusercontent.com/ecotubehq/player/master/screenshots/ecotube-1.webp</image>
+   <caption>EcoTubeHQ interface</caption>
   </screenshot>
   <screenshot>
-   <image>https://raw.githubusercontent.com/ecotubehq/player/master/02-ecotube-loading.png</image>
-   <caption>EcoTubeHQ downloading data</caption>
+   <image>https://raw.githubusercontent.com/ecotubehq/player/master/screenshots/ecotube-2.webp</image>
+   <caption>EcoTubeHQ playback</caption>
+  </screenshot>
+  <screenshot>
+   <image>https://raw.githubusercontent.com/ecotubehq/player/master/screenshots/ecotube-2a.webp</image>
+   <caption>EcoTubeHQ seekbar thumbnail</caption>
+  </screenshot>
+  <screenshot>
+   <image>https://raw.githubusercontent.com/ecotubehq/player/master/screenshots/ecotube-3.webp</image>
+   <caption>EcoTubeHQ select playlist</caption>
+  </screenshot>
+  <screenshot>
+   <image>https://raw.githubusercontent.com/ecotubehq/player/master/screenshots/ecotube-4.webp</image>
+   <caption>EcoTubeHQ playlist</caption>
+  </screenshot>
+  <screenshot>
+   <image>https://raw.githubusercontent.com/ecotubehq/player/master/screenshots/ecotube-5.webp</image>
+   <caption>EcoTubeHQ video information</caption>
+  </screenshot>
+  <screenshot>
+   <image>https://raw.githubusercontent.com/ecotubehq/player/master/screenshots/ecotube-6.webp</image>
+   <caption>EcoTubeHQ screenshot button</caption>
+  </screenshot>
+  <screenshot>
+   <image>https://raw.githubusercontent.com/ecotubehq/player/master/screenshots/ecotube-7.webp</image>
+   <caption>EcoTubeHQ settings</caption>
   </screenshot>
  </screenshots>
  <url type="homepage">https://github.com/ecotubehq/player</url>
  <url type="bugtracker">https://github.com/ecotubehq/player/issues</url>
- <update_contact>sakoadam@googlemail.com</update_contact>
+ <update_contact>sakoadams@googlemail.com</update_contact>
 </component>
