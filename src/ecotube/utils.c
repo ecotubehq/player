@@ -36,6 +36,7 @@ load_default_scripts(){
         {"modernz.conf", script_opts_dir},
         {"fluent-system-icons.ttf", script_font_dir},
         {"material-design-icons.ttf", script_font_dir},
+        {"mpv-reload.lua", scripts_dir},
         {NULL, NULL}
     };
 

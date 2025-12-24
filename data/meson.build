@@ -79,6 +79,9 @@ install_data('fluent-system-icons.ttf',
 install_data('material-design-icons.ttf',
   install_dir: join_paths(get_option('datadir'), 'ecotube')
 )
+install_data('mpv-reload.lua',
+  install_dir: join_paths(get_option('datadir'), 'ecotube')
+)
 #run_command('gsettings', 'reset', 'io.github.celluloid-player.Celluloid', 'startup-request', check: true)
 
 appstream_util = find_program('appstream-util', required: false)
