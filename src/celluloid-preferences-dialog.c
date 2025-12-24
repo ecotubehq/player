@@ -74,7 +74,8 @@ enum PreferencesDialogItemType
 	ITEM_HDR_MODE,
 	ITEM_VULKAN_MODE,
 	ITEM_INFO_CLOSE_BOX,
-	ITEM_COMPUTER_TYPE
+	ITEM_COMPUTER_TYPE,
+	ITEM_TYPE_COMBO_BUFFER,
 };
 
 struct PreferencesDialogItem
@@ -235,6 +236,9 @@ constructed(GObject *object)
 			{NULL,
 			"youtube-audio-quality",
 			ITEM_TYPE_COMBO_AUDIO},
+			{NULL,
+			"stream-buffer",
+			ITEM_TYPE_COMBO_BUFFER},
 			{NULL,
 			"close-info-pref",
 			ITEM_INFO_CLOSE_BOX},
@@ -824,8 +828,38 @@ build_page(	const PreferencesDialogItem *items,
 						G_SETTINGS_BIND_DEFAULT );
 
 			g_signal_connect(combo_pair->pref_combo, "notify::selected", G_CALLBACK(on_playbak_t_changed), dlg);
-			/**/
 			
+			
+			
+		}
+		if(type == ITEM_TYPE_COMBO_BUFFER)
+		{
+			widget = adw_action_row_new();
+			adw_preferences_row_set_title
+				(ADW_PREFERENCES_ROW(widget), label);
+			
+			GtkStringList *stream_buffer = gtk_string_list_new((const char *[]){
+				"Small",
+				"Large",
+				NULL
+			});				  								  
+			combo_pair->pref_combo = gtk_drop_down_new(G_LIST_MODEL(stream_buffer), NULL);
+			
+			
+
+			gtk_widget_set_valign
+				(combo_pair->pref_combo, GTK_ALIGN_CENTER);
+			adw_action_row_add_suffix
+				(ADW_ACTION_ROW(widget), combo_pair->pref_combo);
+			adw_action_row_set_activatable_widget
+				(ADW_ACTION_ROW(widget), combo_pair->pref_combo);
+
+			g_settings_bind(	settings,
+						key,
+						combo_pair->pref_combo,
+						"selected",
+						G_SETTINGS_BIND_DEFAULT );
+
 			
 		}	
 		/* End Added by Sako */

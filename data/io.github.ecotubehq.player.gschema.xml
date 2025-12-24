@@ -270,6 +270,12 @@
 			<description>
 			</description>
 		</key>
+		<key name="stream-buffer" type="i">
+			<default>0</default>
+			<summary>Buffering size</summary>
+			<description>
+			</description>
+		</key>
 	</schema>
 
 	<schema	path="/io/github/ecotubehq/player/window-state/"

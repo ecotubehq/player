@@ -1687,6 +1687,7 @@ load_user_preference(CelluloidMpv *mpv){
 	gchar *selected_v_codec= v_codec[g_settings_get_int(settings, "youtube-video-codec")];
 	gchar *selected_v_output= v_output[g_settings_get_int(settings, "youtube-video-output")];
 	gint playback_type = g_settings_get_int(settings, "ecotube-computer-type");
+	gint stream_buffer = g_settings_get_int(settings, "stream-buffer");
 
 	if(playback_type == 2 && plugged){
 		playback_type = 1;
@@ -1706,6 +1707,9 @@ load_user_preference(CelluloidMpv *mpv){
 		g_string_append_printf(dlp_path, "ytdl_hook-ytdl_path=%s", user_yt_dlp);
 		celluloid_mpv_set_option_string(mpv, "script-opts", dlp_path->str);
 	}
+
+	gint cache_seconds = stream_buffer == 0 ? 10 : 20;
+
 	gchar *script_font_dir = get_script_fonts_dir_path();
 	celluloid_mpv_set_option_string(mpv, "osd-fonts-dir", script_font_dir);
 
@@ -1715,6 +1719,7 @@ load_user_preference(CelluloidMpv *mpv){
 	g_string_append(user_buffer, " stream-buffer-size=100K");
 	g_string_append(user_buffer, " demuxer-max-bytes=500M");
 	g_string_append(user_buffer, " demuxer-max-back-bytes=500M");
+	g_string_append_printf(user_buffer, " cache-secs=%d", cache_seconds);
 	if(g_settings_get_int(settings, "youtube-video-quality") == 0){
 		g_string_append_printf(user_buffer, " ytdl-format=(bv*[height=%s][vcodec~='%s']+"\
 		"ba/bv*[height=144][vcodec~='%s']+ba/bv*[height=144]+ba/bv*[height<=%s][vcodec~='vp']+ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b))[protocol^=http]",
