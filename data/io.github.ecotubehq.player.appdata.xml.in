@@ -14,18 +14,18 @@
  </provides>
  <description translatable="no">
 
-  <p>EcotubeHQ is a streaming video player which uses AMD FidelityFX Super Resolution to play YouTube videos with enhanced quality and offers hardware acceleration to improve performance and extend the battery life of laptops.</p>
-	<p>Features:</p>
+<p>EcotubeHQ is a streaming video player which uses AMD FidelityFX Super Resolution to play YouTube videos with enhanced quality and offers hardware acceleration to improve performance and extend the battery life of laptops.</p>
+      <p>Features:</p>
       <ul>
-        <li>EcotubeHQ can output hardware accelerated h.264, h.265, vp9 and av1 codecs.</li>
-        <li>EcoTubeHQ offers two video output methods: 'Quality' and 'Powersave'.</li>
-        <li>EcoTubeHQ restricts 720p videos to 30fps to minimize data requirements.</li>
-        <li>EcoTubeHQ offers debanding to enhance video quality.</li>
-        <li>EcoTubeHQ opens low resolution YouTube videos [144p / 240p] in a low bitrate miniplayer.</li>
+        <li>EcotubeHQ outputs hardware accelerated h.264, h.265, vp9 and av1 codecs.</li>
+        <li>EcoTubeHQ has two video output methods: 'Quality' and 'Powersave'. 'Quality' mode outputs 720p videos at approx 1080p resolution, whereas 'Powersave' can play videos flawlessly on old hardware.</li>
+        <li>EcoTubeHQ offers video debanding to enhance quality.</li>
+        <li>EcoTubeHQ minimizes video data requirements by restricting output to 30fps.</li>
+        <li>EcoTubeHQ plays 144p / 240p YouTube videos in a low bitrate miniplayer.</li>
         <li>EcoTubeHQ offers drag and drop video playlists.</li>
         <li>EcoTubeHQ can play local video files with AMD FSR upscaling.</li>
         <li>EcoTubeHQ automatically updates yt-dlp to minimize player issues.</li>
-        <li>EcoTubeHQ offers two Opus audio bitrates for av1 and vp9 YouTube videos - 70kbps and 160kbps.</li>
+        <li>EcoTubeHQ offers two Opus audio bitrates for av1 and vp9 YouTube videos.</li>
       </ul>
  </description>
  <developer_name>EcoTube Partners</developer_name>

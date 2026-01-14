@@ -31,6 +31,8 @@
 #include <math.h>
 #include "ecotube-config.h"
 
+#include "ecotube/utils.h"
+
 #ifdef GDK_WINDOWING_X11
 #include <gdk/x11/gdkx.h>
 #endif
@@ -638,7 +640,7 @@ celluloid_video_area_init(CelluloidVideoArea *area)
 	GSettings *settings = g_settings_new(CONFIG_ROOT);
 	int playback_type = g_settings_get_int(settings, "ecotube-computer-type");
 	int video_resolution_index = g_settings_get_int(settings, "youtube-video-quality");
-	if(playback_type == 1 && video_resolution_index > 0){
+	if(playback_type == 1 && video_resolution_index > 0 && is_plugged()){
 		/*const gchar *qmd_logo = g_strconcat(DATADIR, "/ecotube", "/ecotube-fidelityfx-super-resolution-logo.png", NULL);
 		GtkWidget *image = gtk_image_new_from_file(qmd_logo);
 		// Optionally set the image size

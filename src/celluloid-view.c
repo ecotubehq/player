@@ -98,6 +98,7 @@ struct _CelluloidView
 	gchar *media_codec_name;
 	gchar *media_bitrate;
 	gchar *media_height;
+	gboolean was_plugged;
 
 };
 
@@ -981,6 +982,12 @@ open_location_dialog_response_handler(	GtkDialog *dialog,
 			gchar *stream_src = g_ptr_array_index(args, 2);
 			g_signal_emit_by_name(view, "stream-src", uri);
 		}
+		printf("We are opening a new file: %s\n", "Sako");
+		gboolean is_plugged_now = is_plugged();
+		if(view->was_plugged != is_plugged_now){
+			view->was_plugged = is_plugged_now;
+			g_signal_emit_by_name(view, "mpv-reset-request");
+		}
 		g_signal_emit_by_name(view, "file-open", list, *append);
 		
 		g_object_unref(list);
@@ -1663,6 +1670,8 @@ celluloid_view_init(CelluloidView *view)
 	view->media_audio_codec = NULL;
 	view->media_codec_name = NULL;
 	view->media_bitrate = NULL;
+	view->was_plugged = is_plugged();
+
 
 	g_signal_connect(view, "realize", G_CALLBACK(realize_handler), NULL);
 }

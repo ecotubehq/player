@@ -240,12 +240,12 @@
 	    <key name="default-playlist-with-metadata" type="aas">
 	      <default>
 	        [
-	          ['https://www.youtube.com/watch?v=520obWtMiMA', ' Oracle, Palantir, and the Coming Social Credit System'],
-	          ['https://www.youtube.com/watch?v=FRJoHk_VCV0', 'Johnny\'s money and the smart cash nightmare'],
 	          ['https://www.youtube.com/watch?v=YbxpieEQ7bc', 'The real cost of net zero'],
 	          ['https://www.youtube.com/watch?v=cz3AYYZBiGs', 'How much electricity will AI need?'],
 	          ['https://www.youtube.com/watch?v=nodScrkKLX0', 'Uranium Is Running Out—Here’s What That Means'],
-	          ['https://www.youtube.com/watch?v=jSFo_92cJ-U', 'Thorium reactors: why this technology is quite so exciting']
+	          ['https://www.youtube.com/watch?v=jSFo_92cJ-U', 'Thorium reactors: why this technology is quite so exciting'],
+	          ['https://www.youtube.com/watch?v=O36NT5eY9lE', 'Space Data Centers, Musk’s Latest Scam'],
+	          ['https://www.youtube.com/watch?v=h_VLAOXwnU4', 'The Kessler Effect may Finally Be Happening, and Billionaires are to Blame']
 	        ]
 	      </default>
 	      <summary>Default Playlist with Metadata</summary>
@@ -258,7 +258,7 @@
 				HDR on / off
 			</description>
 		</key>
-		<key name="startup-version-notif-25-12-02" type="b">
+		<key name="startup-version-notif-26-01-01" type="b">
 			<default>false</default>
 			<summary></summary>
 			<description>

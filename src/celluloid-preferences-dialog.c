@@ -312,6 +312,7 @@ handle_changed(GSettings *settings, const gchar *key, gpointer data)
 	dlg->needs_mpv_reset |= g_strcmp0(key, "youtube-video-codec") == 0;
 	dlg->needs_mpv_reset |= g_strcmp0(key, "youtube-video-output") == 0;
 	dlg->needs_mpv_reset |= g_strcmp0(key, "mpv-use-vulkan") == 0;
+	dlg->needs_mpv_reset |= g_strcmp0(key, "stream-buffer") == 0;
 }
 
 static void
