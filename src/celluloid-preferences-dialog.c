@@ -88,12 +88,15 @@ struct PreferencesDialogItem
 G_DEFINE_TYPE(CelluloidPreferencesDialog, celluloid_preferences_dialog, ADW_TYPE_PREFERENCES_DIALOG)
 
 typedef struct {
-    GtkWidget *pref_resolution;
-    GtkWidget *pref_combo;
+    GtkDropDown *pref_resolution;
+    GtkDropDown *pref_playback;
     GtkStringList *all_resolutions;
     GtkStringList *powersave_resolutions;
     GtkFilterListModel *filtered_model;
+    GtkListItemFactory *factory;
+    gboolean disable_item;
 } ComboBoxPair;
+
 ComboBoxPair *combo_pair = NULL;
 
 static void
@@ -136,6 +139,16 @@ build_page(	const PreferencesDialogItem *items,
 		const char *icon_name );
 
 
+
+static void
+setup_custom_cb (GtkListItemFactory *factory,
+                 GtkListItem        *item,
+                 gpointer            user_data);
+
+static void
+bind_custom_cb (GtkListItemFactory *factory,
+                GtkListItem        *item,
+                gpointer            user_data);
 
 static void
 finalize(GObject *object);
@@ -216,23 +229,23 @@ constructed(GObject *object)
 			"youtube-info-link",
 			ITEM_INFO_LABEL_BOX},
 			{NULL,
-			"ecotube-computer-type",
-			ITEM_COMPUTER_TYPE},
+			"youtube-separator-line",
+			ITEM_SEPARATOR_LABEL_BOX},
 			{NULL,
 			"mpv-use-vulkan",
 			ITEM_VULKAN_MODE},
+			{NULL,
+			"ecotube-computer-type",
+			ITEM_COMPUTER_TYPE},
+			{NULL,
+			"youtube-video-quality",
+			ITEM_TYPE_COMBO_BOX},
 			{NULL,
 			"youtube-display-deband",
 			ITEM_DEBAND_MODE},
 			{NULL,
 			"youtube-allow-hdr",
 			ITEM_HDR_MODE},
-			{NULL,
-			"youtube-separator-line",
-			ITEM_SEPARATOR_LABEL_BOX},
-			{NULL,
-			"youtube-video-quality",
-			ITEM_TYPE_COMBO_BOX},
 			{NULL,
 			"youtube-audio-quality",
 			ITEM_TYPE_COMBO_AUDIO},
@@ -308,11 +321,11 @@ handle_changed(GSettings *settings, const gchar *key, gpointer data)
 	dlg->needs_mpv_reset |= g_strcmp0(key, "mpv-input-config-file") == 0;
 	dlg->needs_mpv_reset |= g_strcmp0(key, "mpv-options") == 0;
 	dlg->needs_mpv_reset |= g_strcmp0(key, "youtube-video-quality") == 0;
-	dlg->needs_mpv_reset |= g_strcmp0(key, "youtube-audio-quality") == 0;
+	//dlg->needs_mpv_reset |= g_strcmp0(key, "youtube-audio-quality") == 0;
 	dlg->needs_mpv_reset |= g_strcmp0(key, "youtube-video-codec") == 0;
 	dlg->needs_mpv_reset |= g_strcmp0(key, "youtube-video-output") == 0;
 	dlg->needs_mpv_reset |= g_strcmp0(key, "mpv-use-vulkan") == 0;
-	dlg->needs_mpv_reset |= g_strcmp0(key, "stream-buffer") == 0;
+	//dlg->needs_mpv_reset |= g_strcmp0(key, "stream-buffer") == 0;
 }
 
 static void
@@ -359,7 +372,25 @@ save_and_close_settings(GtkWidget *button, gpointer *data)
 }
 
 static void
-on_playbak_t_changed(GtkComboBox *playback_type, gpointer data){
+on_playbak_t_changed(GObject    *object,
+                                GParamSpec *pspec,
+                                gpointer    user_data){
+
+
+    ComboBoxPair *data = (ComboBoxPair *)user_data;
+    GtkDropDown *playback_type = GTK_DROP_DOWN (object);
+    guint selected = gtk_drop_down_get_selected (playback_type);
+
+
+    /* Update the flag: TRUE when playbacktype is changed */
+    data->disable_item = (selected == 0);
+
+
+    /* Force the second dropdown to rebuild its items */
+    gtk_drop_down_set_factory (data->pref_resolution, NULL);
+    gtk_drop_down_set_factory (data->pref_resolution, data->factory);
+
+	/*
 	CelluloidPreferencesDialog *dlg = data;
 	gint selected_item = gtk_drop_down_get_selected(GTK_DROP_DOWN(combo_pair->pref_combo));
 	gint current_resolution = gtk_drop_down_get_selected(GTK_DROP_DOWN(combo_pair->pref_resolution));
@@ -376,6 +407,7 @@ on_playbak_t_changed(GtkComboBox *playback_type, gpointer data){
                                G_LIST_MODEL(combo_pair->all_resolutions));
         gtk_drop_down_set_selected(GTK_DROP_DOWN(combo_pair->pref_resolution), current_resolution);
 	}
+	*/
 }
 static void
 free_signal_data(gpointer data, GClosure *closure)
@@ -403,6 +435,9 @@ build_page(	const PreferencesDialogItem *items,
 
 	GSettingsSchema *schema = NULL;
 	g_object_get(settings, "settings-schema", &schema, NULL);
+
+	/* Allocate app data */
+	ComboBoxPair *data = g_new0 (ComboBoxPair, 1);
 
 	for(gint i = 0; items[i].type != ITEM_TYPE_INVALID; i++)
 	{
@@ -513,42 +548,101 @@ build_page(	const PreferencesDialogItem *items,
 		if(type == ITEM_TYPE_COMBO_BOX)
 		{
 			GtkCellRenderer *column;
-			GtkWidget *pref_resolution;
+			//GtkWidget *pref_resolution;
 
 			widget = adw_action_row_new();
 			adw_preferences_row_set_title
 				(ADW_PREFERENCES_ROW(widget), label);
 
+		    
 
-			gint current_p_type = g_settings_get_int(dlg->settings, "ecotube-computer-type");
-			if(current_p_type == 1){
-				pref_resolution = gtk_drop_down_new(G_LIST_MODEL(combo_pair->all_resolutions), NULL);
-			}else{
-				pref_resolution = gtk_drop_down_new(G_LIST_MODEL(combo_pair->powersave_resolutions), NULL);
-			}
-			combo_pair->pref_resolution = pref_resolution;
-			column = gtk_cell_renderer_text_new();
-			gtk_drop_down_set_selected(GTK_DROP_DOWN(pref_resolution), 3);
+
+		    const char *resolutions[] = { "144p", "240p", "360p", "480p", "720p", NULL };
+		    GtkStringList *resolution_model = gtk_string_list_new (resolutions);
+		    data->pref_resolution = GTK_DROP_DOWN (gtk_drop_down_new (G_LIST_MODEL (resolution_model), NULL));
+		    gtk_drop_down_set_selected (data->pref_resolution, 3);
+
+
+
+		    gint current_p_type = g_settings_get_int(dlg->settings, "ecotube-computer-type");
+		    if(current_p_type != 1){
+		    	data->disable_item = TRUE;
+		    }
+
+		    data->factory = gtk_signal_list_item_factory_new ();
+		    g_signal_connect (data->factory, "setup", G_CALLBACK (setup_custom_cb), data);
+		    g_signal_connect (data->factory, "bind", G_CALLBACK (bind_custom_cb), data);
+
+		    /* Apply factory to the second dropdown */
+		    gtk_drop_down_set_factory (data->pref_resolution, data->factory);
+
+
+			//combo_pair->pref_resolution =  GTK_WIDGET(pref_resolution);
+			gtk_drop_down_set_selected(GTK_DROP_DOWN(data->pref_resolution), 3);
 
 			gtk_widget_set_valign
-				(pref_resolution, GTK_ALIGN_CENTER);
+				(GTK_WIDGET(data->pref_resolution), GTK_ALIGN_CENTER);
 			adw_action_row_add_suffix
-				(ADW_ACTION_ROW(widget), pref_resolution);
+				(ADW_ACTION_ROW(widget), GTK_WIDGET(data->pref_resolution));
 			adw_action_row_set_activatable_widget
-				(ADW_ACTION_ROW(widget), pref_resolution);
+				(ADW_ACTION_ROW(widget), GTK_WIDGET(data->pref_resolution));
 
 			g_settings_bind(	settings,
 						key,
-						pref_resolution,
+						GTK_WIDGET(data->pref_resolution),
 						"selected",
-						G_SETTINGS_BIND_DEFAULT );		
+						G_SETTINGS_BIND_DEFAULT );	
+
+			
+		}
+		if(type == ITEM_COMPUTER_TYPE)
+		{
+
+			widget = adw_action_row_new();
+			adw_preferences_row_set_title
+				(ADW_PREFERENCES_ROW(widget), label);
+			
+			GtkStringList *playback_modes = gtk_string_list_new((const char *[]){
+				"Powersave",
+				"Quality",
+				"Auto",
+				NULL
+			});				  								  
+			GtkDropDown *pref_playback = GTK_DROP_DOWN (gtk_drop_down_new (G_LIST_MODEL (playback_modes), NULL));
+
+			if(is_laptop()){
+				 //gtk_string_list_append (playback_modes, "Auto");
+				 gtk_drop_down_set_selected(GTK_DROP_DOWN(pref_playback), 2);
+			}else{
+				gtk_drop_down_set_selected(GTK_DROP_DOWN(pref_playback), 0);
+			}
+			
+
+			gtk_widget_set_valign
+				(GTK_WIDGET(pref_playback), GTK_ALIGN_CENTER);
+			adw_action_row_add_suffix
+				(ADW_ACTION_ROW(widget), GTK_WIDGET(pref_playback));
+			adw_action_row_set_activatable_widget
+				(ADW_ACTION_ROW(widget), GTK_WIDGET(pref_playback));
+
+			g_settings_bind(	settings,
+						key,
+						GTK_WIDGET(pref_playback),
+						"selected",
+						G_SETTINGS_BIND_DEFAULT );
+
+			g_signal_connect(pref_playback, "notify::selected", G_CALLBACK(on_playbak_t_changed), data);
+			
+			
 			
 		}
 		if(type == ITEM_SEPARATOR_LABEL_BOX)
 		{
+			/*
 			widget = adw_action_row_new(); //adw_entry_row_new();
 			adw_preferences_row_set_title
 				(ADW_PREFERENCES_ROW(widget), label);
+			*/
 		}
 		if(type == ITEM_INFO_LABEL_BOX)
 		{
@@ -579,6 +673,7 @@ build_page(	const PreferencesDialogItem *items,
 		}
 		if(type == ITEM_TYPE_COMBO_AUDIO)
 		{
+			/*
 			GtkWidget *pref_combo;
 			GtkListStore *liststore;
 			GtkCellRenderer *column;
@@ -620,7 +715,7 @@ build_page(	const PreferencesDialogItem *items,
 						pref_combo,
 						"active",
 						G_SETTINGS_BIND_DEFAULT );		
-			/**/
+			*/
 			
 		}
 		if(type == ITEM_TYPE_COMBO_OUTPUTV)
@@ -724,6 +819,7 @@ build_page(	const PreferencesDialogItem *items,
 		}		
 		if(type == ITEM_DEBAND_MODE)
 		{
+			/*
 			GtkWidget *switch_theather_mode;
 
 			widget = adw_action_row_new();
@@ -743,6 +839,7 @@ build_page(	const PreferencesDialogItem *items,
 						switch_theather_mode,
 						"active",
 						G_SETTINGS_BIND_DEFAULT );
+			*/
 			
 		}
 		if(type == ITEM_HDR_MODE)
@@ -791,50 +888,10 @@ build_page(	const PreferencesDialogItem *items,
 						G_SETTINGS_BIND_DEFAULT );
 			
 		}
-		if(type == ITEM_COMPUTER_TYPE)
-		{
 
-			widget = adw_action_row_new();
-			adw_preferences_row_set_title
-				(ADW_PREFERENCES_ROW(widget), label);
-			
-			GtkStringList *playback_modes = gtk_string_list_new((const char *[]){
-				"Powersave",
-				"Quality",
-				"Auto",
-				NULL
-			});				  								  
-			combo_pair->pref_combo = gtk_drop_down_new(G_LIST_MODEL(playback_modes), NULL);
-			if(is_laptop()){
-				 //gtk_string_list_append (playback_modes, "Auto");
-				 gtk_drop_down_set_selected(GTK_DROP_DOWN(combo_pair->pref_combo), 2);
-			}else{
-				gtk_drop_down_set_selected(GTK_DROP_DOWN(combo_pair->pref_combo), 0);
-			}
-
-			
-			
-
-			gtk_widget_set_valign
-				(combo_pair->pref_combo, GTK_ALIGN_CENTER);
-			adw_action_row_add_suffix
-				(ADW_ACTION_ROW(widget), combo_pair->pref_combo);
-			adw_action_row_set_activatable_widget
-				(ADW_ACTION_ROW(widget), combo_pair->pref_combo);
-
-			g_settings_bind(	settings,
-						key,
-						combo_pair->pref_combo,
-						"selected",
-						G_SETTINGS_BIND_DEFAULT );
-
-			g_signal_connect(combo_pair->pref_combo, "notify::selected", G_CALLBACK(on_playbak_t_changed), dlg);
-			
-			
-			
-		}
 		if(type == ITEM_TYPE_COMBO_BUFFER)
 		{
+			/*
 			widget = adw_action_row_new();
 			adw_preferences_row_set_title
 				(ADW_PREFERENCES_ROW(widget), label);
@@ -860,13 +917,16 @@ build_page(	const PreferencesDialogItem *items,
 						combo_pair->pref_combo,
 						"selected",
 						G_SETTINGS_BIND_DEFAULT );
-
+			*/
 			
 		}	
 		/* End Added by Sako */
 
-		adw_preferences_group_add
-			(ADW_PREFERENCES_GROUP(pref_group), widget);
+		if(widget){
+			adw_preferences_group_add
+				(ADW_PREFERENCES_GROUP(pref_group), widget);			
+		}
+
 	}
 
 	return pref_page;
@@ -929,13 +989,13 @@ celluloid_preferences_dialog_init(CelluloidPreferencesDialog *dlg)
 	dlg->settings = g_settings_new(CONFIG_ROOT);
 	dlg->needs_mpv_reset = FALSE;
 	dlg->parent = NULL;
-	combo_pair = g_new0(ComboBoxPair, 1);
+	/*combo_pair = g_new0(ComboBoxPair, 1);
 	combo_pair->all_resolutions = gtk_string_list_new ((const char *[]) {
         "144p", "240p", "360p", "480p", "720p", NULL
     });
 	combo_pair->powersave_resolutions = gtk_string_list_new ((const char *[]) {
         "144p", "240p", "360p", "480p", NULL
-    });
+    });*/
 	g_settings_delay(dlg->settings);
 }
 
@@ -956,4 +1016,37 @@ void
 celluloid_preferences_dialog_present(CelluloidPreferencesDialog *self)
 {
 	adw_dialog_present(ADW_DIALOG(self), GTK_WIDGET(self->parent));
+}
+
+static void
+setup_custom_cb (GtkListItemFactory *factory,
+                 GtkListItem        *item,
+                 gpointer            user_data)
+{
+    GtkWidget *label = gtk_label_new (NULL);
+    gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+    gtk_list_item_set_child (item, label);
+}
+
+static void
+bind_custom_cb (GtkListItemFactory *factory,
+                GtkListItem        *item,
+                gpointer            user_data)
+{
+    ComboBoxPair *data = (ComboBoxPair *)user_data;
+    GtkWidget *label = gtk_list_item_get_child (item);
+    GtkStringObject *string_obj = GTK_STRING_OBJECT (gtk_list_item_get_item (item));
+    const char *text = gtk_string_object_get_string (string_obj);
+    guint position = gtk_list_item_get_position (item);
+
+    gtk_label_set_text (GTK_LABEL (label), text);
+
+    /* Disable 720p only if the flag is TRUE */
+    gboolean disable = (data->disable_item && position == 4);
+    gtk_list_item_set_selectable (item, !disable);
+
+    if (disable)
+        gtk_widget_add_css_class (label, "dim-label");
+    else
+        gtk_widget_remove_css_class (label, "dim-label");
 }
