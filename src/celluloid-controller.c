@@ -551,39 +551,17 @@ file_open_handler(	CelluloidView *view,
 			(controller, CELLULOID_VIDEO_AREA_STATUS_LOADING);
 	}
 
-
 	for(guint i = 0; i < files_count; i++)
 	{
-	    GFile *file = g_list_model_get_item(files, i);
-	    gchar *uri = g_file_get_uri(file);
-	    
-	    g_debug("Dropped file - URI: %s\n", uri);
-	    
-	    // Try direct access first
-	    GError *error = NULL;
-	    GFileInputStream *stream = g_file_read(file, NULL, &error);
-	    
-	    if(stream)
-	    {
-	        g_debug("Direct file access successful\n");
-	        g_input_stream_close(G_INPUT_STREAM(stream), NULL, NULL);
-	        has_media_file |= !extension_matches(uri, subtitle_exts);
-	        celluloid_model_load_file(model, uri, append || i > 0);
-	    }
-	    else
-	    {
-	        g_debug("Direct access failed: %s\n", error->message);
-	        g_error_free(error);
-	        
-	        // Fall back to portal-based access
-	        g_debug("Falling back to portal-based file access\n");
-	        open_dropped_file_via_portal(controller, file);
+		GFile *file = g_list_model_get_item(files, i);
+		gchar *uri = g_file_get_path(file) ?: g_file_get_uri(file);
 
-	    }
-	    has_media_file |= !extension_matches(uri, subtitle_exts);
-	    g_free(uri);
-	    g_object_unref(file);
+		has_media_file |= !extension_matches(uri, subtitle_exts);
+		celluloid_model_load_file(model, uri, append || i > 0);
+
+		g_free(uri);
 	}
+
 	if(!has_media_file)
 	{
 		set_video_area_status
@@ -716,11 +694,13 @@ static void
 set_dark_theme_enable(	CelluloidController *controller,
 					gboolean value )
 {
+
+
 	if(controller->dark_theme_enable)
 	{
 		adw_style_manager_set_color_scheme
 			(	adw_style_manager_get_default(),
-				ADW_COLOR_SCHEME_PREFER_DARK );
+				ADW_COLOR_SCHEME_FORCE_DARK );
 	}
 	else
 	{
