@@ -982,13 +982,13 @@ open_location_dialog_response_handler(	GtkDialog *dialog,
 			gchar *stream_src = g_ptr_array_index(args, 2);
 			g_signal_emit_by_name(view, "stream-src", uri);
 		}
-		printf("We are opening a new file: %s\n", "Sako");
 		gboolean is_plugged_now = is_plugged();
 		if(view->was_plugged != is_plugged_now){
 			view->was_plugged = is_plugged_now;
 			g_signal_emit_by_name(view, "mpv-reset-request");
 		}
 		g_signal_emit_by_name(view, "file-open", list, *append);
+
 		
 		g_object_unref(list);
 		g_free(append);

@@ -24,6 +24,22 @@
  </description>
  <developer_name>EcoTube Partners</developer_name>
  <releases>
+  <release date="2026-02-26" version="26.02.01">
+   <description translatable="no">
+    <p>
+      update preference and remove deprecated features
+    </p>
+    <p>
+      fix dark theme issue on some distrib
+    </p>
+    <p>
+      fix issue occuring on Wayland on open location option
+    </p>
+    <p>
+      Auto update ffmpeg
+    </p>
+   </description>
+  </release>
   <release date="2025-12-24" version="25.12.02">
    <description translatable="no">
     <p>

@@ -1687,7 +1687,6 @@ load_user_preference(CelluloidMpv *mpv){
 	gchar *selected_v_codec= v_codec[g_settings_get_int(settings, "youtube-video-codec")];
 	gchar *selected_v_output= v_output[g_settings_get_int(settings, "youtube-video-output")];
 	gint playback_type = g_settings_get_int(settings, "ecotube-computer-type");
-	gint stream_buffer = g_settings_get_int(settings, "stream-buffer");
 
 	if(playback_type == 2 && plugged){
 		playback_type = 1;
@@ -1698,7 +1697,8 @@ load_user_preference(CelluloidMpv *mpv){
 	gchar *second_codec = "av01";
 	if(playback_type == 1 || (playback_type == 2 && plugged)){
 		first_codec = "av01";
-		second_codec = "vp9";		
+		second_codec = "vp9";	
+		g_string_append(user_buffer, " deband=yes");	
 	}
 
 	gchar *user_yt_dlp = ecotube_get_user_yt_dlp_path();
@@ -1708,7 +1708,7 @@ load_user_preference(CelluloidMpv *mpv){
 		celluloid_mpv_set_option_string(mpv, "script-opts", dlp_path->str);
 	}
 
-	gint cache_seconds = stream_buffer == 0 ? 10 : 20;
+	gint cache_seconds = 10;
 
 	gchar *script_font_dir = get_script_fonts_dir_path();
 	celluloid_mpv_set_option_string(mpv, "osd-fonts-dir", script_font_dir);

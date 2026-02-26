@@ -229,7 +229,7 @@ celluloid_header_bar_init(CelluloidHeaderBar *hdr)
 	hdr->fullscreened = FALSE;
 	hdr->open_popover_visible = FALSE;
 	hdr->menu_popover_visible = FALSE;
-	hdr->playlist_button = gtk_button_new_from_icon_name("sidebar-show-right-symbolic");
+	hdr->playlist_button = gtk_button_new_from_icon_name("view-list-symbolic");
 
 	ghdr = GTK_HEADER_BAR(hdr->header_bar);
 

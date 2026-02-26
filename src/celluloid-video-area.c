@@ -768,7 +768,7 @@ celluloid_video_area_set_status(	CelluloidVideoArea *area,
 				_("Welcome") );
 		adw_status_page_set_description
 			(	ADW_STATUS_PAGE(area->initial_page),
-				_("Press ＋ or drag your video file here.") );
+				_("Press + and select 'Open Location' to play a YouTube video.") );
 		gtk_stack_set_visible_child
 			(GTK_STACK(area->stack), area->initial_page);
 		break;
