@@ -14,16 +14,33 @@
  </provides>
  <description translatable="no">
 
-<p>EcotubeHQ is an easy to use video player based on mpv which utilizes a unique buffering method to minimize data retrieved from streaming services such as YouTube. It is compatible with the X Window System and Wayland display server and is hardware accelerated. It employs two fullscreen output methods - 'Quality' and 'Powersave' - 'Quality' optimizes video quality via AMD FidelityFX Super Resolution, and 'Powersave' minimizes CPU usage through fast video upscaling.</p>
+<p>EcotubeHQ is an mpv-based video player which addresses a VLC weak point - it offers easy playback of streaming services such as YouTube. It has two output methods - 'Quality' uses AMD FidelityFX Super Resolution and debanding to optimize video quality, and 'Powersave' uses fast video upscaling to minimize CPU usage. A nominal buffer size minimizes data downloaded.</p>
       <p>Features:</p>
       <ul>
-        <li>EcoTubeHQ offers auto codec selection and hardware acceleration on av1, vp9, h.264 and h.265 videos.</li>
-        <li>EcoTubeHQ automatically plays 144p / 240p YouTube videos in a miniplayer.</li>
-        <li>EcoTubeHQ automatically updates yt-dlp and FFmpeg to optimize player performance and minimize playback issues.</li>
+        <li>Hardware decoding of av1, vp9, h.264 and h.265 codecs.</li>
+        <li>Drag and drop video playlists.</li>
+        <li>144p and 240p YouTube videos are displayed in a miniplayer.</li>
+        <li>yt-dlp and FFmpeg auto-update to minimize player issues.</li>
       </ul>
  </description>
  <developer_name>EcoTube Partners</developer_name>
  <releases>
+  <release date="2026-03-10" version="26.03.01">
+   <description translatable="no">
+    <p>
+      update preference and remove HDR
+    </p>
+    <p>
+        Add new video scale option
+    </p>
+    <p>
+      fix format selection
+    </p>
+    <p>
+      Change app name in Start Menu / launcher
+    </p>
+   </description>
+  </release>
   <release date="2026-02-26" version="26.02.01">
    <description translatable="no">
     <p>
