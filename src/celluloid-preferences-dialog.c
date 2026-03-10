@@ -844,6 +844,7 @@ build_page(	const PreferencesDialogItem *items,
 		}
 		if(type == ITEM_HDR_MODE)
 		{
+			/*
 			GtkWidget *switch_hdr_mode;
 
 			widget = adw_action_row_new();
@@ -863,6 +864,7 @@ build_page(	const PreferencesDialogItem *items,
 						switch_hdr_mode,
 						"active",
 						G_SETTINGS_BIND_DEFAULT );
+			*/
 			
 		}
 		if(type == ITEM_VULKAN_MODE)
