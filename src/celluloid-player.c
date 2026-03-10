@@ -1699,6 +1699,9 @@ load_user_preference(CelluloidMpv *mpv){
 		first_codec = "av01";
 		second_codec = "vp9";	
 		g_string_append(user_buffer, " deband=yes");	
+	}else if(playback_type == 0){
+		g_string_append(user_buffer, " scale=nearest");	
+		g_string_append(user_buffer, " cscale=nearest");	
 	}
 
 	gchar *user_yt_dlp = ecotube_get_user_yt_dlp_path();
