@@ -240,13 +240,18 @@
 	    <key name="default-playlist-with-metadata" type="aas">
 	      <default>
 	        [
-	          ['https://x.com/therealmrbench/status/1950579819831259161', 'When satire from 2013 becomes reality in 2025'],
 	          ['https://www.youtube.com/watch?v=YbxpieEQ7bc', 'The real cost of net zero'],
-	          ['https://www.youtube.com/watch?v=cz3AYYZBiGs', 'How much electricity will AI need?'],
-	          ['https://www.youtube.com/watch?v=26oQ1frbgfY', 'The AI Energy Crisis: Are Blackouts Coming?'],
+	          ['https://www.youtube.com/watch?v=eAXnd3Zha50', 'This $5 Window Hack Cuts Your Cooling Bill by 30%'],
+	          ['https://www.youtube.com/watch?v=4O6MNhzu9F4', 'This $15 Sticker Cuts 80% of Your Energy Bill.'],
+	          ['https://www.youtube.com/watch?v=lrbmnuIVOOw', 'This $20 Window Fix Cuts Your Heating Bill by 40%.'],
+	          ['https://www.youtube.com/watch?v=yQJybNUHkT0', 'This $5 Trick Makes Your Curtain Insulate Like a $300 Window'],
+	          ['https://www.youtube.com/watch?v=qqevEiBIDUQ', 'Your Attic Hits 140°F - This $50 Foil Reflects 97% of Heat'],
+	          ['https://www.youtube.com/watch?v=1MvLBr3B-iE', '$1 Powder KILLS Ceiling Mold PERMANENTLY'],
+	          ['https://www.youtube.com/watch?v=J-zIt3RZa54', 'This Wall Is Fireproof and Cuts Energy Bills By 50%'],
+	          ['https://www.youtube.com/watch?v=J7lQcNobGXE', 'Fireproof. Stronger Than Concrete.'],
+	          ['https://www.youtube.com/watch?v=c9V1Vo8eme0', 'This “Grass” Grows 4 Inches A Day. Burns Better Than Coal.'],
 	          ['https://www.youtube.com/watch?v=jSFo_92cJ-U', 'Thorium reactors: why this technology is quite so exciting'],
-	          ['https://www.youtube.com/watch?v=O36NT5eY9lE', 'Space Data Centers, Musk’s Latest Scam'],
-	          ['https://www.youtube.com/watch?v=h_VLAOXwnU4', 'The Kessler Effect may Finally Be Happening, and Billionaires are to Blame']
+	          ['https://www.youtube.com/watch?v=cz3AYYZBiGs', 'How much electricity will AI need?']
 	        ]
 	      </default>
 	      <summary>Default Playlist with Metadata</summary>
