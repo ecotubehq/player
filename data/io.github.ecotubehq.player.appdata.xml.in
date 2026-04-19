@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright 2023-2024 ecotube -->
-<component type="desktop">
+<component type="desktop-application">
  <id>io.github.ecotubehq.player</id>
  <metadata_license>CC-BY-SA-4.0</metadata_license>
  <project_license>GPL-3.0+</project_license>
@@ -12,9 +12,11 @@
  <provides>
   <id>io.github.ecotubehq.player.desktop</id>
  </provides>
- <description translatable="no">
-<p>Hardware Accelerated HQ Video Player</p>
-<p>EcotubeHQ is a free mpv-based application which tackles a VLC limitation - it uses minimal resources to deliver a high-quality experience from video streaming services like YouTube. You set the resolution, it does the rest. It has two upscaling modes; 'Quality' uses AMD FSR to boost image clarity, and 'Powersave' outputs HQ video with minimal CPU usage.</p>
+ <description translate="no">
+      <p>Hardware Accelerated HQ Video Player</p>
+      <p>EcotubeHQ is a free mpv-based application which tackles a VLC limitation - it uses minimal resources to deliver a high-quality experience 
+	  from video streaming services like YouTube. You set the resolution, it does the rest. It has two upscaling modes; 'Quality' uses AMD FSR to boost image clarity, 
+	  and 'Powersave' outputs HQ video with minimal CPU usage.</p>
       <p>Main features:</p>
       <ul>
         <li>GPU acceleration of all YouTube codecs - av1, vp9 and h.264.</li>
@@ -25,10 +27,12 @@
         <li>See above screenshots for more.</li>
       </ul>
  </description>
- <developer_name>EcoTube Partners</developer_name>
+ <developer id="io.github.ecotubehq">
+ 	<name>EcoTube Partners</name>
+ </developer>
  <releases>
   <release date="2026-04-19" version="26.04.01">
-   <description translatable="no">
+   <description translate="no">
     <p>
       update gnome runtime to the latest version
     </p>
@@ -41,7 +45,7 @@
    </description>
   </release>
   <release date="2026-03-10" version="26.03.01">
-   <description translatable="no">
+   <description translate="no">
     <p>
       update preference and remove HDR
     </p>
@@ -57,7 +61,7 @@
    </description>
   </release>
   <release date="2026-02-26" version="26.02.01">
-   <description translatable="no">
+   <description translate="no">
     <p>
       update preference and remove deprecated features
     </p>
@@ -73,7 +77,7 @@
    </description>
   </release>
   <release date="2025-12-24" version="25.12.02">
-   <description translatable="no">
+   <description translate="no">
     <p>
       Add option to set many seconds of audio/video to prefetch
     </p>
@@ -89,7 +93,7 @@
    </description>
   </release>
   <release date="2025-12-08" version="25.12.01">
-   <description translatable="no">
+   <description translate="no">
     <p>
       Fix thumbnail on sandbox
     </p>
@@ -105,7 +109,7 @@
    </description>
   </release>
   <release date="2025-11-10" version="25.11.01">
-   <description translatable="no">
+   <description translate="no">
     <p>
       Enhance interface
     </p>
@@ -121,7 +125,7 @@
    </description>
   </release>
   <release date="2025-10-28" version="25.10.2">
-   <description translatable="no">
+   <description translate="no">
     <p>
       Auto update yt-dlp when new release is available
     </p>
@@ -140,7 +144,7 @@
    </description>
   </release>
   <release date="2025-10-07" version="25.10.1">
-   <description translatable="no">
+   <description translate="no">
     <p>
       Add auto mode in plaback type
     </p>
@@ -153,14 +157,14 @@
    </description>
   </release>
   <release date="2025-09-27" version="25.9.4.1">
-   <description translatable="no">
+   <description translate="no">
     <p>
       Update video parser
     </p>
    </description>
   </release>
   <release date="2025-09-24" version="25.9.4">
-   <description translatable="no">
+   <description translate="no">
     <p>
       Use bilinear scalling for powersave mode 
     </p>
@@ -170,7 +174,7 @@
    </description>
   </release>
   <release date="2025-09-17" version="25.9.3">
-   <description translatable="no">
+   <description translate="no">
     <p>
       Fix drag and drop
     </p>
@@ -183,7 +187,7 @@
    </description>
   </release>
   <release date="2025-09-13" version="25.9.2">
-   <description translatable="no">
+   <description translate="no">
   <p>
     Fix codec selection in powersave mode
   </p>
@@ -196,7 +200,7 @@
    </description>
   </release>
   <release date="2025-09-04" version="25.9.1">
-   <description translatable="no">
+   <description translate="no">
   <p>
     Update playback options - Powersave and Quality -
   </p>
@@ -215,7 +219,7 @@
    </description>
   </release>
   <release date="2025-08-21" version="25.8.2">
-   <description translatable="no">
+   <description translate="no">
   <p>
     Add two playback options - Powersave and Quality -
   </p>
@@ -234,7 +238,7 @@
    </description>
   </release>
   <release date="2025-08-06" version="25.8.1">
-   <description translatable="no">
+   <description translate="no">
   <p>
     Force yt-dlp to use MPEG-DASH on some resolutions
   </p>
@@ -253,7 +257,7 @@
    </description>
   </release>
   <release date="2025-07-09" version="25.7.2">
-   <description translatable="no">
+   <description translate="no">
 	<p>
 		Force mpv to avoid HLS - temporarily  - 
 	</p>
@@ -272,7 +276,7 @@
    </description>
   </release>
   <release date="2024-09-21" version="25.4.2">
-   <description translatable="no">
+   <description translate="no">
     <p>
 		Add video and fix view
     </p>
@@ -315,5 +319,6 @@
  </screenshots>
  <url type="homepage">https://github.com/ecotubehq/player</url>
  <url type="bugtracker">https://github.com/ecotubehq/player/issues</url>
+ <url type="vcs-browser">https://github.com/ecotubehq/player</url>
  <update_contact>sakoadams@googlemail.com</update_contact>
 </component>
