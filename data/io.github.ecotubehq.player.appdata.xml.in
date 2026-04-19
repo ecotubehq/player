@@ -13,7 +13,7 @@
   <id>io.github.ecotubehq.player.desktop</id>
  </provides>
  <description translatable="no">
-<h2>Hardware Accelerated HQ Video Player</h2>
+<p>Hardware Accelerated HQ Video Player</p>
 <p>EcotubeHQ is a free mpv-based application which tackles a VLC limitation - it uses minimal resources to deliver a high-quality experience from video streaming services like YouTube. You set the resolution, it does the rest. It has two upscaling modes; 'Quality' uses AMD FSR to boost image clarity, and 'Powersave' outputs HQ video with minimal CPU usage.</p>
       <p>Main features:</p>
       <ul>
