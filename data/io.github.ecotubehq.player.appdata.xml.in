@@ -13,14 +13,16 @@
   <id>io.github.ecotubehq.player.desktop</id>
  </provides>
  <description translatable="no">
-
-<p>EcotubeHQ is an mpv-based video player which addresses a VLC weak point - it offers easy playback of streaming services such as YouTube. It has two output methods - 'Quality' uses AMD FidelityFX Super Resolution and debanding to optimize video quality, and 'Powersave' uses fast video upscaling to minimize CPU usage. A nominal buffer size minimizes data downloaded.</p>
-      <p>Features:</p>
+<h2>Hardware Accelerated HQ Video Player</h2>
+<p>EcotubeHQ is a free mpv-based application which tackles a VLC limitation - it uses minimal resources to deliver a high-quality experience from video streaming services like YouTube. You set the resolution, it does the rest. It has two upscaling modes; 'Quality' uses AMD FSR to boost image clarity, and 'Powersave' outputs HQ video with minimal CPU usage.</p>
+      <p>Main features:</p>
       <ul>
-        <li>Hardware decoding of av1, vp9, h.264 and h.265 codecs.</li>
-        <li>Drag and drop video playlists.</li>
-        <li>144p and 240p YouTube videos are displayed in a miniplayer.</li>
-        <li>yt-dlp and FFmpeg auto-update to minimize player issues.</li>
+        <li>GPU acceleration of all YouTube codecs - av1, vp9 and h.264.</li>
+        <li>720p resolution delivers 1080p clarity.</li>
+        <li>144p and 240p YouTube videos play in a desktop mini-viewer.</li>
+        <li>A nominal buffer minimizes downloaded data.</li>
+        <li>yt-dlp and FFmpeg auto-update to improve player reliability.</li>
+        <li>See above screenshots for more.</li>
       </ul>
  </description>
  <developer_name>EcoTube Partners</developer_name>
