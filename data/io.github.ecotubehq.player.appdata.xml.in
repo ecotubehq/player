@@ -27,6 +27,19 @@
  </description>
  <developer_name>EcoTube Partners</developer_name>
  <releases>
+  <release date="2026-04-19" version="26.04.01">
+   <description translatable="no">
+    <p>
+      update gnome runtime to the latest version
+    </p>
+    <p>
+        fix format selection
+    </p>
+    <p>
+      improve video loading
+    </p>
+   </description>
+  </release>
   <release date="2026-03-10" version="26.03.01">
    <description translatable="no">
     <p>
