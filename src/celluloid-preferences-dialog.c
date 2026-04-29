@@ -31,6 +31,7 @@
 #include "celluloid-def.h"
 
 #include "ecotube/utils.h"
+#include "ecotube/ecotube-yt-dlp-updater.h"
 
 typedef struct PreferencesDialogItem PreferencesDialogItem;
 typedef enum PreferencesDialogItemType PreferencesDialogItemType;
@@ -268,7 +269,7 @@ constructed(GObject *object)
 			"applications-graphics-symbolic" );
 	adw_preferences_dialog_add(	ADW_PREFERENCES_DIALOG(dlg),
 					ADW_PREFERENCES_PAGE(page));
-					
+	/*				
 	page = build_page
 		(	interface_items,
 			dlg,
@@ -277,7 +278,7 @@ constructed(GObject *object)
 			"applications-graphics-symbolic" );
 	adw_preferences_dialog_add(	ADW_PREFERENCES_DIALOG(dlg),
 					ADW_PREFERENCES_PAGE(page));
-
+	*/
 
 
 	g_signal_connect(	dlg,
@@ -325,7 +326,7 @@ handle_changed(GSettings *settings, const gchar *key, gpointer data)
 	dlg->needs_mpv_reset |= g_strcmp0(key, "youtube-video-codec") == 0;
 	dlg->needs_mpv_reset |= g_strcmp0(key, "youtube-video-output") == 0;
 	dlg->needs_mpv_reset |= g_strcmp0(key, "mpv-use-vulkan") == 0;
-	//dlg->needs_mpv_reset |= g_strcmp0(key, "stream-buffer") == 0;
+	dlg->needs_mpv_reset |= g_strcmp0(key, "ecotube-computer-type") == 0;
 }
 
 static void
@@ -647,6 +648,7 @@ build_page(	const PreferencesDialogItem *items,
 		if(type == ITEM_INFO_LABEL_BOX)
 		{
 				GtkWidget *version_label;
+				char *current_yt_version = get_current_yt_dlp_version();
 
 				widget = adw_action_row_new();
 				adw_preferences_row_set_title
@@ -654,7 +656,7 @@ build_page(	const PreferencesDialogItem *items,
 					
 				version_label = gtk_label_new(NULL);
 				char *markup;
-				markup = g_markup_printf_escaped("<span><b>\%s</b>                                                             \n%s</span>", label, VERSION);
+				markup = g_markup_printf_escaped("<span><b>\%s</b>\n%s - (yt-dlp v%s)</span>", label, VERSION, current_yt_version);
 				gtk_label_set_markup(GTK_LABEL(version_label), markup);
 				g_free(markup);
 			

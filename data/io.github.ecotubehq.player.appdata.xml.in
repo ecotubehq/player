@@ -13,20 +13,37 @@
   <id>io.github.ecotubehq.player.desktop</id>
  </provides>
  <description translatable="no">
-<p>Hardware Accelerated HQ Video Player</p>
-<p>EcotubeHQ is a free mpv-based application which tackles a VLC limitation - it uses minimal resources to deliver a high-quality experience from video streaming services like YouTube. You set the resolution, it does the rest. It has two upscaling modes; 'Quality' uses AMD FSR to boost image clarity, and 'Powersave' outputs HQ video with minimal CPU usage.</p>
+<p>Hardware Accelerated Video Playe</p>
+<p>EcotubeHQ is a free mpv-based app which addresses VLC's technical complexity by simplifying video playback on streaming platforms like YouTube. You set the resolution, it does the rest. It has two upscaling modes; 'Quality' uses AMD FSR to boost image clarity, and 'Powersave' outputs HQ video with minimal CPU usage.</p>
       <p>Main features:</p>
       <ul>
         <li>GPU acceleration of all YouTube codecs - av1, vp9 and h.264.</li>
-        <li>720p resolution delivers 1080p clarity.</li>
+        <li>Automatic video codec and upscaling optimization.</li>
+        <li>720p resolution offers 1080p clarity.</li>
         <li>144p and 240p YouTube videos play in a desktop mini-viewer.</li>
-        <li>A nominal buffer minimizes downloaded data.</li>
-        <li>yt-dlp and FFmpeg auto-update to improve player reliability.</li>
+        <li>Minimal buffering reduces downloaded data.</li>
+        <li>Automated updates for yt-dlp and FFmpeg enhance software stability.</li>
         <li>See above screenshots for more.</li>
       </ul>
  </description>
  <developer_name>EcoTube Partners</developer_name>
  <releases>
+  <release date="2026-04-29" version="26.04.02">
+   <description translatable="no">
+    <p>
+      fix format selection when none format is in the range
+    </p>
+    <p>
+        fix data buffering
+    </p>
+    <p>
+      fix error when white space in URL
+    </p>
+    <p>
+      Improve UI
+    </p>
+   </description>
+  </release>
   <release date="2026-04-19" version="26.04.01">
    <description translatable="no">
     <p>
