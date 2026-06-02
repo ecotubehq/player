@@ -329,6 +329,7 @@ mpv_event_notify(CelluloidMpv *mpv, gint event_id, gpointer event_data)
 	}
 	else if(event_id == MPV_EVENT_END_FILE)
 	{
+		printf("Playback ended");
 		if(priv->loaded)
 		{
 			priv->new_file = FALSE;
@@ -1725,19 +1726,20 @@ load_user_preference(CelluloidMpv *mpv){
 	g_string_append_printf(user_buffer, " cache-secs=%d", cache_seconds);
 	if(g_settings_get_int(settings, "youtube-video-quality") == 0){
 		g_string_append_printf(user_buffer, " ytdl-format=(bv*[height=%s][vcodec~='%s']+"\
-		"ba/bv*[height=144][vcodec~='%s']+ba/bv*[height=144]+ba/bv*[height<=%s][vcodec~='vp']+ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b))[protocol^=http]",
+		"ba/bv*[height=144][vcodec~='%s']+ba/bv*[height=144]+ba/bv*[height<=%s][vcodec~='vp']+ba/(wv*+ba/b)[height<=%s]/bv*[height<500][vcodec~='vp9']+ba/(wv*+ba/b))[protocol^=http]",
 		selected_v_quality, first_codec, second_codec, selected_v_quality, selected_v_quality);
+		printf("case: %d\n", 1);
 	}else if(g_settings_get_int(settings, "youtube-video-quality") == 1){
 		g_string_append_printf(user_buffer, " ytdl-format=(bv*[height=240][vcodec~='%s']+ba/[height=240][vcodec~='%s']+ba/"\
-			"bv*[height=240]+ba/bv*[height=360]+ba/bv*[height>=240]+ba/wv*[height<240]+ba/wv*+ba)[protocol^=http]",
+			"bv*[height=240]+ba/bv*[height=360]+ba/bv*[height<500][vcodec~='vp9']+ba/bv*[height>=240]+ba/wv*[height<240]+ba/wv*+ba)[protocol^=http]",
 			first_codec, second_codec);
 	}else if(g_settings_get_int(settings, "youtube-video-quality") == 2){
 		g_string_append_printf(user_buffer, " ytdl-format=(bv*[height=%s][vcodec~='%s']+"\
-		"ba/bv*[height=360][vcodec~=%s]+ba/bv*[height=360]+ba/bv*[height>=%s]+ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b))[protocol^=http]",
+		"ba/bv*[height=360][vcodec~=%s]+ba/bv*[height=360]+ba/bv*[height<500][vcodec~='vp9']+ba/bv*[height>=%s]+ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b))[protocol^=http]",
 		selected_v_quality, first_codec, second_codec, selected_v_quality, selected_v_quality);
 	}else if(g_settings_get_int(settings, "youtube-video-quality") == 3){
 		g_string_append_printf(user_buffer, " ytdl-format=(bv*[height=%s][vcodec~='%s']+"\
-		"ba/bv*[height=480][vcodec~=%s]+ba/bv*[height=480]+ba/bv*[height<=?720]+ba/bv*[height<=%s][vcodec~='vp']+"\
+		"ba/bv*[height=480][vcodec~=%s]+ba/bv*[height=480]+ba/bv*[height<500][vcodec~='vp9']+ba/bv*[height<=?720]+ba/bv*[height<=%s][vcodec~='vp']+"\
 		"ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b))[protocol^=http]%s", 
 		selected_v_quality, first_codec, second_codec, selected_v_quality, selected_v_quality,
 		allow_hdr ?"":"[format_id!*=hdr]");
