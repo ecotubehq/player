@@ -241,17 +241,16 @@
 	      <default>
 	        [
 	          ['https://www.youtube.com/watch?v=YbxpieEQ7bc', 'The real cost of net zero'],
-	          ['https://www.youtube.com/watch?v=eAXnd3Zha50', 'This $5 Window Hack Cuts Your Cooling Bill by 30%'],
-	          ['https://www.youtube.com/watch?v=4O6MNhzu9F4', 'This $15 Sticker Cuts 80% of Your Energy Bill.'],
-	          ['https://www.youtube.com/watch?v=lrbmnuIVOOw', 'This $20 Window Fix Cuts Your Heating Bill by 40%.'],
-	          ['https://www.youtube.com/watch?v=yQJybNUHkT0', 'This $5 Trick Makes Your Curtain Insulate Like a $300 Window'],
-	          ['https://www.youtube.com/watch?v=qqevEiBIDUQ', 'Your Attic Hits 140°F - This $50 Foil Reflects 97% of Heat'],
-	          ['https://www.youtube.com/watch?v=1MvLBr3B-iE', '$1 Powder KILLS Ceiling Mold PERMANENTLY'],
-	          ['https://www.youtube.com/watch?v=J-zIt3RZa54', 'This Wall Is Fireproof and Cuts Energy Bills By 50%'],
-	          ['https://www.youtube.com/watch?v=J7lQcNobGXE', 'Fireproof. Stronger Than Concrete.'],
-	          ['https://www.youtube.com/watch?v=c9V1Vo8eme0', 'This “Grass” Grows 4 Inches A Day. Burns Better Than Coal.'],
-	          ['https://www.youtube.com/watch?v=jSFo_92cJ-U', 'Thorium reactors: why this technology is quite so exciting'],
-	          ['https://www.youtube.com/watch?v=cz3AYYZBiGs', 'How much electricity will AI need?']
+	          ['https://www.youtube.com/watch?v=5p426fSlYH4', 'We Saw What AI Data Centers Don\'t Want You to See'],
+	          ['https://www.youtube.com/watch?v=uE6IhI2qj1Q', 'Why I’m Done Trusting AI'],
+	          ['https://www.youtube.com/watch?v=pToq1b6CVn8', 'The Wall AI Just Hit That Nobody Is Talking About'],
+	          ['https://www.youtube.com/watch?v=hjl7SxN1I2o', 'Samsung One UI 8.5 Has a Hidden Battery Drain Problem'],
+	          ['https://www.youtube.com/watch?v=NlNPKPoxCmE', 'YouTube is STEALING Your Data'],
+	          ['https://www.youtube.com/watch?v=c9V1Vo8eme0', 'This “Grass” Grows 4 Inches A Day. Burns Better Than Coal'],
+	          ['https://www.youtube.com/watch?v=jSFo_92cJ-U', 'Thorium Reactors: Why is this Technology Quite So Exciting'],
+	          ['https://www.youtube.com/watch?v=qzbumWHVsyY', 'The Lazy Desert Farming System'],
+	          ['https://www.youtube.com/watch?v=8DG1XnQfDcE', 'They Dumped Billions Of Oysters In Chesapeake Bay'],
+	          ['https://www.youtube.com/watch?v=fkzXUbAsCS4', 'California Released 50 Sea Otters Into a Dead Ocean']
 	        ]
 	      </default>
 	      <summary>Default Playlist with Metadata</summary>
