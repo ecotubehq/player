@@ -1307,6 +1307,9 @@ celluloid_model_update_mpv_options(	CelluloidModel *model){
 	celluloid_mpv_set_option_string(mpv, "cache-pause-initial", "yes");
 	celluloid_mpv_set_option_string(mpv, "demuxer-hysteresis-secs", "5");
 	celluloid_mpv_set_option_string(mpv, "cache-secs", "10");
+	celluloid_mpv_set_option_string(mpv, "cache-pause-initial", "yes"); // pause until the cache reaches 10 sec
+	// set a maximum cache size to avoid excessive memory use
+	celluloid_mpv_set_option_string(mpv, "demuxer-max-bytes", "500M");
 	gboolean status = sa_get_bat_status();
 	if(status){
 		celluloid_mpv_set_option_string(mpv, "hwdec", "yes");
