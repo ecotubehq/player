@@ -1146,7 +1146,7 @@ mpv_reset_request_handler(AdwPreferencesWindow *dialog, gpointer data)
 	CelluloidVideoArea *video_area =celluloid_main_window_get_video_area(wnd);
 	int video_playback_type = g_settings_get_int(settings, "ecotube-computer-type");
 	if(video_playback_type == 1){
-	    celluloid_video_area_show_toast_message(video_area, "Quality mod enabled");		
+	    celluloid_video_area_show_toast_message(video_area, "Quality mode enabled");		
 	}
 	update_fsr_icon(video_area, video_playback_type);
 

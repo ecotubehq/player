@@ -1718,29 +1718,29 @@ load_user_preference(CelluloidMpv *mpv){
 	g_string_append(user_buffer, " demuxer-max-bytes=500M");
 	g_string_append(user_buffer, " demuxer-max-back-bytes=500M");
 	g_string_append_printf(user_buffer, " cache-secs=%d", cache_seconds);
+
 	if(g_settings_get_int(settings, "youtube-video-quality") == 0){
 		g_string_append_printf(user_buffer, " ytdl-format=(bv*[height=%s][vcodec~='%s']+"\
-		"ba/bv*[height=144][vcodec~='%s']+ba/bv*[height=144]+ba/bv*[height<=%s][vcodec~='vp']+ba/(wv*+ba/b)[height<=%s]/bv*[height<500][vcodec~='vp9']+ba/(wv*+ba/b))[protocol^=http]",
+		"ba/bv*[height=144][vcodec~='%s']+ba/bv*[height=144]+ba/bv*[height<=%s][vcodec~='vp']+ba/(wv*+ba/b)[height<=%s]/bv*[height<500][vcodec~='vp9']+ba/bv*[height<=600]/bv*/(wv*+ba/b))[protocol^=http]",
 		selected_v_quality, first_codec, second_codec, selected_v_quality, selected_v_quality);
-		printf("case: %d\n", 1);
 	}else if(g_settings_get_int(settings, "youtube-video-quality") == 1){
-		g_string_append_printf(user_buffer, " ytdl-format=(bv*[height=240][vcodec~='%s']+ba/[height=240][vcodec~='%s']+ba/"\
-			"bv*[height=240]+ba/bv*[height=360]+ba/bv*[height<500][vcodec~='vp9']+ba/bv*[height>=240]+ba/wv*[height<240]+ba/wv*+ba)[protocol^=http]",
-			first_codec, second_codec);
+		g_string_append_printf(user_buffer, " ytdl-format=(bv*[height=240][vcodec~='%s']+ba/bv*[height=240]+ba/"\
+			"bv*[height=360]+ba/bv*[height<500][vcodec~='vp9']+ba/bv*[height>=240]+ba/wv*[height<240]+ba/wv*+ba/bv*+ba/bv*[height<=600]/bv*/b)[protocol^=http]",
+			first_codec);
 	}else if(g_settings_get_int(settings, "youtube-video-quality") == 2){
 		g_string_append_printf(user_buffer, " ytdl-format=(bv*[height=%s][vcodec~='%s']+"\
-		"ba/bv*[height=360][vcodec~=%s]+ba/bv*[height=360]+ba/bv*[height<500][vcodec~='vp9']+ba/bv*[height>=%s]+ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b))[protocol^=http]",
+		"ba/bv*[height=360][vcodec~=%s]+ba/bv*[height=360]+ba/bv*[height<500][vcodec~='vp9']+ba/bv*[height>=%s]+ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b)/bv*)[protocol^=http]",
 		selected_v_quality, first_codec, second_codec, selected_v_quality, selected_v_quality);
 	}else if(g_settings_get_int(settings, "youtube-video-quality") == 3){
 		g_string_append_printf(user_buffer, " ytdl-format=(bv*[height=%s][vcodec~='%s']+"\
 		"ba/bv*[height=480][vcodec~=%s]+ba/bv*[height=480]+ba/bv*[height<500][vcodec~='vp9']+ba/bv*[height<=?720]+ba/bv*[height<=%s][vcodec~='vp']+"\
-		"ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b))[protocol^=http]%s", 
+		"ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b)/bv*/b)[protocol^=http]%s", 
 		selected_v_quality, first_codec, second_codec, selected_v_quality, selected_v_quality,
 		allow_hdr ?"":"[format_id!*=hdr]");
 	}else{
 		g_string_append_printf(user_buffer, " ytdl-format=(bv*[height=%s][vcodec~='%s']+"\
 		"ba/bv*[height=720][vcodec~='%s']+ba/bv*[height=720]+ba/bv*[height<=%s][vcodec~='vp']+"\
-		"ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b))[protocol^=http]%s",
+		"ba/(wv*+ba/b)[height<=%s]/(wv*+ba/b)/bv*/b)[protocol^=http]%s",
 		selected_v_quality, first_codec, second_codec, selected_v_quality, selected_v_quality,
 		allow_hdr ?"":"[format_id!*=hdr]");
 	}
