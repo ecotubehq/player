@@ -329,7 +329,13 @@ mpv_event_notify(CelluloidMpv *mpv, gint event_id, gpointer event_data)
 	}
 	else if(event_id == MPV_EVENT_END_FILE)
 	{
-		printf("Playback ended");
+		gint64 playlist_pos = 0;
+		gboolean idle_active = FALSE;
+
+		celluloid_mpv_get_property
+			(mpv, "playlist-pos", MPV_FORMAT_INT64, &playlist_pos);
+		celluloid_mpv_get_property
+			(mpv, "idle-active", MPV_FORMAT_FLAG, &idle_active);
 		if(priv->loaded)
 		{
 			priv->new_file = FALSE;
@@ -438,18 +444,6 @@ mpv_property_changed(CelluloidMpv *mpv, const gchar *name, gpointer value)
 		{
 			load_from_playlist(player);
 		}
-		int video_resolution_index = g_settings_get_int(settings, "youtube-video-quality");
-		int playback_type = g_settings_get_int(settings, "ecotube-computer-type");
-		/* disable auto change of the resolution
-		if(video_resolution_index > 3){
-			if(playback_type == 0){
-				g_settings_set_int(settings, "youtube-video-quality", 2);
-			}
-			else if(playback_type == 1){
-				g_settings_set_int(settings, "youtube-video-quality", 3);
-			}
-			//g_signal_emit_by_name(mpv, "window-resize", "640", "360");
-		}*/
 	}
 	else if(g_strcmp0(name, "playlist") == 0)
 	{

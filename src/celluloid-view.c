@@ -379,6 +379,8 @@ set_property(	GObject *object,
 		break;
 
 		case PROP_PAUSE:
+		CelluloidVideoArea *video_area =celluloid_main_window_get_video_area(wnd);
+		celluloid_video_area_set_status(video_area, CELLULOID_VIDEO_AREA_STATUS_IDLE);
 		self->pause = g_value_get_boolean(value);
 		break;
 
