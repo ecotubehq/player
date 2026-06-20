@@ -32,6 +32,22 @@
  	<name>EcoTube Partners</name>
  </developer>
  <releases>
+  <release date="2026-06-19" version="26.06.01">
+   <description translatable="no">
+    <p>
+      fix format selection, take into account when audio is not in separate file
+    </p>
+    <p>
+        Control end of playback
+    </p>
+    <p>
+      fix playback per block of 10 sec
+    </p>
+    <p>
+      Improve UI
+    </p>
+   </description>
+  </release>
   <release date="2026-04-29" version="26.04.02">
    <description translatable="no">
     <p>
