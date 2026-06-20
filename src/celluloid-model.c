@@ -55,7 +55,8 @@ enum
 	PROP_MEDIA_AUDIO_CODEC,
 	PROP_MEDIA_CODEC_NAME,
 	PROP_MEDIA_BITRATE,
-	PROP_MEDIA_HEIGHT
+	PROP_MEDIA_HEIGHT,
+	PROP_EOF_REACHED
 };
 
 struct _CelluloidModel
@@ -93,6 +94,7 @@ struct _CelluloidModel
 	gchar *media_codec_name;
 	gchar *media_bitrate;
 	gchar *media_height;
+	gboolean eof_reached;
 };
 
 struct _CelluloidModelClass
@@ -353,6 +355,10 @@ set_property(	GObject *object,
 		g_free(self->media_height);
 		self->media_height = g_value_dup_string(value);
 		break;
+
+		case PROP_EOF_REACHED:
+		self->eof_reached = g_value_get_boolean(value);
+		break;
 		/*End Added by sako */
 
 		default:
@@ -488,7 +494,11 @@ get_property(	GObject *object,
 
 		case PROP_MEDIA_HEIGHT:
 		g_value_set_string(value, self->media_height);
-		break;		
+		break;	
+
+		case PROP_EOF_REACHED:
+		g_value_set_boolean(value, self->eof_reached);
+		break;	
 		/* End added by Sako */
 		default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
@@ -643,6 +653,13 @@ set_mpv_property(	GObject *object,
 						MPV_FORMAT_DOUBLE,
 						&self->display_fps );
 		break;
+
+	case PROP_EOF_REACHED:
+		celluloid_mpv_set_property(	mpv,
+						"eof_reached",
+						MPV_FORMAT_FLAG,
+						&self->eof_reached );
+	break;
 	}
 }
 
@@ -824,6 +841,7 @@ celluloid_model_class_init(CelluloidModelClass *klass)
 			{"audio-codec-name", PROP_MEDIA_CODEC_NAME, G_TYPE_STRING},
 			{"audio-bitrate", PROP_MEDIA_BITRATE, G_TYPE_STRING},
 			{"height", PROP_MEDIA_HEIGHT, G_TYPE_STRING},
+			{"eof-reached", PROP_EOF_REACHED, G_TYPE_BOOLEAN},
 			{NULL, PROP_INVALID, 0} };
 
 	GObjectClass *obj_class = G_OBJECT_CLASS(klass);
@@ -918,6 +936,7 @@ celluloid_model_init(CelluloidModel *model)
 	model->media_codec_name = NULL;
 	model->media_bitrate = NULL;
 	model->media_height = NULL;
+	model->eof_reached = FALSE;
 	/* End Added by Sako */
 	
 	

@@ -241,6 +241,9 @@ celluloid_controller_init(CelluloidController *controller);
 static void
 update_extra_mpv_options(CelluloidController *controller);
 
+static void
+eof_handler(CelluloidPlayer *player, gpointer data);
+
 G_DEFINE_TYPE(CelluloidController, celluloid_controller, G_TYPE_OBJECT)
 
 
@@ -476,6 +479,7 @@ initialize_model(gpointer data)
 
 	g_object_get(view, "maximized", &maximized, NULL);
 	celluloid_mpv_set_property_flag(mpv, "window-maximized", maximized);
+
 
 	return G_SOURCE_REMOVE;
 }
@@ -783,6 +787,9 @@ connect_signals(CelluloidController *controller)
 	g_object_bind_property(	controller->model, "height",
 				controller->view, "height",
 				G_BINDING_DEFAULT );
+	g_object_bind_property(	controller->model, "eof-reached",
+				controller->view, "eof-reached",
+				G_BINDING_DEFAULT );
 	/* END Added by Sako */	
 	g_signal_connect(	controller->model,
 				"notify::ready",
@@ -941,6 +948,12 @@ connect_signals(CelluloidController *controller)
 	g_signal_connect(	controller->view,
 				"stream-src",
 				G_CALLBACK(stream_src_handler),
+				controller );
+
+	CelluloidPlayer *player = CELLULOID_PLAYER(controller->model);
+	g_signal_connect(	player,
+				"eof-reached",
+				G_CALLBACK(eof_handler),
 				controller );
 }
 
@@ -1459,6 +1472,8 @@ celluloid_controller_init(CelluloidController *controller)
 	controller->skip_buttons_binding = NULL;
 	controller->settings = g_settings_new(CONFIG_ROOT);
 	controller->mpris = NULL;
+
+
 }
 
 static void
@@ -1627,4 +1642,11 @@ static void on_portal_file_response(GtkNativeDialog *native,
     }
     
     g_object_unref(native);
+}
+
+static void
+eof_handler(CelluloidPlayer *player, gpointer data){
+
+	CelluloidController *controller = CELLULOID_CONTROLLER(data);
+	set_video_area_status(controller, CELLULOID_VIDEO_AREA_STATUS_IDLE);
 }

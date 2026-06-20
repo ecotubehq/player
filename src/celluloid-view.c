@@ -64,7 +64,8 @@ enum
 	PROP_MEDIA_AUDIO_CODEC,
 	PROP_MEDIA_CODEC_NAME,
 	PROP_MEDIA_BITRATE,
-	PROP_MEDIA_HEIGHT
+	PROP_MEDIA_HEIGHT,
+	PROP_EOF_REACHED
 };
 
 struct _CelluloidView
@@ -99,6 +100,7 @@ struct _CelluloidView
 	gchar *media_bitrate;
 	gchar *media_height;
 	gboolean was_plugged;
+	gboolean eof_reached;
 
 };
 
@@ -379,8 +381,6 @@ set_property(	GObject *object,
 		break;
 
 		case PROP_PAUSE:
-		CelluloidVideoArea *video_area =celluloid_main_window_get_video_area(wnd);
-		celluloid_video_area_set_status(video_area, CELLULOID_VIDEO_AREA_STATUS_IDLE);
 		self->pause = g_value_get_boolean(value);
 		break;
 
@@ -495,10 +495,6 @@ set_property(	GObject *object,
 		if(!has_bitrate){
 			g_free(self->media_bitrate);
 			self->media_bitrate = g_value_dup_string(value);
-			//update_title(self);
-			//printf("bitrate updated:%s\n", self->media_bitrate);
-		}else{
-			//printf("bitrate already updated:%s\n", self->media_bitrate);
 		}
 		break;
 
@@ -507,6 +503,14 @@ set_property(	GObject *object,
 		self->media_height = g_value_dup_string(value);
 		update_title(self);
 		break;		
+
+		case PROP_EOF_REACHED:
+		self->eof_reached = g_value_get_boolean(value);
+		if(self->eof_reached){
+			CelluloidVideoArea *video_area =celluloid_main_window_get_video_area(wnd);
+			celluloid_video_area_set_status(video_area, CELLULOID_VIDEO_AREA_STATUS_IDLE);
+		}
+		break;	
 		/* End Added by Sako */
 
 		default:
@@ -613,6 +617,10 @@ get_property(	GObject *object,
 
 		case PROP_MEDIA_HEIGHT:
 		g_value_set_static_string(value, self->media_height);
+		break;
+
+		case PROP_EOF_REACHED:
+		g_value_set_boolean(value, self->eof_reached);
 		break;
 		/*End Added by Sako*/
 		default:
@@ -1498,6 +1506,14 @@ celluloid_view_class_init(CelluloidViewClass *klass)
 			NULL,
 			G_PARAM_READWRITE );
 	g_object_class_install_property(object_class, PROP_MEDIA_HEIGHT, pspec);
+
+	pspec = g_param_spec_boolean
+		(	"eof-reached",
+			"end of file reachhed",
+			"End of file reached property",
+			TRUE,
+			G_PARAM_READWRITE );
+	g_object_class_install_property(object_class, PROP_EOF_REACHED, pspec);
 	/* End Added by Sako */
 	
 	g_signal_new(	"video-area-resize",
@@ -1673,6 +1689,8 @@ celluloid_view_init(CelluloidView *view)
 	view->media_codec_name = NULL;
 	view->media_bitrate = NULL;
 	view->was_plugged = is_plugged();
+
+	view->eof_reached = FALSE;
 
 
 	g_signal_connect(view, "realize", G_CALLBACK(realize_handler), NULL);

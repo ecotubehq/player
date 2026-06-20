@@ -340,6 +340,7 @@ mpv_event_notify(CelluloidMpv *mpv, gint event_id, gpointer event_data)
 		{
 			priv->new_file = FALSE;
 		}
+		g_signal_emit_by_name(CELLULOID_PLAYER(mpv), "eof-reached");
 	}
 	else if(event_id == MPV_EVENT_IDLE)
 	{
@@ -489,6 +490,10 @@ mpv_property_changed(CelluloidMpv *mpv, const gchar *name, gpointer value)
 			priv->init_vo_config = FALSE;
 			load_from_playlist(player);
 		}
+	}else if(g_strcmp0(name, "eof-reached") == 0) // set end of file reached property
+	{
+
+		celluloid_mpv_set_property_flag(mpv, "eof-reached", TRUE);
 	}
 
 	CELLULOID_MPV_CLASS(celluloid_player_parent_class)
@@ -531,6 +536,7 @@ observe_properties(CelluloidMpv *mpv)
 	celluloid_mpv_observe_property(mpv, 0, "audio-codec-name", MPV_FORMAT_STRING);
 	celluloid_mpv_observe_property(mpv, 0, "audio-bitrate", MPV_FORMAT_STRING);
 	celluloid_mpv_observe_property(mpv, 0, "height", MPV_FORMAT_STRING);
+	celluloid_mpv_observe_property(mpv, 0, "eof-reached", MPV_FORMAT_FLAG);
 
 }
 
@@ -1391,6 +1397,15 @@ celluloid_player_class_init(CelluloidPlayerClass *klass)
 			G_TYPE_NONE,
 			1,
 			G_TYPE_INT64 );
+	g_signal_new(	"eof-reached",
+			G_TYPE_FROM_CLASS(klass),
+			G_SIGNAL_RUN_FIRST,
+			0,
+			NULL,
+			NULL,
+			g_cclosure_marshal_VOID__VOID,
+			G_TYPE_NONE,
+			0 );
 }
 
 static void

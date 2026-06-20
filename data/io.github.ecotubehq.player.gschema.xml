@@ -240,6 +240,7 @@
 	    <key name="default-playlist-with-metadata" type="aas">
 	      <default>
 	        [
+	          ['https://www.youtube.com/watch?v=HaZIvVb45oI', 'The True Scale of Youtube'],
 	          ['https://www.youtube.com/watch?v=YbxpieEQ7bc', 'The real cost of net zero'],
 	          ['https://www.youtube.com/watch?v=5p426fSlYH4', 'We Saw What AI Data Centers Don\'t Want You to See'],
 	          ['https://www.youtube.com/watch?v=uE6IhI2qj1Q', 'Why I’m Done Trusting AI'],
