@@ -144,7 +144,8 @@ executable('ecotube', sources,
     meson.get_compiler('c').find_library('m', required: false),
     dependency('mpv', version: '>= 1.107'),
     dependency('libadwaita-1', version: '>= 1.6.0'),
-    dependency('epoxy')
+    dependency('epoxy'),
+    dependency('webkitgtk-6.0')
   ],
   link_with: extra_libs,
   include_directories: includes,

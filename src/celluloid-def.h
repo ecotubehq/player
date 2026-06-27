@@ -48,6 +48,7 @@
 #define MIN_MPV_MAJOR 0
 #define MIN_MPV_MINOR 29
 #define MIN_MPV_PATCH 0
+#define PDF_APP_ID APP_ID".pdfviewer"
 
 #define SUBTITLE_EXTS	{	"utf",\
 				"utf8",\

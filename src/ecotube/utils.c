@@ -147,3 +147,22 @@ is_laptop(void){
     fclose(file);
     return FALSE;
 }
+
+void
+display_pdf (GtkApplication *app, gpointer user_data){
+
+
+    GtkWidget *window = gtk_application_window_new (app);
+    gtk_window_set_title (GTK_WINDOW (window), "PDF Viewer");
+    gtk_window_set_default_size (GTK_WINDOW (window), 800, 600);
+
+    GtkWidget *web_view = webkit_web_view_new ();
+
+    gtk_window_set_child (GTK_WINDOW (window), web_view);
+
+    char *pdf_path = (char *) user_data;
+    webkit_web_view_load_uri (WEBKIT_WEB_VIEW (web_view), pdf_path);
+
+    gtk_window_present (GTK_WINDOW (window));
+
+}

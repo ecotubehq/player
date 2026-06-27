@@ -1905,7 +1905,12 @@ celluloid_view_show_about_window (CelluloidView *view)
 
 void
 celluloid_view_show_usage_window (CelluloidView *view){
-	system("xdg-open https://raw.githubusercontent.com/ecotubehq/player/master/data/player-info.pdf");
+    char * player_info =  g_build_filename("file:", DATADIR, "ecotube", "player-info.pdf", NULL);
+	GtkApplication *app = gtk_application_new (PDF_APP_ID, G_APPLICATION_FLAGS_NONE);
+	g_signal_connect (app, "activate", G_CALLBACK (display_pdf), player_info);
+
+	g_application_run (G_APPLICATION (app), 0, NULL);
+	g_object_unref (app);
 }
 
 void

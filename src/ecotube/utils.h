@@ -1,6 +1,7 @@
 #include <glib.h>
 #include <glib-object.h>
 #include <gtk/gtk.h>
+#include <webkit/webkit.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -22,3 +23,6 @@ is_plugged(void);
 
 gboolean
 is_laptop(void);
+
+void
+display_pdf (GtkApplication *app, gpointer user_data);
