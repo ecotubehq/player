@@ -384,7 +384,7 @@ on_playbak_t_changed(GObject    *object,
 
 
     /* Update the flag: TRUE when playbacktype is changed */
-    data->disable_item = (selected == 0);
+    data->disable_item = (selected == 0 );
 
 
     /* Force the second dropdown to rebuild its items */
@@ -566,7 +566,7 @@ build_page(	const PreferencesDialogItem *items,
 
 
 		    gint current_p_type = g_settings_get_int(dlg->settings, "ecotube-computer-type");
-		    if(current_p_type != 1){
+		    if(current_p_type == 1 || (current_p_type == 2 && !is_plugged())){
 		    	data->disable_item = TRUE;
 		    }
 
