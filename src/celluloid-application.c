@@ -234,11 +234,13 @@ initialize_gui(CelluloidApplication *app)
 	g_settings_set_boolean(settings, "always-use-floating-header-bar", TRUE);
 	g_settings_set_boolean(settings, "always-use-floating-controls", TRUE);
 
-	gboolean notif = g_settings_get_boolean(settings, "startup-version-notif-26-06-01");
+	gboolean notif = g_settings_get_boolean(settings, "startup-version-notif-26-06-02");
 	if(!notif){
 		celluloid_view_show_message_toast(view, "Ecotube updated - See 'How To Use' for details");
 		load_default_scripts();
-		g_settings_set_boolean(settings, "startup-version-notif-26-06-01", TRUE);
+		g_settings_set_boolean(settings, "startup-version-notif-26-06-02", TRUE);
+		g_settings_set_boolean(settings, "mpv-use-vulkan", TRUE);
+		g_settings_set_int(settings, "youtube-video-quality", 3);
 	}
 	if(is_modern_osd()){
 		celluloid_main_window_set_use_floating_controls(window, FALSE);

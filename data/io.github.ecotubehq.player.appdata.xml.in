@@ -5,7 +5,7 @@
  <metadata_license>CC-BY-SA-4.0</metadata_license>
  <project_license>GPL-3.0+</project_license>
  <name>EcoTubeHQ</name>
- <summary>Minimal Resource HQ Video Player</summary>
+ <summary>Hardware Accelerated Video Player</summary>
  <launchable type="desktop-id">io.github.ecotubehq.player.desktop</launchable>
  <translation type="gettext">ecotube</translation>
  <content_rating type="oars-1.1" />
@@ -13,7 +13,6 @@
   <id>io.github.ecotubehq.player.desktop</id>
  </provides>
  <description translate="no">
-      <p>Hardware Accelerated HQ Video Player</p>
       <p>EcotubeHQ is a free mpv-based application which tackles a VLC limitation - it uses minimal resources to deliver a high-quality experience 
 	  from video streaming services like YouTube. You set the resolution, it does the rest. It has two upscaling modes; 'Quality' uses AMD FSR to boost image clarity, 
 	  and 'Powersave' outputs HQ video with minimal CPU usage.</p>
@@ -32,6 +31,22 @@
  	<name>EcoTube Partners</name>
  </developer>
  <releases>
+  <release date="2026-06-28" version="26.06.02">
+   <description translatable="no">
+    <p>
+      Add internal pdf viewer
+    </p>
+    <p>
+        allow 720p in auto mode when computer is plugged
+    </p>
+    <p>
+      fix FSR when is plugged
+    </p>
+    <p>
+      fix resolution fallback when plugged
+    </p>
+   </description>
+  </release>
   <release date="2026-06-19" version="26.06.01">
    <description translatable="no">
     <p>
