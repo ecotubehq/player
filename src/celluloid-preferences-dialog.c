@@ -384,31 +384,18 @@ on_playbak_t_changed(GObject    *object,
 
 
     /* Update the flag: TRUE when playbacktype is changed */
-    data->disable_item = (selected == 0 );
+    data->disable_item = (selected == 0 || (selected == 2 && !is_plugged())); 
 
 
     /* Force the second dropdown to rebuild its items */
     gtk_drop_down_set_factory (data->pref_resolution, NULL);
     gtk_drop_down_set_factory (data->pref_resolution, data->factory);
 
-	/*
-	CelluloidPreferencesDialog *dlg = data;
-	gint selected_item = gtk_drop_down_get_selected(GTK_DROP_DOWN(combo_pair->pref_combo));
-	gint current_resolution = gtk_drop_down_get_selected(GTK_DROP_DOWN(combo_pair->pref_resolution));
-	guint p_save_size = g_list_model_get_n_items (G_LIST_MODEL (combo_pair->powersave_resolutions));
-	if(selected_item == 0){
-		// Switch to Powersave resolutions
-		gtk_drop_down_set_model(GTK_DROP_DOWN(combo_pair->pref_resolution), 
-                               G_LIST_MODEL(combo_pair->powersave_resolutions));
-        gtk_drop_down_set_selected(GTK_DROP_DOWN(combo_pair->pref_resolution), 
-        		current_resolution > p_save_size - 1?p_save_size - 1: current_resolution);
-	}else{
-        // Switch to all resolutions
-        gtk_drop_down_set_model(GTK_DROP_DOWN(combo_pair->pref_resolution), 
-                               G_LIST_MODEL(combo_pair->all_resolutions));
-        gtk_drop_down_set_selected(GTK_DROP_DOWN(combo_pair->pref_resolution), current_resolution);
-	}
-	*/
+    gint current_resolution = gtk_drop_down_get_selected(GTK_DROP_DOWN(data->pref_resolution));
+    if(data->disable_item && current_resolution == 4){
+    	gtk_drop_down_set_selected(GTK_DROP_DOWN(data->pref_resolution), 3);
+    }
+
 }
 static void
 free_signal_data(gpointer data, GClosure *closure)
@@ -566,7 +553,7 @@ build_page(	const PreferencesDialogItem *items,
 
 
 		    gint current_p_type = g_settings_get_int(dlg->settings, "ecotube-computer-type");
-		    if(current_p_type == 1 || (current_p_type == 2 && !is_plugged())){
+		    if(current_p_type == 0 || (current_p_type == 2 && !is_plugged())){
 		    	data->disable_item = TRUE;
 		    }
 
@@ -1043,6 +1030,7 @@ bind_custom_cb (GtkListItemFactory *factory,
     const char *text = gtk_string_object_get_string (string_obj);
     guint position = gtk_list_item_get_position (item);
 
+
     gtk_label_set_text (GTK_LABEL (label), text);
 
     /* Disable 720p only if the flag is TRUE */
@@ -1050,7 +1038,11 @@ bind_custom_cb (GtkListItemFactory *factory,
     gtk_list_item_set_selectable (item, !disable);
 
     if (disable)
+    {
         gtk_widget_add_css_class (label, "dim-label");
+    }
     else
+    {
         gtk_widget_remove_css_class (label, "dim-label");
+    }
 }
