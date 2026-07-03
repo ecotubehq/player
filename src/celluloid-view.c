@@ -748,7 +748,7 @@ update_title(CelluloidView *view)
 	gchar *media_format = use_media_title ? view->media_format:"..."; //use_media_title ? view->media_format:"";
 	gchar *media_audio_codec = use_media_title ? view->media_audio_codec:"...";
 	gchar *media_codec_name = use_media_title ? view->media_codec_name:"...";
-	gchar *media_bitrate = view->media_bitrate; //use_media_title ? view->media_bitrate:"...";
+	gchar *media_bitrate = ""; //use_media_title ? view->media_bitrate:"...";
 	gchar *media_height = use_media_title ? view->media_height:"...";
 	GSettings *settings = g_settings_new(CONFIG_ROOT);
 	gchar *v_quality[] = {"144" ,"240", "360", "480", "720", "None"};
@@ -757,14 +757,7 @@ update_title(CelluloidView *view)
 	int playback_type = g_settings_get_int(settings, "ecotube-computer-type");
 	gchar *selected_v_quality= v_quality[video_resolution_index];
 
-	if(audio_quality_index == 0){
-		media_bitrate = "70kbps";
-	}else if(media_format && strcmp("h.264", media_format) == 0 ||
-		 media_format && strcmp("h264", media_format) == 0){
-		media_bitrate = "";
-	}else{
-		media_bitrate = "160kbps";
-	}
+
 	if(playback_type == 1 || is_plugged()){
 		media_codec_name = g_strconcat("FSR - ", media_codec_name, NULL);
 	}
