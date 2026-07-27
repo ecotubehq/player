@@ -34,13 +34,16 @@
   <release date="2026-07-26" version="26.07.02">
    <description translatable="no">
     <p>
-      stops downloading when the cache fills up
+      disable thumbnail on streaming sources
     </p>
     <p>
-        remove static bitrate
+        add audio only option
     </p>
     <p>
-      update player info
+      stop/slow buffering on playback pause
+    </p>
+    <p>
+      Option to disable cinegrain
     </p>
    </description>
   </release>
