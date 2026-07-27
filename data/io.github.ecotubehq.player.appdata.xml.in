@@ -346,10 +346,6 @@
  </releases>
  <screenshots>
   <screenshot type="default">
-   <image>https://raw.githubusercontent.com/ecotubehq/player/master/screenshots/ecotube-1.webp</image>
-   <caption>EcoTubeHQ interface</caption>
-  </screenshot>
-  <screenshot>
    <image>https://raw.githubusercontent.com/ecotubehq/player/master/screenshots/ecotube-2.webp</image>
    <caption>EcoTubeHQ playback</caption>
   </screenshot>
@@ -372,10 +368,6 @@
   <screenshot>
    <image>https://raw.githubusercontent.com/ecotubehq/player/master/screenshots/ecotube-6.webp</image>
    <caption>EcoTubeHQ screenshot button</caption>
-  </screenshot>
-  <screenshot>
-   <image>https://raw.githubusercontent.com/ecotubehq/player/master/screenshots/ecotube-7.webp</image>
-   <caption>EcoTubeHQ settings</caption>
   </screenshot>
  </screenshots>
  <url type="homepage">https://github.com/ecotubehq/player</url>

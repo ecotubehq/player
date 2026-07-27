@@ -1721,7 +1721,7 @@ load_user_preference(CelluloidMpv *mpv){
 		celluloid_mpv_set_option_string(mpv, "script-opts", dlp_path->str);
 	}
 
-	gint cache_seconds = 10;
+	gint cache_seconds = 180;
 
 	gchar *script_font_dir = get_script_fonts_dir_path();
 	celluloid_mpv_set_option_string(mpv, "osd-fonts-dir", script_font_dir);
@@ -1729,9 +1729,9 @@ load_user_preference(CelluloidMpv *mpv){
 	//g_string_append(user_buffer, " log-file=ecotube-mpv.log");
 	g_string_append(user_buffer, " reset-on-next-file=all");
 	g_string_append(user_buffer, " cache-pause=yes");
-	g_string_append(user_buffer, " stream-buffer-size=100K");
-	g_string_append(user_buffer, " demuxer-max-bytes=50M");
-	g_string_append(user_buffer, " demuxer-max-back-bytes=50M");
+	g_string_append(user_buffer, " stream-buffer-size=100M");
+	g_string_append(user_buffer, " demuxer-max-bytes=500M");
+	g_string_append(user_buffer, " demuxer-max-back-bytes=500M");
 	g_string_append_printf(user_buffer, " demuxer-hysteresis-secs=%d", cache_seconds);
 	g_string_append_printf(user_buffer, " cache-secs=%d", cache_seconds);
 
