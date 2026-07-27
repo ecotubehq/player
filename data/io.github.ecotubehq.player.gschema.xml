@@ -240,8 +240,8 @@
 	    <key name="default-playlist-with-metadata" type="aas">
 	      <default>
 	        [
-	          ['https://www.youtube.com/watch?v=HaZIvVb45oI', 'The True Scale of Youtube'],
 	          ['https://www.youtube.com/watch?v=YbxpieEQ7bc', 'The real cost of net zero'],
+	          ['https://www.youtube.com/watch?v=A3zTNEpjl_w', 'The Solar Plant Decaying In The Desert That Can\'t Be Shut Down'],
 	          ['https://www.youtube.com/watch?v=5p426fSlYH4', 'We Saw What AI Data Centers Don\'t Want You to See'],
 	          ['https://www.youtube.com/watch?v=uE6IhI2qj1Q', 'Why I’m Done Trusting AI'],
 	          ['https://www.youtube.com/watch?v=pToq1b6CVn8', 'The Wall AI Just Hit That Nobody Is Talking About'],
@@ -280,6 +280,20 @@
 			<default>0</default>
 			<summary>Buffering size</summary>
 			<description>
+			</description>
+		</key>
+		<key name="ecotube-video-noise" type="b">
+			<default>false</default>
+			<summary>Allow Video noise</summary>
+			<description>
+				video noise on / off
+			</description>
+		</key>
+		<key name="ecotube-audio-only" type="b">
+			<default>false</default>
+			<summary>Audio only</summary>
+			<description>
+				disable video to play audio only
 			</description>
 		</key>
 	</schema>

@@ -1698,6 +1698,11 @@ load_user_preference(CelluloidMpv *mpv){
 	gchar *selected_v_output= v_output[g_settings_get_int(settings, "youtube-video-output")];
 	gint playback_type = g_settings_get_int(settings, "ecotube-computer-type");
 
+	if(g_settings_get_boolean(settings, "ecotube-audio-only")){
+
+		return "ytdl-format=(bestaudio[ext=webm]/bestaudio)";
+	}
+
 	if(playback_type == 2 && plugged){
 		playback_type = 1;
 	}

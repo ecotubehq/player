@@ -74,6 +74,8 @@ enum PreferencesDialogItemType
 	ITEM_DEBAND_MODE,
 	ITEM_HDR_MODE,
 	ITEM_VULKAN_MODE,
+	ITEM_VIDEO_NOISE,
+	ITEM_AUDIO_ONLY,
 	ITEM_INFO_CLOSE_BOX,
 	ITEM_COMPUTER_TYPE,
 	ITEM_TYPE_COMBO_BUFFER,
@@ -256,6 +258,12 @@ constructed(GObject *object)
 			{NULL,
 			"close-info-pref",
 			ITEM_INFO_CLOSE_BOX},
+			{NULL,
+			"ecotube-video-noise",
+			ITEM_VIDEO_NOISE},
+			{NULL,
+			"ecotube-audio-only",
+			ITEM_AUDIO_ONLY},
 			{NULL, NULL, ITEM_TYPE_INVALID} };
 
 			
@@ -327,6 +335,7 @@ handle_changed(GSettings *settings, const gchar *key, gpointer data)
 	dlg->needs_mpv_reset |= g_strcmp0(key, "youtube-video-output") == 0;
 	dlg->needs_mpv_reset |= g_strcmp0(key, "mpv-use-vulkan") == 0;
 	dlg->needs_mpv_reset |= g_strcmp0(key, "ecotube-computer-type") == 0;
+	dlg->needs_mpv_reset |= g_strcmp0(key, "ecotube-audio-only") == 0;
 }
 
 static void
@@ -880,6 +889,52 @@ build_page(	const PreferencesDialogItem *items,
 			
 		}
 
+		if(type == ITEM_VIDEO_NOISE)
+		{
+			GtkWidget *switch_video_noise;
+
+			widget = adw_action_row_new();
+			adw_preferences_row_set_title
+				(ADW_PREFERENCES_ROW(widget), label);
+
+			switch_video_noise = gtk_switch_new();
+			gtk_widget_set_valign
+				(switch_video_noise, GTK_ALIGN_CENTER);
+			adw_action_row_add_suffix
+				(ADW_ACTION_ROW(widget), switch_video_noise);
+			adw_action_row_set_activatable_widget
+				(ADW_ACTION_ROW(widget), switch_video_noise);
+
+			g_settings_bind(	settings,
+						key,
+						switch_video_noise,
+						"active",
+						G_SETTINGS_BIND_DEFAULT );
+			
+		}
+		if(type == ITEM_AUDIO_ONLY)
+		{
+			GtkWidget *switch_audio_only;
+
+			widget = adw_action_row_new();
+			adw_preferences_row_set_title
+				(ADW_PREFERENCES_ROW(widget), label);
+
+			switch_audio_only = gtk_switch_new();
+			gtk_widget_set_valign
+				(switch_audio_only, GTK_ALIGN_CENTER);
+			adw_action_row_add_suffix
+				(ADW_ACTION_ROW(widget), switch_audio_only);
+			adw_action_row_set_activatable_widget
+				(ADW_ACTION_ROW(widget), switch_audio_only);
+
+			g_settings_bind(	settings,
+						key,
+						switch_audio_only,
+						"active",
+						G_SETTINGS_BIND_DEFAULT );
+			
+		}
 		if(type == ITEM_TYPE_COMBO_BUFFER)
 		{
 			/*
