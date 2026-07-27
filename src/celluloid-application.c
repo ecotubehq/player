@@ -233,7 +233,7 @@ initialize_gui(CelluloidApplication *app)
 	}
 	g_settings_set_boolean(settings, "always-use-floating-header-bar", TRUE);
 	g_settings_set_boolean(settings, "always-use-floating-controls", TRUE);
-
+	
 	gboolean notif = g_settings_get_boolean(settings, "startup-version-notif-26-07-01");
 	if(!notif){
 		celluloid_view_show_message_toast(view, "Ecotube updated - See 'How To Use' for details");
