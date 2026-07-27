@@ -1766,6 +1766,9 @@ load_user_preference(CelluloidMpv *mpv){
 		selected_v_quality, first_codec, second_codec, selected_v_quality, selected_v_quality,
 		allow_hdr ?"":"[format_id!*=hdr]");
 	}
+	if(!g_settings_get_boolean(settings, "ecotube-video-noise")){
+		g_string_append_printf(user_buffer, " vf=format:film-grain=no");
+	}
 	if(playback_type == 1){
 		gchar *mpv_conf = g_strconcat("file:/", DATADIR, "/ecotube", "/mpv-fsr.conf", NULL);
 		if(g_settings_get_boolean(settings, "mpv-config-enable")){

@@ -31,6 +31,19 @@
  	<name>EcoTube Partners</name>
  </developer>
  <releases>
+  <release date="2026-07-26" version="26.07.02">
+   <description translatable="no">
+    <p>
+      stops downloading when the cache fills up
+    </p>
+    <p>
+        remove static bitrate
+    </p>
+    <p>
+      update player info
+    </p>
+   </description>
+  </release>
   <release date="2026-07-03" version="26.07.01">
    <description translatable="no">
     <p>

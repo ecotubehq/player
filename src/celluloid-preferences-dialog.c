@@ -336,6 +336,7 @@ handle_changed(GSettings *settings, const gchar *key, gpointer data)
 	dlg->needs_mpv_reset |= g_strcmp0(key, "mpv-use-vulkan") == 0;
 	dlg->needs_mpv_reset |= g_strcmp0(key, "ecotube-computer-type") == 0;
 	dlg->needs_mpv_reset |= g_strcmp0(key, "ecotube-audio-only") == 0;
+	dlg->needs_mpv_reset |= g_strcmp0(key, "ecotube-video-noise") == 0;
 }
 
 static void
