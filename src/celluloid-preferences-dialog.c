@@ -79,6 +79,7 @@ enum PreferencesDialogItemType
 	ITEM_INFO_CLOSE_BOX,
 	ITEM_COMPUTER_TYPE,
 	ITEM_TYPE_COMBO_BUFFER,
+	ITEM_VIDEO_PROCESSING,
 };
 
 struct PreferencesDialogItem
@@ -264,6 +265,9 @@ constructed(GObject *object)
 			{NULL,
 			"ecotube-audio-only",
 			ITEM_AUDIO_ONLY},
+			{NULL,
+			"ecotube-video-processing",
+			ITEM_VIDEO_PROCESSING},
 			{NULL, NULL, ITEM_TYPE_INVALID} };
 
 			
@@ -437,6 +441,8 @@ build_page(	const PreferencesDialogItem *items,
 	/* Allocate app data */
 	ComboBoxPair *data = g_new0 (ComboBoxPair, 1);
 
+	char *current_yt_version = get_current_yt_dlp_version();
+	
 	for(gint i = 0; items[i].type != ITEM_TYPE_INVALID; i++)
 	{
 		const gchar *key = items[i].key;
@@ -644,12 +650,14 @@ build_page(	const PreferencesDialogItem *items,
 		}
 		if(type == ITEM_INFO_LABEL_BOX)
 		{
+			/*
 				GtkWidget *version_label;
 				char *current_yt_version = get_current_yt_dlp_version();
 
 				widget = adw_action_row_new();
 				adw_preferences_row_set_title
 					(ADW_PREFERENCES_ROW(widget), "");
+
 					
 				version_label = gtk_label_new(NULL);
 				char *markup;
@@ -661,6 +669,7 @@ build_page(	const PreferencesDialogItem *items,
 				(version_label, GTK_ALIGN_START);
 			adw_action_row_add_suffix
 				(ADW_ACTION_ROW(widget), version_label);
+				*/
 				
 			
 		}
@@ -913,7 +922,7 @@ build_page(	const PreferencesDialogItem *items,
 						G_SETTINGS_BIND_DEFAULT );
 			
 		}
-		if(type == ITEM_AUDIO_ONLY)
+		/*if(type == ITEM_AUDIO_ONLY)
 		{
 			GtkWidget *switch_audio_only;
 
@@ -935,6 +944,50 @@ build_page(	const PreferencesDialogItem *items,
 						"active",
 						G_SETTINGS_BIND_DEFAULT );
 			
+		}*/
+		if(type == ITEM_VIDEO_PROCESSING)
+		{
+			GtkWidget *pref_combo;
+			GtkListStore *liststore;
+			GtkCellRenderer *column;
+
+			widget = adw_action_row_new();
+			adw_preferences_row_set_title
+				(ADW_PREFERENCES_ROW(widget), label);
+
+			liststore = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_STRING);
+			gtk_list_store_insert_with_values(liststore, NULL, -1,
+											  0, NULL,
+											  1, "av1 Video",
+											  -1);
+			gtk_list_store_insert_with_values(liststore, NULL, -1,
+											  0, NULL,
+											  1, "Hardware Acceleration",
+											  -1);
+								  								  
+			pref_combo = gtk_combo_box_new_with_model(GTK_TREE_MODEL(liststore));
+			g_object_unref(liststore);
+			column = gtk_cell_renderer_text_new();
+			gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(pref_combo), column, TRUE);
+			gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(pref_combo), column,
+										   "cell-background", 0,
+										   "text", 1,
+										   NULL);
+
+			gtk_combo_box_set_active(GTK_COMBO_BOX(pref_combo), 0);
+
+			gtk_widget_set_valign
+				(pref_combo, GTK_ALIGN_CENTER);
+			adw_action_row_add_suffix
+				(ADW_ACTION_ROW(widget), pref_combo);
+			adw_action_row_set_activatable_widget
+				(ADW_ACTION_ROW(widget), pref_combo);
+
+			g_settings_bind(	settings,
+						key,
+						pref_combo,
+						"active",
+						G_SETTINGS_BIND_DEFAULT );	
 		}
 		if(type == ITEM_TYPE_COMBO_BUFFER)
 		{
@@ -970,6 +1023,9 @@ build_page(	const PreferencesDialogItem *items,
 		/* End Added by Sako */
 
 		if(widget){
+			adw_preferences_group_set_title (ADW_PREFERENCES_GROUP(pref_group), "                                                                    Ecotube");
+			gchar *version_info = g_strdup_printf("                                                               %s - yt-dlp v%s", VERSION, current_yt_version);
+			adw_preferences_group_set_description (ADW_PREFERENCES_GROUP(pref_group), version_info);
 			adw_preferences_group_add
 				(ADW_PREFERENCES_GROUP(pref_group), widget);			
 		}

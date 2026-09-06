@@ -294,6 +294,12 @@
 				disable video to play audio only
 			</description>
 		</key>
+		<key name="ecotube-video-processing" type="i">
+			<default>1</default>
+			<summary>Video Processing</summary>
+			<description>
+			</description>
+		</key>
 	</schema>
 
 	<schema	path="/io/github/ecotubehq/player/window-state/"
