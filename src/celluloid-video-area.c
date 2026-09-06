@@ -747,7 +747,7 @@ celluloid_video_area_set_status(	CelluloidVideoArea *area,
 		case CELLULOID_VIDEO_AREA_STATUS_LOADING:
 		adw_status_page_set_title
 			(	ADW_STATUS_PAGE(area->initial_page),
-				_("Loading…") );
+				_("Buffering ... please wait...") );
 		adw_status_page_set_description
 			(	ADW_STATUS_PAGE(area->initial_page),
 				NULL );
