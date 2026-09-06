@@ -1731,15 +1731,7 @@ load_user_preference(CelluloidMpv *mpv){
 	gchar *script_font_dir = get_script_fonts_dir_path();
 	celluloid_mpv_set_option_string(mpv, "osd-fonts-dir", script_font_dir);
 
-	//g_string_append(user_buffer, " log-file=ecotube-mpv.log");
-	g_string_append(user_buffer, " reset-on-next-file=all");
-	g_string_append(user_buffer, " cache-pause=yes");
-	g_string_append(user_buffer, " stream-buffer-size=100M");
-	g_string_append(user_buffer, " demuxer-max-bytes=10M");
-	g_string_append(user_buffer, " demuxer-max-back-bytes=5M");
-	g_string_append(user_buffer, " demuxer-readahead-secs=10");
-	g_string_append_printf(user_buffer, " demuxer-hysteresis-secs=%d", cache_seconds);
-	g_string_append_printf(user_buffer, " cache-secs=%d", cache_seconds);
+
 
 	if(g_settings_get_int(settings, "youtube-video-quality") == 0){
 		g_string_append_printf(user_buffer, " ytdl-format=(bv*[height=%s][vcodec~='%s']+"\
@@ -1769,46 +1761,23 @@ load_user_preference(CelluloidMpv *mpv){
 	if(!g_settings_get_boolean(settings, "ecotube-video-noise")){
 		g_string_append_printf(user_buffer, " vf=format:film-grain=no");
 	}
-	if(playback_type == 1){
-		gchar *mpv_conf = g_strconcat("file:/", DATADIR, "/ecotube", "/mpv-fsr.conf", NULL);
-		if(g_settings_get_boolean(settings, "mpv-config-enable")){
-			mpv_conf = g_strconcat("file:/", DATADIR, "/mpv-fsr-vulkan.conf", NULL);
-		}
+	if(playback_type == 0){
+		gchar *mpv_conf = g_strconcat("file://", DATADIR, "/ecotube", "/powersave.conf", NULL);
 		GFile *file = g_file_new_for_uri(mpv_conf);
 		gchar *path = g_file_get_path(file);
+
 		celluloid_mpv_load_config_file(mpv, "");
 		celluloid_mpv_load_config_file(mpv, path);
-		g_string_append(user_buffer, " hwdec=auto-safe");
 
-		sa_updade_yt_file(user_buffer->str);
-		celluloid_mpv_load_config_file(mpv, "file:///tmp/sa-yt.config");
-		return user_buffer->str;
 	}else{
-		g_string_append(user_buffer, " scale=bilinear");
-		g_string_append(user_buffer, " dscale=bilinear");
-	}
-	if(g_settings_get_int(settings, "youtube-video-output") == 0 ||is_plugged()){
-		g_string_append(user_buffer, " profile=gpu-hq");
-		g_string_append(user_buffer, " hwdec=auto-safe");
-		g_string_append(user_buffer, " scale=bicubic");
-		g_string_append(user_buffer, " dscale=bicubic");
-		if(g_settings_get_boolean(settings, "mpv-config-enable")){
-			gchar *mpv_conf = g_strconcat("file:/", DATADIR, "/data", "/mpv-fsr-vulkan.conf", NULL);
-			GFile *file = g_file_new_for_uri(mpv_conf);
-			gchar *path = g_file_get_path(file);
-			celluloid_mpv_load_config_file(mpv, "");
-			celluloid_mpv_load_config_file(mpv, path);
-		}
-	}else{
-		g_string_append(user_buffer, " profile=fast");
-		g_string_append(user_buffer, " hwdec=vaapi,auto");		
-	}
-	if(g_settings_get_boolean(settings, "mpv-config-enable")){
-		//celluloid_mpv_load_config_file(mpv, "");
-		//celluloid_mpv_load_config_file(mpv, "file:///usr/local/share/ecotube/mpv-vulkan.conf");
-	}else{
+		gchar *mpv_conf = g_strconcat("file://", DATADIR, "/ecotube", "/hq.conf", NULL);
+		GFile *file = g_file_new_for_uri(mpv_conf);
+		gchar *path = g_file_get_path(file);
+
 		celluloid_mpv_load_config_file(mpv, "");
+		celluloid_mpv_load_config_file(mpv, path);		
 	}
+
 	g_string_append_printf(user_buffer, " ytdl-raw-options=throttled-rate=1");
 	return user_buffer->str;
 }

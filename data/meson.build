@@ -52,6 +52,18 @@ install_data('mpv-vulkan.conf',
 install_data('mpv-fsr-vulkan.conf',
   install_dir: join_paths(get_option('datadir'), 'ecotube')
 )
+install_data('hq.conf',
+  install_dir: join_paths(get_option('datadir'), 'ecotube')
+)
+install_data('powersave.conf',
+  install_dir: join_paths(get_option('datadir'), 'ecotube')
+)
+install_data('ecotube-CfL_Prediction.glsl',
+  install_dir: join_paths(get_option('datadir'), 'ecotube')
+)
+install_data('ecotube-LumaSharpenHook.glsl',
+  install_dir: join_paths(get_option('datadir'), 'ecotube')
+)
 install_data('player-info.pdf',
   install_dir: join_paths(get_option('datadir'), 'ecotube')
 )
