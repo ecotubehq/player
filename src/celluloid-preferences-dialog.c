@@ -78,6 +78,7 @@ enum PreferencesDialogItemType
 	ITEM_AUDIO_ONLY,
 	ITEM_INFO_CLOSE_BOX,
 	ITEM_COMPUTER_TYPE,
+	ITEM_COMPUTER_QUALITY,
 	ITEM_TYPE_COMBO_BUFFER,
 	ITEM_VIDEO_PROCESSING,
 };
@@ -241,6 +242,9 @@ constructed(GObject *object)
 			{NULL,
 			"ecotube-computer-type",
 			ITEM_COMPUTER_TYPE},
+			{NULL,
+			"ecotube-computer-quality",
+			ITEM_COMPUTER_QUALITY},
 			{NULL,
 			"youtube-video-quality",
 			ITEM_TYPE_COMBO_BOX},
@@ -442,7 +446,7 @@ build_page(	const PreferencesDialogItem *items,
 	ComboBoxPair *data = g_new0 (ComboBoxPair, 1);
 
 	char *current_yt_version = get_current_yt_dlp_version();
-	
+
 	for(gint i = 0; items[i].type != ITEM_TYPE_INVALID; i++)
 	{
 		const gchar *key = items[i].key;
@@ -608,7 +612,6 @@ build_page(	const PreferencesDialogItem *items,
 			
 			GtkStringList *playback_modes = gtk_string_list_new((const char *[]){
 				"Powersave",
-				"Quality",
 				"Auto",
 				NULL
 			});				  								  
@@ -616,7 +619,7 @@ build_page(	const PreferencesDialogItem *items,
 
 			if(is_laptop()){
 				 //gtk_string_list_append (playback_modes, "Auto");
-				 gtk_drop_down_set_selected(GTK_DROP_DOWN(pref_playback), 2);
+				 gtk_drop_down_set_selected(GTK_DROP_DOWN(pref_playback), 1);
 			}else{
 				gtk_drop_down_set_selected(GTK_DROP_DOWN(pref_playback), 0);
 			}
@@ -637,6 +640,35 @@ build_page(	const PreferencesDialogItem *items,
 
 			g_signal_connect(pref_playback, "notify::selected", G_CALLBACK(on_playbak_t_changed), data);
 			
+			
+			
+		}
+		if(type == ITEM_COMPUTER_QUALITY)
+		{
+
+			widget = adw_action_row_new();
+			adw_preferences_row_set_title
+				(ADW_PREFERENCES_ROW(widget), label);
+			
+			GtkStringList *playback_modes = gtk_string_list_new((const char *[]){
+				"HQ",
+				"UHQ",
+				NULL
+			});				  								  
+			GtkDropDown *pref_playback = GTK_DROP_DOWN (gtk_drop_down_new (G_LIST_MODEL (playback_modes), NULL));
+
+			gtk_widget_set_valign
+				(GTK_WIDGET(pref_playback), GTK_ALIGN_CENTER);
+			adw_action_row_add_suffix
+				(ADW_ACTION_ROW(widget), GTK_WIDGET(pref_playback));
+			adw_action_row_set_activatable_widget
+				(ADW_ACTION_ROW(widget), GTK_WIDGET(pref_playback));
+
+			g_settings_bind(	settings,
+						key,
+						GTK_WIDGET(pref_playback),
+						"selected",
+						G_SETTINGS_BIND_DEFAULT );			
 			
 			
 		}

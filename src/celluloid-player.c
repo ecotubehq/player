@@ -1639,6 +1639,7 @@ get_ytdlp_format(CelluloidMpv *mpv, gboolean is_plugged){
 	gchar *selected_v_codec= v_codec[g_settings_get_int(settings, "youtube-video-codec")];
 	gchar *selected_v_output= v_output[g_settings_get_int(settings, "youtube-video-output")];
 	gint playback_type = g_settings_get_int(settings, "ecotube-computer-type");
+	gint playback_quality = g_settings_get_int(settings, "ecotube-computer-quality");
 
 	if(playback_type == 2 && is_plugged){
 		playback_type = 1;
@@ -1697,6 +1698,7 @@ load_user_preference(CelluloidMpv *mpv){
 	gchar *selected_v_codec= v_codec[g_settings_get_int(settings, "youtube-video-codec")];
 	gchar *selected_v_output= v_output[g_settings_get_int(settings, "youtube-video-output")];
 	gint playback_type = g_settings_get_int(settings, "ecotube-computer-type");
+	gint playback_quality = g_settings_get_int(settings, "ecotube-computer-quality");
 
 	if(g_settings_get_boolean(settings, "ecotube-audio-only")){
 
@@ -1762,7 +1764,7 @@ load_user_preference(CelluloidMpv *mpv){
 		g_string_append_printf(user_buffer, " vf=format:film-grain=no");
 	}
 	if(playback_type == 0){
-		gchar *mpv_conf = g_strconcat("file://", DATADIR, "/ecotube", "/powersave.conf", NULL);
+		gchar *mpv_conf = g_strconcat("file://", DATADIR, "/ecotube", is_plugged() ? "/hq.conf" : "/powersave.conf", NULL);
 		GFile *file = g_file_new_for_uri(mpv_conf);
 		gchar *path = g_file_get_path(file);
 

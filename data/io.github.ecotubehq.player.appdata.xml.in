@@ -13,24 +13,39 @@
   <id>io.github.ecotubehq.player.desktop</id>
  </provides>
  <description translate="no">
-      <p>EcotubeHQ is a free mpv-based application which tackles a VLC limitation - it uses minimal resources to deliver a high-quality experience 
-	  from video streaming services like YouTube. You set the resolution, it does the rest. It has two upscaling modes; 'Quality' uses AMD FSR to boost image clarity, 
-	  and 'Powersave' outputs HQ video with minimal CPU usage.</p>
+    <p>EcotubeHQ is an mpv-based video player which tackles a VLC limitation - it offers a simple way to deliver a high-quality video experience from streaming services like YouTube. You set the resolution, it does the rest. Two modes cover output; 'High Quality' enables advanced video processing, and 'Powersave' benefits unplugged laptops.</p>
       <p>Main features:</p>
       <ul>
-        <li>GPU acceleration of all YouTube codecs - av1, vp9 and h.264.</li>
-        <li>Automatic video codec and upscaling optimization.</li>
-        <li>720p resolution offers 1080p clarity.</li>
-        <li>144p and 240p YouTube videos play in a desktop mini-viewer.</li>
+        <li>Nvidia, AMD and Intel GPU acceleration of YouTube codecs.</li>
+        <li>HDR-to-SDR conversion allows playback on SDR screens.</li>
+        <li>Motion smoothing of 30fps video output.</li>
         <li>Minimal buffering reduces downloaded data.</li>
-        <li>Automated updates for yt-dlp and FFmpeg enhance software stability.</li>
-        <li>See above screenshots for more.</li>
+        <li>Video output supports screenshot functionality.</li>
+        <li>144p and 240p YouTube videos play in a desktop mini-viewer.</li>
+        <li>yt-dlp auto-updates to improve reliability.</li>
+        <li>Works on Lenovo T480 and newer PC hardware.</li>
       </ul>
  </description>
  <developer id="io.github.ecotubehq">
  	<name>EcoTube Partners</name>
  </developer>
  <releases>
+  <release date="2026-09-06" version="26.09.01">
+   <description translatable="no">
+    <p>
+      externalize the mpv configuration
+    </p>
+    <p>
+        Auto customize player with better video quality and hardware usage
+    </p>
+    <p>
+      Add new option in preferences box
+    </p>
+    <p>
+      Improve caching and buffering
+    </p>
+   </description>
+  </release>
   <release date="2026-07-26" version="26.07.02">
    <description translatable="no">
     <p>

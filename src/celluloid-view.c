@@ -759,7 +759,7 @@ update_title(CelluloidView *view)
 
 
 	if(playback_type == 1 || is_plugged()){
-		media_codec_name = g_strconcat("FSR - ", media_codec_name, NULL);
+		media_codec_name = g_strconcat("HQ - ", media_codec_name, NULL);
 	}
     if(strcmp("None",selected_v_quality) == 0 || !use_media_title || !view->media_title || view->media_title == NULL){     
         snprintf(title_buff, sizeof(title_buff), "%s", title);

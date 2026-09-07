@@ -237,6 +237,12 @@
 			<description>
 			</description>
 		</key>
+		<key name="ecotube-computer-quality" type="i">
+			<default>1</default>
+			<summary>Playback Quality</summary>
+			<description>
+			</description>
+		</key>
 	    <key name="default-playlist-with-metadata" type="aas">
 	      <default>
 	        [
@@ -262,7 +268,7 @@
 				HDR on / off
 			</description>
 		</key>
-		<key name="startup-version-notif-26-07-02" type="b">
+		<key name="startup-version-notif-26-08-01" type="b">
 			<default>false</default>
 			<summary></summary>
 			<description>
