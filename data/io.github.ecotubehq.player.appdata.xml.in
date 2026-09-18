@@ -13,23 +13,30 @@
   <id>io.github.ecotubehq.player.desktop</id>
  </provides>
  <description translate="no">
-    <p>EcotubeHQ is an mpv-based video player which tackles a VLC limitation - it offers a simple way to deliver a high-quality video experience from streaming services like YouTube. You set the resolution, it does the rest. Two modes cover output; 'High Quality' enables advanced video processing, and 'Powersave' benefits unplugged laptops.</p>
-      <p>Main features:</p>
-      <ul>
-        <li>Nvidia, AMD and Intel GPU acceleration of YouTube codecs.</li>
-        <li>HDR-to-SDR conversion allows playback on SDR screens.</li>
-        <li>Motion smoothing of 30fps video output.</li>
-        <li>Minimal buffering reduces downloaded data.</li>
-        <li>Video output supports screenshot functionality.</li>
-        <li>144p and 240p YouTube videos play in a desktop mini-viewer.</li>
-        <li>yt-dlp auto-updates to improve reliability.</li>
-        <li>Works on Lenovo T480 and newer PC hardware.</li>
-      </ul>
+    <p>EcotubeHQ is an mpv-based video player which tackles a VLC limitation - it offers a simple way to deliver a high-quality video experience from streaming services like YouTube. You set the resolution, it does the rest. Two modes cover output; 'High Quality' enables premium video output, and 'Powersave' offers Potato PCs good quality video + maximizes laptop battery life.</p>
+          <p>Main features:</p>
+          <ul>
+            <li>Hardware acceleration of YouTube codecs.</li>
+            <li>Comprehensive denoising removes many video artifacts.</li>
+            <li>Advanced upscaling outputs higher-detail video.</li>
+            <li>Automatically adapts HDR video for SDR screens.</li>
+            <li>Optimized buffer minimizes unnecessary data retrieval.</li>
+            <li>144p and 240p YouTube videos play in a desktop mini-player.</li>
+            <li>yt-dlp auto-updates for better reliability.</li>
+            <li>Works on Lenovo T480 and newer PC hardware.</li>
+          </ul>
  </description>
  <developer id="io.github.ecotubehq">
  	<name>EcoTube Partners</name>
  </developer>
  <releases>
+  <release date="2026-09-17" version="26.09.02">
+   <description translatable="no">
+    <p>
+      Fix preconfiguration data
+    </p>
+   </description>
+  </release>
   <release date="2026-09-06" version="26.09.01">
    <description translatable="no">
     <p>

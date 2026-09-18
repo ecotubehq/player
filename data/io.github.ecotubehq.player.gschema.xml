@@ -268,7 +268,7 @@
 				HDR on / off
 			</description>
 		</key>
-		<key name="startup-version-notif-26-08-01" type="b">
+		<key name="startup-version-notif-26-09-02" type="b">
 			<default>false</default>
 			<summary></summary>
 			<description>
@@ -288,7 +288,7 @@
 		</key>
 		<key name="ecotube-video-noise" type="b">
 			<default>false</default>
-			<summary>Allow Video noise</summary>
+			<summary>Show Video noise</summary>
 			<description>
 				video noise on / off
 			</description>
@@ -302,7 +302,7 @@
 		</key>
 		<key name="ecotube-video-processing" type="i">
 			<default>1</default>
-			<summary>Video Processing</summary>
+			<summary>Preferred Codec</summary>
 			<description>
 			</description>
 		</key>

@@ -216,12 +216,7 @@ initialize_gui(CelluloidApplication *app)
 				controller,
 				"dark-theme-enable",
 				G_SETTINGS_BIND_GET );
-	// Added by Sako
-	/*
-	gint current_resolution = g_settings_get_int(settings, "youtube-video-quality");
-	if(current_resolution > 3)
-		g_settings_set_int(settings, "youtube-video-quality", 3);
-	*/
+
 	int video_resolution_index = g_settings_get_int(settings, "youtube-video-quality");
 	if(video_resolution_index == 0){
 		celluloid_view_resize_video_area(view, 640, 360);
@@ -234,11 +229,11 @@ initialize_gui(CelluloidApplication *app)
 	g_settings_set_boolean(settings, "always-use-floating-header-bar", TRUE);
 	g_settings_set_boolean(settings, "always-use-floating-controls", TRUE);
 	
-	gboolean notif = g_settings_get_boolean(settings, "startup-version-notif-26-08-01");
+	gboolean notif = g_settings_get_boolean(settings, "startup-version-notif-26-09-02");
 	if(!notif){
 		celluloid_view_show_message_toast(view, "Ecotube updated - See 'How To Use' for details");
 		load_default_scripts();
-		g_settings_set_boolean(settings, "startup-version-notif-26-08-01", TRUE);
+		g_settings_set_boolean(settings, "startup-version-notif-26-09-02", TRUE);
 		g_settings_set_boolean(settings, "mpv-use-vulkan", TRUE);
 		g_settings_set_int(settings, "youtube-video-quality", 3);
 	}

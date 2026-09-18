@@ -64,6 +64,18 @@ install_data('ecotube-CfL_Prediction.glsl',
 install_data('ecotube-LumaSharpenHook.glsl',
   install_dir: join_paths(get_option('datadir'), 'ecotube')
 )
+install_data('ravu-lite-ar-r4.glsl',
+  install_dir: join_paths(get_option('datadir'), 'ecotube')
+)
+install_data('CAS.glsl',
+  install_dir: join_paths(get_option('datadir'), 'ecotube')
+)
+install_data('CfL_Prediction_Lite.glsl',
+  install_dir: join_paths(get_option('datadir'), 'ecotube')
+)
+install_data('grain.glsl',
+  install_dir: join_paths(get_option('datadir'), 'ecotube')
+)
 install_data('player-info.pdf',
   install_dir: join_paths(get_option('datadir'), 'ecotube')
 )

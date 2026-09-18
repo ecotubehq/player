@@ -612,6 +612,7 @@ build_page(	const PreferencesDialogItem *items,
 			
 			GtkStringList *playback_modes = gtk_string_list_new((const char *[]){
 				"Powersave",
+				"Quality",
 				"Auto",
 				NULL
 			});				  								  
@@ -640,35 +641,6 @@ build_page(	const PreferencesDialogItem *items,
 
 			g_signal_connect(pref_playback, "notify::selected", G_CALLBACK(on_playbak_t_changed), data);
 			
-			
-			
-		}
-		if(type == ITEM_COMPUTER_QUALITY)
-		{
-
-			widget = adw_action_row_new();
-			adw_preferences_row_set_title
-				(ADW_PREFERENCES_ROW(widget), label);
-			
-			GtkStringList *playback_modes = gtk_string_list_new((const char *[]){
-				"HQ",
-				"UHQ",
-				NULL
-			});				  								  
-			GtkDropDown *pref_playback = GTK_DROP_DOWN (gtk_drop_down_new (G_LIST_MODEL (playback_modes), NULL));
-
-			gtk_widget_set_valign
-				(GTK_WIDGET(pref_playback), GTK_ALIGN_CENTER);
-			adw_action_row_add_suffix
-				(ADW_ACTION_ROW(widget), GTK_WIDGET(pref_playback));
-			adw_action_row_set_activatable_widget
-				(ADW_ACTION_ROW(widget), GTK_WIDGET(pref_playback));
-
-			g_settings_bind(	settings,
-						key,
-						GTK_WIDGET(pref_playback),
-						"selected",
-						G_SETTINGS_BIND_DEFAULT );			
 			
 			
 		}
