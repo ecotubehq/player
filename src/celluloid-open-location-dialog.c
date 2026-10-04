@@ -224,6 +224,20 @@ clipboard_text_received_handler(	GObject *object,
 		g_strstrip(text); // fix white space issue
 
 		buffer = gtk_entry_get_buffer(GTK_ENTRY(dlg->loc_entry));
+
+		char * ptr;
+		int  ch = '&';
+		ptr = strchr(text, ch);
+		if(ptr)
+		{
+			// crop uri
+			int index = (int)(ptr - text);
+	        text = g_strndup (
+				  text,
+				  index
+				);
+		}
+
 		gtk_entry_buffer_set_text(buffer, text, -1);
 		gtk_editable_select_region(GTK_EDITABLE(dlg->loc_entry), 0, -1);
 	}

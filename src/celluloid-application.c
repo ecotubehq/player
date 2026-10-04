@@ -235,7 +235,7 @@ initialize_gui(CelluloidApplication *app)
 		load_default_scripts();
 		g_settings_set_boolean(settings, "startup-version-notif-26-09-02", TRUE);
 		g_settings_set_boolean(settings, "mpv-use-vulkan", TRUE);
-		g_settings_set_int(settings, "youtube-video-quality", 3);
+		g_settings_set_int(settings, "youtube-video-quality", 2);
 	}
 	if(is_modern_osd()){
 		celluloid_main_window_set_use_floating_controls(window, FALSE);

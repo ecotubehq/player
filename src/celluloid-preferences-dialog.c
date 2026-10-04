@@ -879,53 +879,6 @@ build_page(	const PreferencesDialogItem *items,
 			*/
 			
 		}
-		if(type == ITEM_VULKAN_MODE)
-		{
-			GtkWidget *switch_vulkan_mode;
-
-			widget = adw_action_row_new();
-			adw_preferences_row_set_title
-				(ADW_PREFERENCES_ROW(widget), label);
-
-			switch_vulkan_mode = gtk_switch_new();
-			gtk_widget_set_valign
-				(switch_vulkan_mode, GTK_ALIGN_CENTER);
-			adw_action_row_add_suffix
-				(ADW_ACTION_ROW(widget), switch_vulkan_mode);
-			adw_action_row_set_activatable_widget
-				(ADW_ACTION_ROW(widget), switch_vulkan_mode);
-
-			g_settings_bind(	settings,
-						key,
-						switch_vulkan_mode,
-						"active",
-						G_SETTINGS_BIND_DEFAULT );
-			
-		}
-
-		if(type == ITEM_VIDEO_NOISE)
-		{
-			GtkWidget *switch_video_noise;
-
-			widget = adw_action_row_new();
-			adw_preferences_row_set_title
-				(ADW_PREFERENCES_ROW(widget), label);
-
-			switch_video_noise = gtk_switch_new();
-			gtk_widget_set_valign
-				(switch_video_noise, GTK_ALIGN_CENTER);
-			adw_action_row_add_suffix
-				(ADW_ACTION_ROW(widget), switch_video_noise);
-			adw_action_row_set_activatable_widget
-				(ADW_ACTION_ROW(widget), switch_video_noise);
-
-			g_settings_bind(	settings,
-						key,
-						switch_video_noise,
-						"active",
-						G_SETTINGS_BIND_DEFAULT );
-			
-		}
 		/*if(type == ITEM_AUDIO_ONLY)
 		{
 			GtkWidget *switch_audio_only;
@@ -966,7 +919,7 @@ build_page(	const PreferencesDialogItem *items,
 											  -1);
 			gtk_list_store_insert_with_values(liststore, NULL, -1,
 											  0, NULL,
-											  1, "Hardware Acceleration",
+											  1, "vp9 / h.264.",
 											  -1);
 								  								  
 			pref_combo = gtk_combo_box_new_with_model(GTK_TREE_MODEL(liststore));
@@ -1028,7 +981,7 @@ build_page(	const PreferencesDialogItem *items,
 
 		if(widget){
 			adw_preferences_group_set_title (ADW_PREFERENCES_GROUP(pref_group), "                                                                    Ecotube");
-			gchar *version_info = g_strdup_printf("                                                               %s - yt-dlp v%s", VERSION, current_yt_version);
+			gchar *version_info = g_strdup_printf("                                                 %s - yt-dlp v%s", VERSION, current_yt_version);
 			adw_preferences_group_set_description (ADW_PREFERENCES_GROUP(pref_group), version_info);
 			adw_preferences_group_add
 				(ADW_PREFERENCES_GROUP(pref_group), widget);			

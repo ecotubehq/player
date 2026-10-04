@@ -971,6 +971,20 @@ open_location_dialog_response_handler(	GtkDialog *dialog,
 		const gchar *uri =
 			celluloid_open_location_dialog_get_string
 			(location_dialog);
+		char * ptr;
+		int  ch = '&';
+		ptr = strchr(uri, ch);
+		if(ptr)
+		{
+			// crop uri
+			int index = (int)(ptr - uri);
+	        uri = g_strndup (
+				  uri,
+				  index
+				);
+		}
+
+
 		
 		GPtrArray *args = data;
 		CelluloidView *view = g_ptr_array_index(args, 0);
