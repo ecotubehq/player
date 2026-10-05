@@ -16,22 +16,33 @@
     <p>Energy Efficient YouTube Video Player</p>
 
     <p>EcoTubeHQ is an mpv-based video player which tackles a VLC limitation - it offers a simple way to output video from YouTube and other streaming services. It utilizes adaptive upscaling to maximize video quality whilst minimizing energy usage. Two modes cover output; 'Quality' outputs premium quality video, and 'Powersave' maximizes laptop battery life.</p>
-      <p>Main features:</p>
-      <ul>
-        <li>Hardware acceleration of video codecs.</li>
-        <li>Minimal buffer reduces data retrieval.</li>
-        <li>Automatically adapts HDR video for SDR screens.</li>
-        <li>Dynamic contrast improves picture quality.</li>
-        <li>HQ video from resolutions as low as 360p.</li>
-        <li>144p YouTube videos play in a desktop mini-player.</li>
-        <li>yt-dlp auto-updates for better reliability.</li>
-        <li>Works on Lenovo T480 and newer PC hardware.</li>
-      </ul>
+          <p>Main features:</p>
+          <ul>
+            <li>YouIube livestream playback.</li>
+            <li>Hardware acceleration of video codecs.</li>
+            <li>Minimal buffer reduces data retrieval.</li>
+            <li>Automatically adapts HDR video for SDR screens.</li>
+            <li>Dynamic contrast improves picture quality.</li>
+            <li>HQ video from low resolutions [360p+].</li>
+            <li>144p YouTube videos play in a desktop mini-player.</li>
+            <li>yt-dlp auto-updates for better reliability.</li>
+            <li>Works on Lenovo T480 and newer PC hardware.</li>
+          </ul>
  </description>
  <developer id="io.github.ecotubehq">
  	<name>EcoTube Partners</name>
  </developer>
  <releases>
+  <release date="2026-10-04" version="26.10.01">
+   <description translatable="no">
+    <p>
+      Update shaders
+    </p>
+    <p>
+      Enhance interface
+    </p>
+   </description>
+  </release>
   <release date="2026-09-17" version="26.09.02">
    <description translatable="no">
     <p>
