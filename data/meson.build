@@ -58,23 +58,32 @@ install_data('hq.conf',
 install_data('powersave.conf',
   install_dir: join_paths(get_option('datadir'), 'ecotube')
 )
-install_data('ecotube-CfL_Prediction.glsl',
-  install_dir: join_paths(get_option('datadir'), 'ecotube')
+install_data('shaders/colorlevel_expand_luma.glsl',
+  install_dir: join_paths(get_option('datadir'), 'ecotube/shaders')
 )
-install_data('ecotube-LumaSharpenHook.glsl',
-  install_dir: join_paths(get_option('datadir'), 'ecotube')
+install_data('shaders/dehaasn_ads_luma_RT.glsl',
+  install_dir: join_paths(get_option('datadir'), 'ecotube/shaders')
 )
-install_data('ravu-lite-ar-r4.glsl',
-  install_dir: join_paths(get_option('datadir'), 'ecotube')
+install_data('shaders/noise_static_luma.glsl',
+  install_dir: join_paths(get_option('datadir'), 'ecotube/shaders')
 )
-install_data('CAS.glsl',
-  install_dir: join_paths(get_option('datadir'), 'ecotube')
+install_data('shaders/kVibrance_RT.glsl',
+  install_dir: join_paths(get_option('datadir'), 'ecotube/shaders')
 )
-install_data('CfL_Prediction_Lite.glsl',
-  install_dir: join_paths(get_option('datadir'), 'ecotube')
+install_data('shaders/PixelClipper_RT.glsl',
+  install_dir: join_paths(get_option('datadir'), 'ecotube/shaders')
 )
-install_data('grain.glsl',
-  install_dir: join_paths(get_option('datadir'), 'ecotube')
+install_data('shaders/eq_clarity_RT.glsl',
+  install_dir: join_paths(get_option('datadir'), 'ecotube/shaders')
+)
+install_data('shaders/espcn_x2_8.glsl',
+  install_dir: join_paths(get_option('datadir'), 'ecotube/shaders')
+)
+install_data('shaders/ravu-r3.hook',
+  install_dir: join_paths(get_option('datadir'), 'ecotube/shaders')
+)
+install_data('shaders/ravu-r4.hook',
+  install_dir: join_paths(get_option('datadir'), 'ecotube/shaders')
 )
 install_data('player-info.pdf',
   install_dir: join_paths(get_option('datadir'), 'ecotube')
