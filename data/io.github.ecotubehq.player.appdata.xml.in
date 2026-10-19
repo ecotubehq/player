@@ -33,6 +33,13 @@
  	<name>EcoTube Partners</name>
  </developer>
  <releases>
+  <release date="2026-10-19" version="26.10.02">
+   <description translatable="no">
+    <p>
+      Fix power save looping issue
+    </p>
+   </description>
+  </release>
   <release date="2026-10-04" version="26.10.01">
    <description translatable="no">
     <p>
