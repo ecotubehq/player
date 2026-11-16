@@ -1686,6 +1686,7 @@ static gchar *
 load_user_preference(CelluloidMpv *mpv){
 	
 	GSettings *settings = g_settings_new(CONFIG_ROOT);
+	const gchar *user_data_dir = g_get_user_data_dir();
 	GString *user_buffer = g_string_new("cache=yes");
 	gboolean plugged = is_plugged();
 	
@@ -1708,17 +1709,18 @@ load_user_preference(CelluloidMpv *mpv){
 	if(playback_type == 2 && plugged){
 		playback_type = 1;
 	}
-
+	//g_string_append(user_buffer, " msg-level=all=debug");	
+	//g_string_append(user_buffer, " log-file=ecotube-mpv-debug.log");	
 	gboolean allow_hdr = g_settings_get_boolean(settings, "youtube-allow-hdr");
 	gchar *first_codec = "vp9";
 	gchar *second_codec = "av01";
 	if(playback_type == 1 || (playback_type == 2 && plugged)){
 		first_codec = "av01";
 		second_codec = "vp9";	
-		g_string_append(user_buffer, " deband=yes");	
+		//g_string_append(user_buffer, " deband=yes");	
 	}else if(playback_type == 0){
-		g_string_append(user_buffer, " scale=nearest");	
-		g_string_append(user_buffer, " cscale=nearest");	
+		//g_string_append(user_buffer, " scale=nearest");	
+		//g_string_append(user_buffer, " cscale=nearest");	
 	}
 
 	gchar *user_yt_dlp = ecotube_get_user_yt_dlp_path();
@@ -1761,18 +1763,22 @@ load_user_preference(CelluloidMpv *mpv){
 		allow_hdr ?"":"[format_id!*=hdr]");
 	}
 	if(!g_settings_get_boolean(settings, "ecotube-video-noise")){
-		g_string_append_printf(user_buffer, " vf=format:film-grain=no");
+		//g_string_append_printf(user_buffer, " vf=format:film-grain=no");
 	}
 	if(playback_type == 0){
-		gchar *mpv_conf = g_strconcat("file://", DATADIR, "/ecotube", is_plugged() ? "/hq.conf" : "/powersave.conf", NULL);
+		gchar *mpv_conf = g_strconcat("file://", user_data_dir, "/ecotube", is_plugged() ? "/hq.conf" : "/powersave.conf", NULL);
 		GFile *file = g_file_new_for_uri(mpv_conf);
 		gchar *path = g_file_get_path(file);
+
+		//gchar *shader_folder = g_strconcat(DATADIR, "/ecotube", "shaders", NULL);
+		//const char *shader_path = "colorlevel_expand_luma.glsl";
+		//g_string_append_printf(user_buffer, " glsl-shaders=%s/%s", shader_folder, shader_path);
 
 		celluloid_mpv_load_config_file(mpv, "");
 		celluloid_mpv_load_config_file(mpv, path);
 
 	}else{
-		gchar *mpv_conf = g_strconcat("file://", DATADIR, "/ecotube", "/hq.conf", NULL);
+		gchar *mpv_conf = g_strconcat("file://", user_data_dir, "/ecotube", "/hq.conf", NULL);
 		GFile *file = g_file_new_for_uri(mpv_conf);
 		gchar *path = g_file_get_path(file);
 
@@ -1780,7 +1786,7 @@ load_user_preference(CelluloidMpv *mpv){
 		celluloid_mpv_load_config_file(mpv, path);		
 	}
 
-	g_string_append_printf(user_buffer, " ytdl-raw-options=throttled-rate=1");
+	//g_string_append_printf(user_buffer, " ytdl-raw-options=throttled-rate=1");
 	return user_buffer->str;
 }
 

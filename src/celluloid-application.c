@@ -108,6 +108,9 @@ celluloid_application_init(CelluloidApplication *app);
 
 void async_check_updates(CelluloidMainWindow *window);
 
+static int 
+update_config_file(void);
+
 
 G_DEFINE_TYPE(CelluloidApplication, celluloid_application, GTK_TYPE_APPLICATION)
 
@@ -229,11 +232,12 @@ initialize_gui(CelluloidApplication *app)
 	g_settings_set_boolean(settings, "always-use-floating-header-bar", TRUE);
 	g_settings_set_boolean(settings, "always-use-floating-controls", TRUE);
 	
-	gboolean notif = g_settings_get_boolean(settings, "startup-version-notif-26-10-02");
+	gboolean notif = g_settings_get_boolean(settings, "startup-version-notif-26-11-01");
 	if(!notif){
 		celluloid_view_show_message_toast(view, "Ecotube updated - See 'How To Use' for details");
 		load_default_scripts();
-		g_settings_set_boolean(settings, "startup-version-notif-26-10-02", TRUE);
+		update_config_file();
+		g_settings_set_boolean(settings, "startup-version-notif-26-11-01", TRUE);
 		g_settings_set_boolean(settings, "mpv-use-vulkan", TRUE);
 		g_settings_set_int(settings, "youtube-video-quality", 2);
 	}
@@ -242,6 +246,7 @@ initialize_gui(CelluloidApplication *app)
 	}
 
 	//gtk_window_set_resizable(view, TRUE);
+
 
 	async_check_updates(window);
 	
@@ -694,4 +699,15 @@ void async_check_updates(CelluloidMainWindow *window){
 	pthread_t update_thread;
 	pthread_create(&update_thread, NULL, (void*)update_yt_dlp_with_builtin, window);
 	pthread_detach(update_thread);
+}
+static int 
+update_config_file(void){
+	const gchar *user_data_dir = g_get_user_data_dir();
+	gchar *user_mpv_config[2] = {"hq.conf", "powersave.conf"};
+	for(size_t x=0; x<2; x++){
+		gchar *file_path = g_strconcat(user_data_dir, "/ecotube", "/", user_mpv_config[x], NULL);
+	    if (find_and_replace_file(file_path, "#DATADIR#", DATADIR) == 0) {
+	    }
+	} 
+    return 0;
 }

@@ -26,3 +26,9 @@ is_laptop(void);
 
 void
 display_pdf (GtkApplication *app, gpointer user_data);
+
+void 
+replace_in_line(char *line, const char *old_str, const char *new_str, FILE *out);
+
+int 
+find_and_replace_file(const char *filename, const char *old_str, const char *new_str);

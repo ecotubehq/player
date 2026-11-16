@@ -1,5 +1,8 @@
 #include "utils.h"
+#include <stdlib.h>
+#include <string.h>
 
+#define BUFFER_SIZE 4096
 
 void
 load_default_scripts(){
@@ -7,6 +10,7 @@ load_default_scripts(){
     gchar *scripts_dir = get_scripts_dir_path();
     gchar *script_opts_dir = get_script_opts_dir_path();
     gchar *script_font_dir = get_script_fonts_dir_path();
+    gchar *user_data_dir = g_strconcat(g_get_user_data_dir(), "/ecotube", NULL);
 
 
     // remove modernx script
@@ -37,6 +41,8 @@ load_default_scripts(){
         {"fluent-system-icons.ttf", script_font_dir},
         {"material-design-icons.ttf", script_font_dir},
         {"mpv-reload.lua", scripts_dir},
+        {"hq.conf", user_data_dir},
+        {"powersave.conf", user_data_dir},
         {NULL, NULL}
     };
 
@@ -165,4 +171,60 @@ display_pdf (GtkApplication *app, gpointer user_data){
 
     gtk_window_present (GTK_WINDOW (window));
 
+}
+
+void replace_in_line(char *line, const char *old_str, const char *new_str, FILE *out) {
+    char *pos = line;
+    char *found;
+    size_t old_len = strlen(old_str);
+
+    while ((found = strstr(pos, old_str)) != NULL) {
+        // Write everything before the match
+        fwrite(pos, 1, found - pos, out);
+        // Write the replacement string
+        fputs(new_str, out);
+        // Advance pointer past the old substring
+        pos = found + old_len;
+    }
+    // Write the remainder of the line
+    fputs(pos, out);
+}
+
+int find_and_replace_file(const char *filename, const char *old_str, const char *new_str) {
+    if (strlen(old_str) == 0) return -1;
+
+    gchar *user_data_dir = g_strconcat(g_get_user_data_dir(), "/ecotube", NULL);
+
+    FILE *in = fopen(filename, "rb");
+    if (!in) {
+        perror("Error opening input file");
+        return -1;
+    }
+
+    const char *temp_name = g_strconcat(user_data_dir, "/temp_replace.tmp", NULL);
+    FILE *out = fopen(temp_name, "wb");
+    if (!out) {
+        perror("Error creating temporary file");
+        fclose(in);
+        return -1;
+    }
+
+    char buffer[BUFFER_SIZE];
+    while (fgets(buffer, sizeof(buffer), in) != NULL) {
+        replace_in_line(buffer, old_str, new_str, out);
+    }
+
+    fclose(in);
+    fclose(out);
+
+    if (remove(filename) != 0) {
+        perror("Error deleting original file");
+        return -1;
+    }
+    if (rename(temp_name, filename) != 0) {
+        perror("Error renaming temporary file");
+        return -1;
+    }
+
+    return 0;
 }
